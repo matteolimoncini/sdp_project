@@ -20,22 +20,35 @@ public class StatisticsService {
         return Response.ok().entity("{\"message\": \"Not implemented\"}").build();
     }
 
-
+    //insert timestamp t1 and t2 like params
     @Path("delivery/avg")
+    @GET
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    /*
+     Method to extract the average number of delivery by all drones in the smart city between two timestamp.
+     It works with a GET request http.
+
+     Server receive two timestamp t1 and t2.
+    */
+    public Response deliveryAvg() {//@PathParam("time1") Integer idDrone
+
+        // TODO implement this
+        return Response.ok().build();
+    }
+
+    @Path("kilometers/avg")
     //insert timestamp t1 and t2 like params
     @GET
     @Consumes({"application/json"})
     @Produces({"application/json"})
     /*
-     Method to remove drone from the system with a DELETE request http.
-     Server receive drone ID.
+     Method to extract the average number of kilometers covered by all drones in the smart city between two timestamp.
+     It works with a GET request http.
 
-     If ID is already used remove drone from the system.
-     If ID not in list throw exception.
-
+     Server receive two timestamp t1 and t2.
     */
-
-    public Response removeDrone() {//@PathParam("time1") Integer idDrone
+    public Response kilometersAvg() {//@PathParam("time1") Integer idDrone
 
         // TODO implement this
         return Response.ok().build();

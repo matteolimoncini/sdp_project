@@ -10,7 +10,10 @@ import javax.ws.rs.core.Response;
 public class DroneService {
     @GET
     @Produces({"application/json", "application/xml"})
-    public Response getAllWords() {
+    /*
+     Method to return the list of drones into the system with a GET request http.
+    */
+    public Response getAllDrones() {
         return Response.ok(DroneList.getInstance()).build();
     }
 
@@ -25,7 +28,6 @@ public class DroneService {
      If ID is not already used insert drone into the system.
      If ID is already in use throw exception.
      If insert successfully return drone's list present in the city.
-
     */
     public Response addDrone(Drone droneToAdd) {
         int pos = DroneList.getInstance().checkDrone(droneToAdd.getId());
@@ -33,8 +35,7 @@ public class DroneService {
         if (droneNotFound) {
             DroneList.getInstance().add(droneToAdd);
             return Response.ok().entity("{\"message\": \"Drone added to the system\"}").build();
-        }
-        else
+        } else
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Exist another drone with this id\"}").build();
     }
 
@@ -49,17 +50,15 @@ public class DroneService {
 
      If ID is already used remove drone from the system.
      If ID not in list throw exception.
-
     */
     public Response removeDrone(@PathParam("idDrone") Integer idDroneToRemove) {
         int pos = DroneList.getInstance().checkDrone(idDroneToRemove);
         boolean droneNotFound = pos == -1;
         if (droneNotFound) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Not exist drone with this id\"}").build();
-        }
-        else
+        } else
             DroneList.getInstance().deleteDrone(idDroneToRemove);
-            return Response.ok().entity("{\"message\": \"Drone removed from the system\"}").build();
+        return Response.ok().entity("{\"message\": \"Drone removed from the system\"}").build();
     }
 
 }
