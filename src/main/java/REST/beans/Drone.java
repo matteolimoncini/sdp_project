@@ -11,6 +11,8 @@ public class Drone {
     private String ipAddress;
     private Integer portNumber;
 
+    public Drone(){}
+
     public Drone(Integer id, String ipAddress, Integer portNumber) {
         this.id = id;
         this.ipAddress = ipAddress;

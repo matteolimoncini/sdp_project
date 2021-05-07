@@ -8,6 +8,11 @@ import javax.ws.rs.core.Response;
 
 @Path("drone")
 public class DroneService {
+    @GET
+    @Produces({"application/json", "application/xml"})
+    public Response getAllWords() {
+        return Response.ok(DroneList.getInstance()).build();
+    }
 
     @Path("add")
     @POST

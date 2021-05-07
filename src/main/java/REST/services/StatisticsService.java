@@ -8,28 +8,22 @@ import javax.ws.rs.core.Response;
 @Path("statistics")
 public class StatisticsService {
 
-    @Path("add")
-    @POST
+    @Path("globals/{lastN}")
+    @GET
     @Consumes({"application/json", "application/xml", "text/plain"})
     @Produces({"application/json"})
     /*
-     Method to add drone into the system with a POST request http.
-     Server receive ID, ip address and port number.
-
-     If ID is not already used insert drone into the system.
-     If ID is already in use throw exception.
-     If insert successfully return drone's list present in the city.
-
+     Method to extract the last n global statistics with timestamp about smart-city
     */
-    public Response addDrone(Drone d) {
+    public Response getGlobal(Integer lastN) {
         // TODO implement this
-        return Response.ok().entity("{\"message\": \"Parola inserita\"}").build();
-        //return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Parola già inserita\"}").build();
+        return Response.ok().entity("{\"message\": \"Not implemented\"}").build();
     }
 
 
-    @Path("delete/{idDrone}")
-    @DELETE
+    @Path("delivery/avg")
+    //insert timestamp t1 and t2 like params
+    @GET
     @Consumes({"application/json"})
     @Produces({"application/json"})
     /*
@@ -40,9 +34,12 @@ public class StatisticsService {
      If ID not in list throw exception.
 
     */
-    public Response removeDrone(@PathParam("idDrone") Integer idDrone) {
+
+    public Response removeDrone() {//@PathParam("time1") Integer idDrone
+
         // TODO implement this
         return Response.ok().build();
     }
+
 
 }
