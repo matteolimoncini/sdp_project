@@ -34,6 +34,7 @@ public class DroneService {
         boolean droneNotFound = pos == -1;
         if (droneNotFound) {
             DroneList.getInstance().add(droneToAdd);
+            // TODO return starting position and list of drones already registered
             return Response.ok().entity("{\"message\": \"Drone added to the system\"}").build();
         } else
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Exist another drone with this id\"}").build();
