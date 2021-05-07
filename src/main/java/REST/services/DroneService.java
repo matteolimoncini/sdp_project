@@ -23,7 +23,7 @@ public class DroneService {
     */
     public Response addDrone(Drone d) {
         // TODO implement this
-        return Response.ok().entity("{\"message\": \"Parola inserita\"}").build();
+        return Response.ok().entity("{\"message\": \"Drone added to the system\"}").build();
         //return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Parola già inserita\"}").build();
     }
 
@@ -42,7 +42,7 @@ public class DroneService {
     */
     public Response removeDrone(@PathParam("idDrone") Integer idDrone) {
         // TODO implement this
-        return Response.ok().build();
+        return Response.ok().entity("{\"message\": \"Drone remove from the system\"}").build();
     }
 
 }
