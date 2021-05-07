@@ -5,7 +5,7 @@ import REST.beans.Drone;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@Path("drone")
+@Path("statistics")
 public class StatisticsService {
 
     @Path("add")
