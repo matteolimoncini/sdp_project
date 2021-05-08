@@ -33,7 +33,6 @@ public class DroneList {
     public synchronized List<Drone> getDrones() {
         return new ArrayList<>(drones);
     }
-
     /*public Word getDefinition(String word) {
         List<Word> copy = getDrones();
         for (Word w: copy) {

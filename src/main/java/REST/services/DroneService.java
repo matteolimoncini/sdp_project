@@ -6,6 +6,7 @@ import REST.beans.ResponseAddModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Random;
 
 @Path("drone")
@@ -36,8 +37,10 @@ public class DroneService {
         boolean droneNotFound = pos == -1;
         int[] myPosition = setPosition();
         if (droneNotFound) {
+            List<Drone> droneList = DroneList.getInstance().getDrones();
             DroneList.getInstance().add(droneToAdd);
-            return Response.ok(new ResponseAddModel(DroneList.getInstance().getDrones(),myPosition)).build();
+            ResponseAddModel responseAddModel = new ResponseAddModel(droneList, myPosition);
+            return Response.ok(responseAddModel).build();
 
         } else
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Exist another drone with this id\"}").build();
@@ -45,8 +48,8 @@ public class DroneService {
 
     private int[] setPosition() {
         Random r = new Random();
-        int randIntX = r.nextInt(9);
-        int randIntY = r.nextInt(9);
+        int randIntX = r.nextInt(10);
+        int randIntY = r.nextInt(10);
         return new int[]{randIntX,randIntY};
     }
 
