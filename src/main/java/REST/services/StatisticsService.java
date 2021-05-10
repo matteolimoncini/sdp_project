@@ -51,9 +51,17 @@ public class StatisticsService {
      Server receive two timestamp t1 and t2.
     */
     public Response deliveryAvgGet(@QueryParam("t1") String t1,@QueryParam("t2") String t2) {
+        double avgDelivery;
+        int sumDelivery = 0;
+        List<GlobalStats> globalStatsList;
 
-        // TODO implement this
-        return Response.ok().build();
+        globalStatsList = GlobalStatsList.getInstance().getGlobalStatsList(t1,t2);
+
+        for (GlobalStats globalStats:globalStatsList)
+            sumDelivery += globalStats.getAvgDelivery();
+
+        avgDelivery = (double) sumDelivery / globalStatsList.size();
+        return Response.ok().entity("{\"AvgDelivery\":"+avgDelivery+ "}").build();
     }
 
     @Path("kilometers/avg")
@@ -67,10 +75,17 @@ public class StatisticsService {
      Server receive two timestamp t1 and t2.
     */
     public Response kilometersAvg(@QueryParam("t1") String t1,@QueryParam("t2") String t2) {
-        System.out.println(t1);
-        System.out.println(t2);
-        // TODO implement this
-        return Response.ok().build();
+        double avgKilometers;
+        int sumKilometers = 0;
+        List<GlobalStats> globalStatsList;
+
+        globalStatsList = GlobalStatsList.getInstance().getGlobalStatsList(t1,t2);
+
+        for (GlobalStats globalStats:globalStatsList)
+            sumKilometers += globalStats.getAvgKilometers();
+
+        avgKilometers = (double) sumKilometers / globalStatsList.size();
+        return Response.ok().entity("{\"AvgKilometers\":"+avgKilometers+ "}").build();
     }
 
 

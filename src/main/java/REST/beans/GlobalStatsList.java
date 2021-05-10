@@ -3,23 +3,19 @@ package REST.beans;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GlobalStatsList {
-    private int avgDelivery;
-    private int avgKilometers;
-    private int avgPollution;
-    private int avgBattery;
-    private int timestamp;
 
     private List<GlobalStats> globalStatsList;
     private static GlobalStatsList instance;
 
     public GlobalStatsList() {
-        globalStatsList = new ArrayList<GlobalStats>();
+        globalStatsList = new ArrayList<>();
     }
 
 
@@ -30,7 +26,7 @@ public class GlobalStatsList {
         return instance;
     }
 
-    public void addGlobalStats(GlobalStats globalStats) {
+    public synchronized void addGlobalStats(GlobalStats globalStats) {
         globalStatsList.add(globalStats);
     }
     public synchronized List<GlobalStats> getGlobalStatsList() {
@@ -42,5 +38,25 @@ public class GlobalStatsList {
         if (lastN > length)
             lastN = length;
         return new ArrayList<>(globalStatsList.subList(0,lastN));
+    }
+
+    public synchronized List<GlobalStats> getGlobalStatsList(String t1, String t2) {
+        Timestamp iTimestamp;
+        boolean greaterOrEqualThanT1;
+        boolean lessOrEqualThanT2;
+        System.out.println(t1);
+        System.out.println(t2);
+        Timestamp timestamp1 = Timestamp.valueOf(t1);
+        Timestamp timestamp2 = Timestamp.valueOf(t2);
+        List<GlobalStats> subList = new ArrayList<>();
+
+        for (GlobalStats stats : globalStatsList) {
+            iTimestamp = stats.getTimestamp();
+            greaterOrEqualThanT1 = iTimestamp.compareTo(timestamp1) >= 0;
+            lessOrEqualThanT2 = iTimestamp.compareTo(timestamp2) <= 0;
+            if (greaterOrEqualThanT1 && lessOrEqualThanT2)
+                subList.add(stats);
+        }
+        return subList;
     }
 }
