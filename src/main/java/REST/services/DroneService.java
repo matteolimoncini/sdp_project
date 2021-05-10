@@ -2,12 +2,12 @@ package REST.services;
 
 import REST.beans.Drone;
 import REST.beans.DroneList;
+import REST.beans.Position;
 import REST.beans.ResponseAddModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Random;
 
 @Path("drone")
 public class DroneService {
@@ -35,7 +35,7 @@ public class DroneService {
     public Response addDrone(Drone droneToAdd) {
         int pos = DroneList.getInstance().checkDrone(droneToAdd.getId());
         boolean droneNotFound = pos == -1;
-        int[] myPosition = setPosition();
+        Position myPosition = new Position();
         if (droneNotFound) {
             List<Drone> droneList = DroneList.getInstance().getDrones();
             DroneList.getInstance().add(droneToAdd);
@@ -45,14 +45,14 @@ public class DroneService {
         } else
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Exist another drone with this id\"}").build();
     }
-
+/*
     private int[] setPosition() {
         Random r = new Random();
         int randIntX = r.nextInt(10);
         int randIntY = r.nextInt(10);
         return new int[]{randIntX,randIntY};
     }
-
+*/
 
     @Path("delete/{idDrone}")
     @DELETE

@@ -9,9 +9,9 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ResponseAddModel {
     private List<Drone> drones;
-    private int[] myPosition;
+    private Position myPosition;
 
-    public ResponseAddModel(List<Drone> drones, int[] myPosition) {
+    public ResponseAddModel(List<Drone> drones, Position myPosition) {
         this.drones = drones;
         this.myPosition = myPosition;
     }
