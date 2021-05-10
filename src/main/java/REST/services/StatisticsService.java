@@ -1,7 +1,5 @@
 package REST.services;
 
-import REST.beans.Drone;
-import REST.beans.DroneList;
 import REST.beans.GlobalStats;
 import REST.beans.GlobalStatsList;
 
