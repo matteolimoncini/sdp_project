@@ -22,7 +22,7 @@ public class DroneService {
 
     @Path("add")
     @POST
-    @Consumes({"application/json", "application/xml", "text/plain"})
+    @Consumes({"application/json", "application/xml"})
     @Produces({"application/json"})
     /*
      Method to add drone into the system with a POST request http.

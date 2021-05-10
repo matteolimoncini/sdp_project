@@ -20,7 +20,7 @@ public class DroneList {
         drones = new ArrayList<Drone>();
     }
 
-    //singleton per ritornare l'istanza di dizionario
+    //singleton per ritornare l'istanza di droneList
     public synchronized static DroneList getInstance() {
         if (instance==null)
             instance = new DroneList();
