@@ -23,6 +23,7 @@ public class StatisticsService {
         System.out.println(globalStats.getAvgKilometers());
         System.out.println(globalStats.getAvgPollution());
         System.out.println(globalStats.getAvgBattery());
+        System.out.println(globalStats.getTimestamp());
 
         GlobalStatsList.getInstance().addGlobalStats(globalStats);
         return Response.ok().entity("{\"message\": \"Global statistics added\"}").build();

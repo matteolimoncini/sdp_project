@@ -22,4 +22,13 @@ public class Order {
     public Position getDeliveryPoint() {
         return deliveryPoint;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", pickUpPoint=" + pickUpPoint.toString() +
+                ", deliveryPoint=" + deliveryPoint.toString() +
+                '}';
+    }
 }

@@ -25,4 +25,11 @@ public class Position {
         return yCoordinate;
     }
 
+    @Override
+    public String toString() {
+        return "Position{" +
+                "xCoordinate=" + xCoordinate +
+                ", yCoordinate=" + yCoordinate +
+                '}';
+    }
 }

@@ -23,6 +23,7 @@ public class GlobalStats {
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
         this.avgBattery = avgBattery;
+        //String t = timestamp.substring(3,timestamp.length()-3);
         this.timestamp = Timestamp.valueOf(timestamp);
     }
 
