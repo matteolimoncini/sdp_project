@@ -1,5 +1,7 @@
 package REST.beans;
 
+import com.google.gson.Gson;
+
 import java.util.Random;
 
 public class Position {
@@ -27,9 +29,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "xCoordinate=" + xCoordinate +
-                ", yCoordinate=" + yCoordinate +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

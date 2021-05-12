@@ -1,4 +1,7 @@
+package REST.beans;
+
 import REST.beans.Position;
+import com.google.gson.Gson;
 
 public class Order {
     private int id;
@@ -25,10 +28,15 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
+        Gson gson = new Gson();
+        return gson.toJson(this);
+        /*
+        return "REST.beans.Order{" +
                 "id=" + id +
                 ", pickUpPoint=" + pickUpPoint.toString() +
                 ", deliveryPoint=" + deliveryPoint.toString() +
                 '}';
+
+         */
     }
 }

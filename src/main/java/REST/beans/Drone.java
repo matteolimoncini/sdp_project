@@ -1,11 +1,17 @@
 package REST.beans;
 
+import com.google.gson.Gson;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.eclipse.paho.client.mqttv3.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -62,6 +68,11 @@ public class Drone {
     }
 
     public void disconnect() throws MqttException {
+        if (!iAmMaster()) {
+            System.err.println("only master can disconnect");
+            return;
+            //throw exception?
+        }
         if (this.client.isConnected()) {
             this.client.disconnect();
             System.out.println("Subscriber " + this.clientId + " disconnected");
@@ -72,6 +83,7 @@ public class Drone {
     public void subscribe() throws MqttException {
         if (!iAmMaster()) {
             System.err.println("only master can subscribe");
+            return;
             //throw exception?
         }
 
@@ -99,6 +111,9 @@ public class Drone {
                         "\n\tTopic:   " + topic +
                         "\n\tMessage: " + receivedMessage +
                         "\n\tQoS:     " + message.getQos() + "\n");
+                Gson gson = new Gson();
+                Order order = gson.fromJson(receivedMessage,Order.class);
+                Drone.this.chooseDeliver(order);
             }
 
             public void connectionLost(Throwable cause) {
@@ -113,8 +128,49 @@ public class Drone {
         System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
         this.client.subscribe(topic, qos);
         System.out.println(clientId + " Subscribed to topics : " + topic);
+    }
 
-        //TODO manageOrder
+    private int chooseDeliver(Order order) {
+        int idDrone=-1;
+        if (!iAmMaster()) {
+            System.err.println("only master can manage orders");
+            return idDrone;
+            //throw exception?
+        }
 
+        //extract drone list
+        List<Drone> drones = this.getDroneList();
+        //not consider drone already at work
+
+        //choose the drone nearest with greater battery
+
+        //select drone with id greater
+
+        return idDrone;
+    }
+
+    private List<Drone> getDroneList() {
+        ArrayList<Drone> drones = new ArrayList<>();
+
+        Client client = Client.create();
+
+        WebResource webResource = client.resource("http://localhost:1337/drone");
+
+        ClientResponse response = webResource.accept("application/json")
+                .get(ClientResponse.class);
+
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+
+        String output = response.getEntity(String.class);
+
+        System.out.println("Output from Server .... \n");
+        System.out.println(output);
+
+        //TODO convert output into drones
+
+        return drones;
     }
 }
