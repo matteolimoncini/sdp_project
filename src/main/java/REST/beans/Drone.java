@@ -22,6 +22,7 @@ public class Drone {
     private Integer idMaster;
     private Integer battery;
     private boolean processingDelivery;
+    private Position myPosition;
 
     private MqttClient client;
     String clientId;
