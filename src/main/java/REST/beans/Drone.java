@@ -16,7 +16,7 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Drone {
-    private Integer id;
+    private Integer idDrone;
     private String ipAddress;
     private Integer portNumber;
     private Integer idMaster;
@@ -24,15 +24,15 @@ public class Drone {
     private boolean processingDelivery;
     private Position myPosition;
 
-    private MqttClient client;
-    String clientId;
+    private MqttClient clientDrone;
+    //String clientId;
 
 
     public Drone() {
     }
 
     public Drone(Integer id, String ipAddress, Integer portNumber) {
-        this.id = id;
+        this.idDrone = id;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
         this.battery = 100;
@@ -40,7 +40,7 @@ public class Drone {
     }
 
     public Integer getId() {
-        return id;
+        return idDrone;
     }
 
     public String getIpAddress() {
@@ -52,7 +52,7 @@ public class Drone {
     }
 
     private boolean iAmMaster() {
-        return idMaster.equals(id);
+        return idMaster.equals(idDrone);
     }
 
     private boolean iAmProcessingDelivery() {
@@ -74,9 +74,9 @@ public class Drone {
             return;
             //throw exception?
         }
-        if (this.client.isConnected()) {
-            this.client.disconnect();
-            System.out.println("Subscriber " + this.clientId + " disconnected");
+        if (this.clientDrone.isConnected()) {
+            this.clientDrone.disconnect();
+            System.out.println("Subscriber " + this.clientDrone.getClientId() + " disconnected");
         }
         System.out.println("Subscriber already disconnected");
     }
@@ -89,19 +89,19 @@ public class Drone {
         }
 
         MqttConnectOptions connOpts;
-        clientId = MqttClient.generateClientId();
+        String clientId = MqttClient.generateClientId();
         String broker = "tcp://localhost:1883";
         String topic = "dronazon/smarcity/orders";
         int qos = 2;
 
-        this.client = new MqttClient(broker, clientId);
+        this.clientDrone = new MqttClient(broker, clientId);
 
         // Connect the client
         System.out.println(clientId + " Connecting Broker " + broker);
         System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
 
         // Callback
-        this.client.setCallback(new MqttCallback() {
+        this.clientDrone.setCallback(new MqttCallback() {
 
             public void messageArrived(String topic, MqttMessage message) {
                 // Called when a message arrives from the server that matches any subscription made by the client
@@ -127,7 +127,7 @@ public class Drone {
 
         });
         System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
-        this.client.subscribe(topic, qos);
+        this.clientDrone.subscribe(topic, qos);
         System.out.println(clientId + " Subscribed to topics : " + topic);
     }
 
@@ -149,6 +149,8 @@ public class Drone {
 
         return idDrone;
     }
+
+
 
     private List<Drone> getDroneList() {
         ArrayList<Drone> drones = new ArrayList<>();

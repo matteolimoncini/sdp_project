@@ -11,7 +11,6 @@ import java.util.List;
 @XmlAccessorType (XmlAccessType.FIELD)
 public class DroneList {
 
-    @XmlElement (name = "Dictionary")
     private List<Drone> drones;
 
     private static DroneList instance;
