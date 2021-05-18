@@ -1,6 +1,8 @@
 package REST.beans;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -14,18 +16,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Drone {
+    @Expose
     private Integer idDrone;
+    @Expose
     private String ipAddress;
+    @Expose
     private Integer portNumber;
     private Integer idMaster;
+    private MqttClient clientDrone;
+
+
     private Integer battery;
     private boolean processingDelivery;
     private Position myPosition;
+    private Timestamp lastDelivery;
+    private double kmTotDelivery;
 
-    private MqttClient clientDrone;
+    private GlobalStats globalStats;
+
+    private List<Drone> drones;
     //String clientId;
+
+    /*
+    id_drone:  batteria
+               position
+               timestamp
+               tot_km_percorsi
+               avg_pollution ?
+               processingDelivery
+
+
+     */
 
 
     public Drone() {
@@ -140,7 +162,7 @@ public class Drone {
         }
 
         //extract drone list
-        List<Drone> drones = this.getDroneList();
+        //List<Drone> drones =
         //not consider drone already at work
 
         //choose the drone nearest with greater battery
@@ -152,15 +174,18 @@ public class Drone {
 
 
 
-    private List<Drone> getDroneList() {
+    public void addDrone() {
         ArrayList<Drone> drones = new ArrayList<>();
 
         Client client = Client.create();
 
-        WebResource webResource = client.resource("http://localhost:1337/drone");
+        WebResource webResource = client.resource("http://localhost:1337/drone/add");
 
-        ClientResponse response = webResource.accept("application/json")
-                .get(ClientResponse.class);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String input = gson.toJson(this);
+        System.out.println(input);
+        System.out.println("#####################");
+        ClientResponse response = webResource.type("application/json").post(ClientResponse.class,input);
 
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
@@ -173,7 +198,51 @@ public class Drone {
         System.out.println(output);
 
         //TODO convert output into drones
-
-        return drones;
+        this.drones = drones;
     }
+
+    private void sendStatToMaster(){
+        /*
+            drone send after a delivery
+
+            - timestamp
+            - position = position of delivery
+            - km_travelled
+            - avg_pollution
+            - battery
+
+            - num_delivery
+            - km_tot_travelled
+            - battery
+        */
+    }
+    private void sendGlobalStatistics (){
+        if (!iAmMaster()) {
+            System.err.println("only master can send global statistics");
+            return ;
+            //throw exception?
+        }
+
+        //TODO implement this
+        Client client = Client.create();
+
+        WebResource webResource = client.resource("http://localhost:1337/statistics/globals");
+        Gson gson = new Gson();
+        String input = gson.toJson(this.globalStats);
+        ClientResponse response = webResource.accept("application/json").post(ClientResponse.class,input);
+
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+
+        String output = response.getEntity(String.class);
+
+        System.out.println("Output from Server .... \n");
+        System.out.println(output);
+
+
+    }
+
+
 }

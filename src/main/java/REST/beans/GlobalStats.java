@@ -1,5 +1,7 @@
 package REST.beans;
 
+import com.sun.xml.txw2.annotation.XmlElement;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,6 +15,7 @@ public class GlobalStats {
     private int avgKilometers;
     private int avgPollution;
     private int avgBattery;
+
     private Timestamp timestamp;
 
     public GlobalStats() {
