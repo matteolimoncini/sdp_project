@@ -20,12 +20,16 @@ public class DroneMain {
         quitThread.start();
 
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
-
+        sendGlobalStatsThread.start();
 
         while (quitThread.isAlive()){
+            //send global stats
+            if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster())
+                sendGlobalStatsThread.start();
+
             //manage one order
 
-            //send global stats
+
 
         }
 
