@@ -40,7 +40,7 @@ public class DroneList {
 
     public synchronized void deleteDrone(Integer idDroneToRemove) {
         for (int i = 0; i < drones.size(); i++) {
-            if (drones.get(i).getId().equals(idDroneToRemove))
+            if (drones.get(i).getIdDrone().equals(idDroneToRemove))
                 drones.remove(i);
         }
     }
@@ -50,7 +50,7 @@ public class DroneList {
         List<Drone> copy = getDrones();
         for (int i = 0; i < copy.size(); i++) {
             drone = copy.get(i);
-            Integer idDrone = drone.getId();
+            Integer idDrone = drone.getIdDrone();
             if (idDrone.equals(idDroneToCheck))
                 return i;
         }

@@ -33,7 +33,7 @@ public class DroneService {
      If insert successfully return drone's list present in the city.
     */
     public Response addDrone(Drone droneToAdd) {
-        int pos = DroneList.getInstance().checkDrone(droneToAdd.getId());
+        int pos = DroneList.getInstance().checkDrone(droneToAdd.getIdDrone());
         boolean droneNotFound = pos == -1;
         Position myPosition = new Position();
         if (droneNotFound) {

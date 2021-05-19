@@ -53,6 +53,14 @@ public class Drone {
     public Drone() {
     }
 
+    public Integer getIdDrone() {
+        return idDrone;
+    }
+
+    public void setIdDrone(Integer idDrone) {
+        this.idDrone = idDrone;
+    }
+
     public Drone(Integer id, String ipAddress, Integer portNumber) {
         this.idDrone = id;
         this.ipAddress = ipAddress;
@@ -61,9 +69,6 @@ public class Drone {
         this.processingDelivery = false;
     }
 
-    public Integer getId() {
-        return idDrone;
-    }
 
     public String getIpAddress() {
         return ipAddress;

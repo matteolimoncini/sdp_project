@@ -15,11 +15,14 @@ public class DroneMain {
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
         Thread sendGlobalStatsThread;
+        Thread manageOrderThread;
 
         quitThread = new DroneThreadQuit();
         quitThread.start();
 
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
+        manageOrderThread = new DroneManageOrderThread(drone);
+
         sendGlobalStatsThread.start();
 
         while (quitThread.isAlive()){
