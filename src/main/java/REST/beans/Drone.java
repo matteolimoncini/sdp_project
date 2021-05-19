@@ -73,7 +73,7 @@ public class Drone {
         return portNumber;
     }
 
-    private boolean iAmMaster() {
+    public boolean iAmMaster() {
         return idMaster.equals(idDrone);
     }
 
@@ -216,14 +216,13 @@ public class Drone {
             - battery
         */
     }
-    private void sendGlobalStatistics (){
-        if (!iAmMaster()) {
+    public void sendGlobalStatistics (){
+        /*if (!iAmMaster()) {
             System.err.println("only master can send global statistics");
             return ;
             //throw exception?
-        }
+        }*/
 
-        //TODO implement this
         Client client = Client.create();
 
         WebResource webResource = client.resource("http://localhost:1337/statistics/globals");
