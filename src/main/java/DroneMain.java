@@ -1,29 +1,36 @@
-package REST.beans;
+import REST.beans.*;
 
 import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(111,"localhost",810);
+        Drone drone = new Drone(5,"localhost",74);
         drone.addDrone();
+
         /*
         - sempre essere in attesa che io scriva quit sul terminale
         - effettuare una consegna
         - inviare global statistics al server (se master)
         - elezione master
         -
-         */
+        */
+
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
         Thread sendGlobalStatsThread;
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
+        Thread serverThread;
         List<Drone> drones= drone.getDrones();
+
+        //start grpc server thread
+        serverThread = new ServerGrpcThread(drone.getPortNumber());
+        serverThread.start();
 
         //send a message to all other drone that i'm entering in the system
         for (Drone d: drones) {
-            sendNewDroneAdded = new sendNewDroneThread(d.getIdDrone(),d.getIpAddress(),d.getPortNumber(),"new drone added");
+            sendNewDroneAdded = new sendNewDroneThread(d.getIpAddress(),d.getPortNumber(),"new drone added",drone);
             sendNewDroneAdded.start();
         }
 
@@ -50,5 +57,7 @@ public class DroneMain {
 
 
         drone.sendGlobalStatistics();
+
+
     }
 }

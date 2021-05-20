@@ -40,7 +40,7 @@ public class DroneService {
             List<Drone> droneList = DroneList.getInstance().getDrones();
             DroneList.getInstance().add(droneToAdd);
             ResponseAddModel responseAddModel = new ResponseAddModel(droneList, myPosition);
-            return Response.ok(responseAddModel).build();
+            return Response.ok().entity(responseAddModel).build();
 
         } else
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"message\": \"Drone id not valid! Exist another drone with this id\"}").build();

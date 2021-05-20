@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement
 public class Drone {
     @Expose
     private Integer idDrone;
@@ -73,6 +72,9 @@ public class Drone {
         this.processingDelivery = false;
     }
 
+    public void setMyPosition(Position myPosition) {
+        this.myPosition = myPosition;
+    }
 
     public String getIpAddress() {
         return ipAddress;
@@ -184,7 +186,7 @@ public class Drone {
 
 
     public void addDrone() {
-        ArrayList<Drone> drones = new ArrayList<>();
+        List<Drone> droneList;
 
         Client client = Client.create();
 
@@ -201,13 +203,20 @@ public class Drone {
                     + response.getStatus());
         }
 
-        String output = response.getEntity(String.class);
+        ResponseAddModel output = response.getEntity(ResponseAddModel.class);
+
+        droneList = output.getDrones();
+        this.setMyPosition(output.getMyPosition());
 
         System.out.println("Output from Server .... \n");
         System.out.println(output);
+        for (Drone d: droneList) {
+            System.out.println(d.getIpAddress());
+            System.out.println(d.getIdDrone());
+            System.out.println(d.getPortNumber());
 
-        //TODO convert output into drones
-        this.drones = drones;
+        }
+        this.drones = droneList;
     }
 
     private void sendStatToMaster(){
@@ -252,5 +261,12 @@ public class Drone {
 
     }
 
-
+    @Override
+    public String toString() {
+        return "Drone{" +
+                "idDrone=" + this.getIdDrone() +
+                ", ipAddress='" + this.getIpAddress() + '\'' +
+                ", portNumber=" + this.getPortNumber() +
+                '}';
+    }
 }

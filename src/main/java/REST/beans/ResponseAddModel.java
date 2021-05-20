@@ -11,11 +11,27 @@ public class ResponseAddModel {
     private List<Drone> drones;
     private Position myPosition;
 
+    public ResponseAddModel() {
+    }
+
     public ResponseAddModel(List<Drone> drones, Position myPosition) {
         this.drones = drones;
         this.myPosition = myPosition;
     }
 
-    public ResponseAddModel() {
+    public List<Drone> getDrones() {
+        return drones;
+    }
+
+    public Position getMyPosition() {
+        return myPosition;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseAddModel{" +
+                "drones=" + drones +
+                ", myPosition=" + myPosition +
+                '}';
     }
 }

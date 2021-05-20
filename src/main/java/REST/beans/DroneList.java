@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DroneList {
 
     private List<Drone> drones;
