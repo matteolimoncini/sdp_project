@@ -8,11 +8,11 @@ message addNewDrone {
   int64 portNumber = 4;
 }
 
-message HelloResponse {
-  string helloResponse = 1;
+message responseAddNewDrone {
+  string response = 1;
 }
 
 
-service Hello {
-  rpc MessageHello(addNewDrone) returns (HelloResponse);
+service newDrone {
+  rpc MessageAddDrone(addNewDrone) returns (responseAddNewDrone);
 }

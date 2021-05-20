@@ -1,5 +1,14 @@
 package REST.beans;
 
+import com.example.grpc.AddDrone;
+import com.example.grpc.newDroneGrpc;
+import com.example.grpc.newDroneGrpc.newDroneStub;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
+
+import static com.example.grpc.AddDrone.*;
+
 public class sendNewDroneThread extends Thread {
     private int idNewDrone;
     private String ipNewDrone;
@@ -15,7 +24,32 @@ public class sendNewDroneThread extends Thread {
 
     @Override
     public void run() {
-        //TODO send here messagge
-        // super.run();
+        String targetAddress = this.ipNewDrone+":"+this.portNewDrone;
+        final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+        newDroneStub stub = newDroneGrpc.newStub(channel);
+        addNewDrone request = addNewDrone
+                .newBuilder()
+                .setIdDrone(this.idNewDrone)
+                .setIpAddress(this.ipNewDrone)
+                .setPortNumber(this.portNewDrone)
+                .setMessage(this.message)
+                .build();
+
+        stub.messageAddDrone(request, new StreamObserver<responseAddNewDrone>() {
+            @Override
+            public void onNext(responseAddNewDrone value) {
+                System.out.println(value.getResponse());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
     }
 }
