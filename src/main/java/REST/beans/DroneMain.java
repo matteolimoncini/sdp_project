@@ -1,5 +1,7 @@
 package REST.beans;
 
+import java.util.List;
+
 public class DroneMain {
     public static void main(String[] args) {
         Drone drone = new Drone(111,"localhost",810);
@@ -16,17 +18,27 @@ public class DroneMain {
         Thread quitThread;
         Thread sendGlobalStatsThread;
         Thread manageOrderThread;
+        Thread sendNewDroneAdded;
+        List<Drone> drones= drone.getDrones();
 
+        //send a message to all other drone that i'm entering in the system
+        for (Drone d: drones) {
+            sendNewDroneAdded = new sendNewDroneThread(d.getIdDrone(),d.getIpAddress(),d.getPortNumber(),"new drone added");
+            sendNewDroneAdded.start();
+        }
+
+        //start a thread that wait that user type "quit" and exit
         quitThread = new DroneThreadQuit();
         quitThread.start();
 
+        //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
-        manageOrderThread = new DroneManageOrderThread(drone);
-
         sendGlobalStatsThread.start();
 
+        manageOrderThread = new DroneManageOrderThread(drone);
+
         while (quitThread.isAlive()){
-            //send global stats
+            //send global stats if is master and thread to send global stats is crashed
             if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster())
                 sendGlobalStatsThread.start();
 

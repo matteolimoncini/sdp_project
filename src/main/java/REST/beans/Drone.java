@@ -53,6 +53,10 @@ public class Drone {
     public Drone() {
     }
 
+    public List<Drone> getDrones() {
+        return drones;
+    }
+
     public Integer getIdDrone() {
         return idDrone;
     }
