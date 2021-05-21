@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(4,"localhost",4);
+        Drone drone = new Drone(11,"localhost",11);
         drone.addDrone();
 
         /*
@@ -14,6 +14,7 @@ public class DroneMain {
         - elezione master
         -
 
+        */
 
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
@@ -29,10 +30,11 @@ public class DroneMain {
         serverThread.start();
 
         //send a message to all other drone that i'm entering in the system
-        for (Drone d: drones) {
-            sendNewDroneAdded = new sendNewDroneThread(d.getIpAddress(),d.getPortNumber(),"new drone added",drone);
-            sendNewDroneAdded.start();
-        }
+        if (drones != null)
+            for (Drone d: drones) {
+                sendNewDroneAdded = new sendNewDroneThread(d.getIpAddress(),d.getPortNumber(),"new drone added",drone);
+                sendNewDroneAdded.start();
+            }
 
         //start a thread that wait that user type "quit" and exit
         quitThread = new DroneThreadQuit();
@@ -58,8 +60,6 @@ public class DroneMain {
 
         drone.sendGlobalStatistics();
 
-
-         */
 
     }
 }

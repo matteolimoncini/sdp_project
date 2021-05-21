@@ -23,8 +23,16 @@ public class ResponseAddModel {
         return drones;
     }
 
+    public void setDrones(List<Drone> drones) {
+        this.drones = drones;
+    }
+
     public Position getMyPosition() {
         return myPosition;
+    }
+
+    public void setMyPosition(Position myPosition) {
+        this.myPosition = myPosition;
     }
 
     @Override

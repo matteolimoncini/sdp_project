@@ -22,7 +22,7 @@ public class Drone {
     private String ipAddress;
     @Expose
     private Integer portNumber;
-    private Integer idMaster;
+    private Integer idMaster=-1;
     private MqttClient clientDrone;
 
 
@@ -44,8 +44,6 @@ public class Drone {
                tot_km_percorsi
                avg_pollution ?
                processingDelivery
-
-
      */
 
 
@@ -218,12 +216,6 @@ public class Drone {
 
         System.out.println("Output from Server .... \n");
         System.out.println(output);
-        for (Drone d: droneList) {
-            System.out.println(d.getIpAddress());
-            System.out.println(d.getIdDrone());
-            System.out.println(d.getPortNumber());
-
-        }
         this.drones = droneList;
     }
 
