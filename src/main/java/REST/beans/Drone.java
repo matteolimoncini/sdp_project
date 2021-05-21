@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
+@XmlRootElement
 public class Drone {
     @Expose
     private Integer idDrone;
@@ -52,6 +52,14 @@ public class Drone {
     public Drone() {
     }
 
+    public Drone(Integer id, String ipAddress, Integer portNumber) {
+        this.idDrone = id;
+        this.ipAddress = ipAddress;
+        this.portNumber = portNumber;
+        this.battery = 100;
+        this.processingDelivery = false;
+    }
+
     public List<Drone> getDrones() {
         return drones;
     }
@@ -64,24 +72,24 @@ public class Drone {
         this.idDrone = idDrone;
     }
 
-    public Drone(Integer id, String ipAddress, Integer portNumber) {
-        this.idDrone = id;
-        this.ipAddress = ipAddress;
-        this.portNumber = portNumber;
-        this.battery = 100;
-        this.processingDelivery = false;
-    }
-
-    public void setMyPosition(Position myPosition) {
-        this.myPosition = myPosition;
-    }
-
     public String getIpAddress() {
         return ipAddress;
     }
 
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
     public Integer getPortNumber() {
         return portNumber;
+    }
+
+    public void setPortNumber(Integer portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    public void setMyPosition(Position myPosition) {
+        this.myPosition = myPosition;
     }
 
     public boolean iAmMaster() {

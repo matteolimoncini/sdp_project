@@ -33,13 +33,21 @@ public class DroneService {
      If insert successfully return drone's list present in the city.
     */
     public Response addDrone(Drone droneToAdd) {
+        System.out.println(droneToAdd);
+
         int pos = DroneList.getInstance().checkDrone(droneToAdd.getIdDrone());
         boolean droneNotFound = pos == -1;
         Position myPosition = new Position();
         if (droneNotFound) {
             List<Drone> droneList = DroneList.getInstance().getDrones();
+            for (Drone d:
+                 droneList) {
+                System.out.println(d);
+            }
+
             DroneList.getInstance().add(droneToAdd);
             ResponseAddModel responseAddModel = new ResponseAddModel(droneList, myPosition);
+            System.out.println(responseAddModel);
             return Response.ok().entity(responseAddModel).build();
 
         } else
