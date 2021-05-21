@@ -31,6 +31,8 @@ public class Drone {
     private Position myPosition;
     private Timestamp lastDelivery;
     private double kmTotDelivery;
+    private String ipServerAdmin;
+    private Integer portServerAdmin;
 
     private GlobalStats globalStats;
 
@@ -50,10 +52,12 @@ public class Drone {
     public Drone() {
     }
 
-    public Drone(Integer id, String ipAddress, Integer portNumber) {
+    public Drone(Integer id, String ipAddress, Integer portNumber, String ipServerAdmin, Integer portServerAdmin) {
         this.idDrone = id;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.ipServerAdmin = ipServerAdmin;
+        this.portServerAdmin = portServerAdmin;
         this.battery = 100;
         this.processingDelivery = false;
     }
@@ -88,6 +92,14 @@ public class Drone {
 
     public void setMyPosition(Position myPosition) {
         this.myPosition = myPosition;
+    }
+
+    public String getIpServerAdmin() {
+        return ipServerAdmin;
+    }
+
+    public Integer getPortServerAdmin() {
+        return portServerAdmin;
     }
 
     public boolean iAmMaster() {
@@ -195,8 +207,9 @@ public class Drone {
         List<Drone> droneList;
 
         Client client = Client.create();
-
-        WebResource webResource = client.resource("http://localhost:1337/drone/add");
+        String url = "http://"+this.getIpServerAdmin()+":"+this.getPortServerAdmin();
+        System.out.println(url);
+        WebResource webResource = client.resource(url+"/drone/add");
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);

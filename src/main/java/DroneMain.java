@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(11,"localhost",11);
+        Drone drone = new Drone(11,"localhost",11,"localhost",1337);
         drone.addDrone();
 
         /*
