@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 @XmlRootElement
 public class Drone {
@@ -217,6 +218,7 @@ public class Drone {
         if (this.drones == null)
             this.drones = new ArrayList<>();
         this.drones.add(insertDrone);
+        this.drones.sort(Comparator.comparing(Drone::getIdDrone));
     }
 
     public void addDrone() {

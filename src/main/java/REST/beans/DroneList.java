@@ -2,6 +2,7 @@ package REST.beans;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @XmlRootElement
@@ -24,6 +25,7 @@ public class DroneList {
     }
     public synchronized void add(Drone droneToAdd) {
         drones.add(droneToAdd);
+        drones.sort(Comparator.comparing(Drone::getIdDrone));
     }
 
     public synchronized List<Drone> getDrones() {

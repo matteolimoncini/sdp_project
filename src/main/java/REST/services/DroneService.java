@@ -40,10 +40,10 @@ public class DroneService {
         Position myPosition = new Position();
         if (droneNotFound) {
             List<Drone> droneList = DroneList.getInstance().getDrones();
-            for (Drone d:
+            /*for (Drone d:
                  droneList) {
                 System.out.println(d);
-            }
+            }*/
 
             DroneList.getInstance().add(droneToAdd);
             ResponseAddModel responseAddModel = new ResponseAddModel(droneList, myPosition);
