@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class ServerGrpcThread extends Thread {
     private Drone drone;
+
     public ServerGrpcThread(Drone drone) {
         this.drone = drone;
     }
@@ -14,10 +15,11 @@ public class ServerGrpcThread extends Thread {
     public void run() {
         try {
             Server server = ServerBuilder
-                .forPort(this.drone.getPortNumber())
-                .addService(new NewDroneImpl(this.drone))
+                    .forPort(this.drone.getPortNumber())
+                    .addService(new NewDroneImpl(this.drone))
                     .addService(new PingDroneImpl(this.drone))
-                .build();
+                    .addService(new electionImpl(this.drone))
+                    .build();
 
             server.start();
             server.awaitTermination();

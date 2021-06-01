@@ -225,6 +225,14 @@ public class Drone {
         return idDrone;
     }
 
+    public synchronized Drone getNextInRing(){
+        for (Drone d:drones) {
+            if (d.getIdDrone()>this.getIdDrone()){
+                return d;
+            }
+        }
+        return drones.get(0);
+    }
     public synchronized void insertDroneInList(Drone insertDrone){
         if (this.drones == null)
             this.drones = new ArrayList<>();

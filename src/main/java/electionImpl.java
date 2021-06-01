@@ -12,6 +12,13 @@ public class electionImpl extends electionImplBase{
 
     @Override
     public void election(Election.message request, StreamObserver<Election.message> responseObserver) {
-        System.out.print("message received: "+request.getType()+" from: "+request.getIdDrone());
+        int idDroneInMessage = request.getIdDrone();
+        System.out.print("message received: "+request.getType()+" from: "+ idDroneInMessage);
+        if (drone.getPartecipant()){
+            Integer myId = drone.getIdDrone();
+            if(myId > idDroneInMessage){
+                //propaga messaggio
+            }
+        }
     }
 }
