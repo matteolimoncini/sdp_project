@@ -60,6 +60,7 @@ public class Drone {
         this.portServerAdmin = portServerAdmin;
         this.battery = 100;
         this.processingDelivery = false;
+        this.drones = new ArrayList<>();
     }
 
     public List<Drone> getDrones() {
@@ -92,6 +93,10 @@ public class Drone {
 
     public void setMyPosition(Position myPosition) {
         this.myPosition = myPosition;
+    }
+
+    public Position getMyPosition() {
+        return myPosition;
     }
 
     public String getIpServerAdmin() {
@@ -201,7 +206,9 @@ public class Drone {
         return idDrone;
     }
 
-
+    public void insertDroneInList(Drone insertDrone){
+        this.drones.add(insertDrone);
+    }
 
     public void addDrone() {
         List<Drone> droneList;

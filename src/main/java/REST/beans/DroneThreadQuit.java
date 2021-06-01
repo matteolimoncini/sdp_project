@@ -11,6 +11,6 @@ public class DroneThreadQuit extends Thread{
         do{
             input = in.nextLine();
         }while(!input.equals(quit));
-
+        //System.exit(0);
     }
 }

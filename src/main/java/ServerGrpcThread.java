@@ -1,20 +1,21 @@
+import REST.beans.Drone;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 
 public class ServerGrpcThread extends Thread {
-    private int portNumber;
-    public ServerGrpcThread(Integer portNumber) {
-        this.portNumber = portNumber;
+    private Drone drone;
+    public ServerGrpcThread(Drone drone) {
+        this.drone = drone;
     }
 
     @Override
     public void run() {
         try {
             Server server = ServerBuilder
-                .forPort(this.portNumber)
-                .addService(new NewDroneImpl())
+                .forPort(this.drone.getPortNumber())
+                .addService(new NewDroneImpl(this.drone))
                 .build();
 
             server.start();

@@ -8,13 +8,13 @@ import io.grpc.stub.StreamObserver;
 
 import static com.example.grpc.AddDrone.*;
 
-public class sendNewDroneThread extends Thread {
+public class sendNewDroneAddedThread extends Thread {
     private Drone newDrone;
     private String ipReceiverDrone;
     private int portReceiverDrone;
     private String message;
 
-    public sendNewDroneThread(String ipReceiverDrone, int portReceiverDrone, String message, Drone newDrone) {
+    public sendNewDroneAddedThread(String ipReceiverDrone, int portReceiverDrone, String message, Drone newDrone) {
         this.ipReceiverDrone = ipReceiverDrone;
         this.portReceiverDrone = portReceiverDrone;
         this.message = message;
@@ -32,6 +32,8 @@ public class sendNewDroneThread extends Thread {
                 .setIpAddress(this.newDrone.getIpAddress())
                 .setPortNumber(this.newDrone.getPortNumber())
                 .setMessage(this.message)
+                .setXPosition(this.newDrone.getMyPosition().getxCoordinate())
+                .setYPosition(this.newDrone.getMyPosition().getyCoordinate())
                 .build();
 
         stub.messageAddDrone(request, new StreamObserver<responseAddNewDrone>() {

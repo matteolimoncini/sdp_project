@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(11,"localhost",11,"localhost",1337);
+        Drone drone = new Drone(13, "localhost", 1112, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -23,18 +23,33 @@ public class DroneMain {
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         Thread serverThread;
-        List<Drone> drones= drone.getDrones();
+        Thread sendFindMaster;
+        List<Drone> drones = drone.getDrones();
 
         //start grpc server thread
-        serverThread = new ServerGrpcThread(drone.getPortNumber());
+        serverThread = new ServerGrpcThread(drone);
         serverThread.start();
 
         //send a message to all other drone that i'm entering in the system
         if (drones != null)
-            for (Drone d: drones) {
-                sendNewDroneAdded = new sendNewDroneThread(d.getIpAddress(),d.getPortNumber(),"new drone added",drone);
+            for (Drone droneReceiver : drones) {
+                sendNewDroneAdded = new sendNewDroneAddedThread(droneReceiver.getIpAddress(), droneReceiver.getPortNumber(), "new drone added", drone);
                 sendNewDroneAdded.start();
             }
+
+        if (drones != null) {
+            if (drones.size() == 0) {
+                //i am alone in the system, i'm master
+                //TODO became master
+                assert true;
+            } else {
+                //find the master
+                Drone firstDrone = drones.get(0);
+                sendFindMaster = new sendFindMasterThread(firstDrone.getIpAddress(),firstDrone.getPortNumber(),"who is master?",drone   );
+            }
+
+        }
+
 
         //start a thread that wait that user type "quit" and exit
         quitThread = new DroneThreadQuit();
@@ -46,7 +61,10 @@ public class DroneMain {
 
         manageOrderThread = new DroneManageOrderThread(drone);
 
-        while (quitThread.isAlive()){
+
+        while (quitThread.isAlive()) {
+
+
             //send global stats if is master and thread to send global stats is crashed
             if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster())
                 sendGlobalStatsThread.start();
@@ -54,9 +72,8 @@ public class DroneMain {
             //manage one order
 
 
-
         }
-
+        //manage exit from the system
 
         drone.sendGlobalStatistics();
 

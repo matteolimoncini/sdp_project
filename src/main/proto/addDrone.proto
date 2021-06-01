@@ -3,9 +3,11 @@ package com.example.grpc;
 
 message addNewDrone {
   string message = 1;
-  int64 idDrone = 2;
+  int32 idDrone = 2;
   string ipAddress = 3;
-  int64 portNumber = 4;
+  int32 portNumber = 4;
+  int32 xPosition = 5;
+  int32 yPosition = 6;
 }
 
 message responseAddNewDrone {
