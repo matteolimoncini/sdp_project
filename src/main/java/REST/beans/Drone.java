@@ -60,7 +60,6 @@ public class Drone {
         this.portServerAdmin = portServerAdmin;
         this.battery = 100;
         this.processingDelivery = false;
-        this.drones = new ArrayList<>();
     }
 
     public List<Drone> getDrones() {
@@ -105,6 +104,14 @@ public class Drone {
 
     public Integer getPortServerAdmin() {
         return portServerAdmin;
+    }
+
+    public Integer getIdMaster() {
+        return idMaster;
+    }
+
+    public void setIdMaster(Integer idMaster) {
+        this.idMaster = idMaster;
     }
 
     public boolean iAmMaster() {
@@ -207,6 +214,8 @@ public class Drone {
     }
 
     public void insertDroneInList(Drone insertDrone){
+        if (this.drones == null)
+            this.drones = new ArrayList<>();
         this.drones.add(insertDrone);
     }
 

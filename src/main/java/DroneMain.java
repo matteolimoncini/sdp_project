@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(13, "localhost", 1112, "localhost", 1337);
+        Drone drone = new Drone(18, "localhost", 1118, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -30,22 +30,17 @@ public class DroneMain {
         serverThread = new ServerGrpcThread(drone);
         serverThread.start();
 
-        //send a message to all other drone that i'm entering in the system
-        if (drones != null)
-            for (Drone droneReceiver : drones) {
-                sendNewDroneAdded = new sendNewDroneAddedThread(droneReceiver.getIpAddress(), droneReceiver.getPortNumber(), "new drone added", drone);
-                sendNewDroneAdded.start();
-            }
-
         if (drones != null) {
             if (drones.size() == 0) {
                 //i am alone in the system, i'm master
-                //TODO became master
-                assert true;
+                drone.setIdMaster(drone.getIdDrone());
             } else {
                 //find the master
-                Drone firstDrone = drones.get(0);
-                sendFindMaster = new sendFindMasterThread(firstDrone.getIpAddress(),firstDrone.getPortNumber(),"who is master?",drone   );
+                //send a message to all other drone that i'm entering in the system
+                for (Drone droneReceiver : drones) {
+                    sendNewDroneAdded = new sendNewDroneAddedThread(droneReceiver.getIpAddress(), droneReceiver.getPortNumber(), "new drone added", drone);
+                    sendNewDroneAdded.start();
+                }
             }
 
         }
