@@ -63,7 +63,7 @@ public class Drone {
         this.processingDelivery = false;
     }
 
-    public List<Drone> getDrones() {
+    public synchronized List<Drone> getDrones() {
         return drones;
     }
 
@@ -214,11 +214,14 @@ public class Drone {
         return idDrone;
     }
 
-    public void insertDroneInList(Drone insertDrone){
+    public synchronized void insertDroneInList(Drone insertDrone){
         if (this.drones == null)
             this.drones = new ArrayList<>();
         this.drones.add(insertDrone);
         this.drones.sort(Comparator.comparing(Drone::getIdDrone));
+    }
+    public synchronized void removeDroneFromList(Drone removeDrone){
+        this.drones.remove(removeDrone);
     }
 
     public void addDrone() {

@@ -32,21 +32,26 @@ public class PingThread extends Thread {
                     String targetAddress = ipReceiverDrone + ":" + portReceiverDrone;
                     System.out.println("target address:" + targetAddress);
                     final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+                    if (channel.isShutdown()) {
+                        System.out.println("channel closed");
+                    }
                     pingServiceGrpc.pingServiceStub stub = pingServiceGrpc.newStub(channel);
                     Ping.ping request = Ping.ping
                             .newBuilder()
-                            .setMessage("are u alive? send by "+this.drone.getIdDrone())
+                            .setMessage("are u alive? send by " + this.drone.getIdDrone())
                             .build();
 
                     stub.pingDrones(request, new StreamObserver<Ping.responsePing>() {
                         @Override
                         public void onNext(Ping.responsePing value) {
-                            System.out.println("PING:"+value);
+                            System.out.println("PING:" + value);
                         }
 
                         @Override
                         public void onError(Throwable t) {
-
+                            System.out.println("PING FAILED!");
+                            drone.removeDroneFromList(d);
+                            System.out.println("DRONE REMOVED");
                         }
 
                         @Override
@@ -55,7 +60,6 @@ public class PingThread extends Thread {
                         }
                     });
                 }
-
 
             }
         } catch (InterruptedException e) {
