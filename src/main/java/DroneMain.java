@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(41, "localhost", 1141, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 1241, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -30,6 +30,10 @@ public class DroneMain {
         serverThread = new ServerGrpcThread(drone);
         serverThread.start();
 
+        //start a thread that wait that user type "quit" and exit
+        quitThread = new DroneThreadQuit();
+        quitThread.start();
+
         if (drones != null) {
             if (drones.size() == 0) {
                 //i am alone in the system, i'm master
@@ -46,9 +50,6 @@ public class DroneMain {
         }
 
 
-        //start a thread that wait that user type "quit" and exit
-        quitThread = new DroneThreadQuit();
-        quitThread.start();
 
         //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
@@ -68,10 +69,23 @@ public class DroneMain {
 
 
         }
-        //manage exit from the system
-
+        //TODO ?
         drone.sendGlobalStatistics();
 
+
+        //manage exit from the system
+
+        //manage current order
+
+        //if is master disconnect from broker mqtt
+
+        //if is master manage pending orders
+
+        //close communication channels with others drones
+
+        //if is master send global stats to server
+
+        //ask to exit to server
 
     }
 }
