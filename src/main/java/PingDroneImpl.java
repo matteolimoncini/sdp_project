@@ -1,11 +1,12 @@
 import REST.beans.Drone;
 
+import com.example.grpc.pingServiceGrpc.pingServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import com.example.grpc.Ping;
 import com.example.grpc.Ping.responsePing;
 import com.example.grpc.pingServiceGrpc;
 
-public class PingDroneImpl extends  pingServiceGrpc.pingServiceImplBase{
+public class PingDroneImpl extends pingServiceImplBase{
     private Drone myDrone;
     public PingDroneImpl(Drone myDrone) {
         this.myDrone = myDrone;

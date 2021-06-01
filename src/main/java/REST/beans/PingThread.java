@@ -51,6 +51,11 @@ public class PingThread extends Thread {
                         public void onError(Throwable t) {
                             System.out.println("PING FAILED!");
                             drone.removeDroneFromList(d);
+                            if (drone.getIdMaster().equals(d.getIdDrone())){
+                                //start election
+                                Thread electionThread = new ElectionThread(drone);
+                                electionThread.start();
+                            }
                             System.out.println("DRONE REMOVED");
                         }
 

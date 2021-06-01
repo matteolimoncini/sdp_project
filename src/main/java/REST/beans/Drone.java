@@ -36,6 +36,7 @@ public class Drone {
     private Integer portServerAdmin;
 
     private GlobalStats globalStats;
+    private boolean partecipant;
 
     private List<Drone> drones;
     //String clientId;
@@ -51,6 +52,7 @@ public class Drone {
 
 
     public Drone() {
+        this.partecipant = false;
     }
 
     public Drone(Integer id, String ipAddress, Integer portNumber, String ipServerAdmin, Integer portServerAdmin) {
@@ -61,6 +63,7 @@ public class Drone {
         this.portServerAdmin = portServerAdmin;
         this.battery = 100;
         this.processingDelivery = false;
+        this.partecipant = false;
     }
 
     public synchronized List<Drone> getDrones() {
@@ -113,6 +116,14 @@ public class Drone {
 
     public void setIdMaster(Integer idMaster) {
         this.idMaster = idMaster;
+    }
+
+    public boolean getPartecipant() {
+        return partecipant;
+    }
+
+    public void setPartecipant(boolean partecipant) {
+        this.partecipant = partecipant;
     }
 
     public boolean iAmMaster() {

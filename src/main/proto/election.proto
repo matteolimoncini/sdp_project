@@ -1,0 +1,12 @@
+syntax='proto3';
+package com.example.grpc;
+
+message message {
+  string type = 1;
+  int32 idDrone = 2;
+}
+
+
+service election {
+  rpc Election(message) returns (message);
+}
