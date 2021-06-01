@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 1241, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 1142, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -57,6 +57,7 @@ public class DroneMain {
 
         manageOrderThread = new DroneManageOrderThread(drone);
 
+        System.out.println("before while");
 
         while (quitThread.isAlive()) {
 
@@ -69,9 +70,9 @@ public class DroneMain {
 
 
         }
+        System.out.println("fuori while");
         //TODO ?
-        drone.sendGlobalStatistics();
-
+        //drone.sendGlobalStatistics();
 
         //manage exit from the system
 
@@ -82,10 +83,12 @@ public class DroneMain {
         //if is master manage pending orders
 
         //close communication channels with others drones
-
+        serverThread.stop();
         //if is master send global stats to server
 
         //ask to exit to server
-
+        drone.removeDrone();
+        //close all thread
+        System.exit(0);
     }
 }
