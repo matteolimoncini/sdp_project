@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 1142, "localhost", 1337);
+        Drone drone = new Drone(5, "localhost", 1105, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -23,7 +23,7 @@ public class DroneMain {
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         Thread serverThread;
-        Thread sendFindMaster;
+        Thread pingThread;
         List<Drone> drones = drone.getDrones();
 
         //start grpc server thread
@@ -33,6 +33,9 @@ public class DroneMain {
         //start a thread that wait that user type "quit" and exit
         quitThread = new DroneThreadQuit();
         quitThread.start();
+
+        pingThread = new PingThread(drone);
+        pingThread.start();
 
         if (drones != null) {
             if (drones.size() == 0) {
@@ -53,9 +56,10 @@ public class DroneMain {
 
         //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
-        sendGlobalStatsThread.start();
+        //sendGlobalStatsThread.start();
 
-        manageOrderThread = new DroneManageOrderThread(drone);
+
+        //manageOrderThread = new DroneManageOrderThread(drone);
 
         System.out.println("before while");
 

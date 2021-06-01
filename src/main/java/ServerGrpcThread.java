@@ -16,6 +16,7 @@ public class ServerGrpcThread extends Thread {
             Server server = ServerBuilder
                 .forPort(this.drone.getPortNumber())
                 .addService(new NewDroneImpl(this.drone))
+                    .addService(new PingDroneImpl(this.drone))
                 .build();
 
             server.start();

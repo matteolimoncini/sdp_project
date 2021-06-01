@@ -1,0 +1,15 @@
+syntax='proto3';
+package com.example.grpc;
+
+message ping {
+  string message = 1;
+}
+
+message responsePing {
+  string response = 1;
+}
+
+
+service pingService {
+  rpc pingDrones(ping) returns (responsePing);
+}

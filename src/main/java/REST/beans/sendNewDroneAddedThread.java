@@ -51,7 +51,7 @@ public class sendNewDroneAddedThread extends Thread {
 
             @Override
             public void onCompleted() {
-
+                channel.shutdown();
             }
         });
     }
