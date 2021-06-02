@@ -18,7 +18,7 @@ import java.util.List;
 @XmlRootElement
 public class Drone {
     @Expose
-    private Integer idDrone;
+    private int idDrone;
     @Expose
     private String ipAddress;
     @Expose
@@ -70,11 +70,11 @@ public class Drone {
         return drones;
     }
 
-    public Integer getIdDrone() {
+    public int getIdDrone() {
         return idDrone;
     }
 
-    public void setIdDrone(Integer idDrone) {
+    public void setIdDrone(int idDrone) {
         this.idDrone = idDrone;
     }
 
