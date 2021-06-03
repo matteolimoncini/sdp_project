@@ -14,7 +14,7 @@ public class DroneList {
     private static DroneList instance;
 
     private DroneList() {
-        drones = new ArrayList<Drone>();
+        drones = new ArrayList<>();
     }
 
     //singleton per ritornare l'istanza di droneList
@@ -41,20 +41,20 @@ public class DroneList {
         return null;
     }*/
 
-    public synchronized void deleteDrone(Integer idDroneToRemove) {
+    public synchronized void deleteDrone(int idDroneToRemove) {
         for (int i = 0; i < drones.size(); i++) {
-            if (drones.get(i).getIdDrone().equals(idDroneToRemove))
+            if (drones.get(i).getIdDrone() == idDroneToRemove)
                 drones.remove(i);
         }
     }
 
-    public synchronized int checkDrone(Integer idDroneToCheck) {
+    public synchronized int checkDrone(int idDroneToCheck) {
         Drone drone;
         List<Drone> copy = getDrones();
         for (int i = 0; i < copy.size(); i++) {
             drone = copy.get(i);
-            Integer idDrone = drone.getIdDrone();
-            if (idDrone.equals(idDroneToCheck))
+            int idDrone = drone.getIdDrone();
+            if (idDrone == idDroneToCheck)
                 return i;
         }
         return -1;

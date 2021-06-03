@@ -52,7 +52,11 @@ public class Drone {
 
 
     public Drone() {
+        this.battery = 100;
+        this.processingDelivery = false;
         this.partecipant = false;
+        this.drones = new ArrayList<>();
+
     }
 
     public Drone(Integer id, String ipAddress, Integer portNumber, String ipServerAdmin, Integer portServerAdmin) {
@@ -64,6 +68,7 @@ public class Drone {
         this.battery = 100;
         this.processingDelivery = false;
         this.partecipant = false;
+        this.drones = new ArrayList<>();
     }
 
     public synchronized List<Drone> getDrones() {
@@ -226,13 +231,20 @@ public class Drone {
     }
 
     public synchronized Drone getNextInRing(){
-        for (Drone d:drones) {
+        assert this.drones != null;
+        for (Drone d:this.drones) {
+            System.out.println("HERE");
             if (d.getIdDrone()>this.getIdDrone()){
                 return d;
             }
         }
+        assert drones.size()>0;
+        System.out.println(drones.size());
+        System.out.println(this.idDrone);
         return drones.get(0);
     }
+
+
     public synchronized void insertDroneInList(Drone insertDrone){
         if (this.drones == null)
             this.drones = new ArrayList<>();
@@ -244,6 +256,7 @@ public class Drone {
     }
 
     public void addDrone() {
+        System.out.println("start addDrone");
         List<Drone> droneList;
 
         Client client = Client.create();
@@ -253,6 +266,7 @@ public class Drone {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class,input);
+        System.out.println("middle addDrone");
 
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "

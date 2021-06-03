@@ -27,6 +27,8 @@ public class PingThread extends Thread {
                 if (drones == null)
                     continue;
                 for (Drone d : drones) {
+                    System.out.println("inside ping thread loop for");
+                    System.out.println("id:"+d.getIdDrone());
                     String ipReceiverDrone = d.getIpAddress();
                     int portReceiverDrone = d.getPortNumber();
                     String targetAddress = ipReceiverDrone + ":" + portReceiverDrone;
@@ -53,8 +55,9 @@ public class PingThread extends Thread {
                             drone.removeDroneFromList(d);
                             if (drone.getIdMaster().equals(d.getIdDrone())){
                                 //start election
-                                Thread electionThread = new ElectionThread(drone);
-                                electionThread.start();
+                                System.out.println("Election starting...");
+                                //Thread electionThread = new ElectionThread(drone);
+                                //electionThread.start();
                             }
                             System.out.println("DRONE REMOVED");
                         }
@@ -65,6 +68,7 @@ public class PingThread extends Thread {
                         }
                     });
                 }
+
 
             }
         } catch (InterruptedException e) {

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(4, "localhost", 1104, "localhost", 1337);
+        Drone drone = new Drone(8, "localhost", 1108, "localhost", 1337);
         drone.addDrone();
 
         /*
@@ -34,8 +34,7 @@ public class DroneMain {
         quitThread = new DroneThreadQuit();
         quitThread.start();
 
-        pingThread = new PingThread(drone);
-        pingThread.start();
+
 
         if (drones != null) {
             if (drones.size() == 0) {
@@ -51,6 +50,9 @@ public class DroneMain {
             }
 
         }
+
+        pingThread = new PingThread(drone);
+        pingThread.start();
 
 
 

@@ -2,7 +2,9 @@ package REST.beans;
 
 import com.example.grpc.Election;
 
+import com.example.grpc.Election.message;
 import com.example.grpc.electionGrpc;
+import com.example.grpc.electionGrpc.electionStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -16,21 +18,25 @@ public class ElectionThread extends Thread {
 
     @Override
     public void run() {
+
         //marca come partecipante
         drone.setPartecipant(true);
 
         //invia al successivo un msg ELECTION,<id>
-        String targetAddress = drone.getNextInRing().getIpAddress() + ":" + drone.getNextInRing().getPortNumber();
+        System.out.println("ID DRONE: "+drone.getIdDrone());
+        System.out.println("drones:"+drone.getDrones());
+        Drone nextDroneInRing = drone.getNextInRing();
+        String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
-        electionGrpc.electionStub stub = electionGrpc.newStub(channel);
-        Election.message request = Election.message
+        electionStub stub = electionGrpc.newStub(channel);
+        message request = message
                 .newBuilder()
                 .setType("ELECTION")
                 .setIdDrone(drone.getIdDrone())
                 .build();
-        stub.election(request, new StreamObserver<Election.message>() {
+        stub.election(request, new StreamObserver<message>() {
             @Override
-            public void onNext(Election.message value) {
+            public void onNext(message value) {
                 System.out.println("type drone" + value.getType() + "id drone:" + value.getIdDrone());
 
             }
@@ -45,6 +51,6 @@ public class ElectionThread extends Thread {
                 channel.shutdown();
             }
         });
-
     }
+
 }

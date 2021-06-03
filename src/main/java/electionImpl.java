@@ -1,36 +1,47 @@
 import REST.beans.Drone;
 import com.example.grpc.Election;
+import com.example.grpc.Election.message;
 import com.example.grpc.electionGrpc;
 import com.example.grpc.electionGrpc.electionImplBase;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-public class electionImpl extends electionImplBase{
+public class electionImpl extends electionImplBase {
     private Drone drone;
+
     public electionImpl(Drone drone) {
         this.drone = drone;
     }
 
     @Override
-    public void election(Election.message request, StreamObserver<Election.message> responseObserver) {
+    public void election(message request, StreamObserver<message> responseObserver) {
 
         int idDroneInMessage = request.getIdDrone();
         String typeMessage = request.getType();
         int myId = drone.getIdDrone();
 
-        System.out.print("message received: "+ typeMessage +" from: "+ idDroneInMessage);
+        Drone nextDroneInRing = drone.getNextInRing();
+        String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
+        final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+        electionGrpc.electionStub stub = electionGrpc.newStub(channel);
+        message propagatedMessage = null;
+
+        System.out.print("message received: " + typeMessage + " from: " + idDroneInMessage);
 
         if (typeMessage.equals("ELECTION")) {
 
             if (drone.getPartecipant()) {   //if drone is participant
                 if (myId > idDroneInMessage) {
                     //propagate message as is
+                    propagatedMessage= request;
 
                 } else {
-                    if(myId < idDroneInMessage){
+                    if (myId < idDroneInMessage) {
                         //not propagate message
-                    }
-                    else{
-                        //myId = idDroneInMessage
+                        propagatedMessage = null;
+                    } else {
+                        //in this case myId = idDroneInMessage
 
                         //i am elected as master
                         drone.setIdMaster(myId);
@@ -39,6 +50,10 @@ public class electionImpl extends electionImplBase{
                         drone.setPartecipant(false);
 
                         //send ELECTED message
+                        propagatedMessage= message.newBuilder()
+                                .setType("ELECTED")
+                                .setIdDrone(myId)
+                                .build();
                     }
                 }
             } else {                //if drone is not participant
@@ -46,19 +61,22 @@ public class electionImpl extends electionImplBase{
                 //set as participant
                 drone.setPartecipant(true);
 
-                if (myId>idDroneInMessage){
+                if (myId > idDroneInMessage) {
                     //change idDroneInMessage with myId and send message
-                }
-                else{
-                    if(myId<idDroneInMessage){
+                    propagatedMessage= message.newBuilder()
+                            .setType("ELECTION")
+                            .setIdDrone(myId)
+                            .build();
+                } else {
+                    if (myId < idDroneInMessage) {
                         //propagate message as is
+                        propagatedMessage= request;
                     }
                 }
 
             }
-        }
-        else{ //type message not ELECTION
-            if (typeMessage.equals("ELECTED")){
+        } else { //type message not ELECTION
+            if (typeMessage.equals("ELECTED")) {
 
                 //set as non participant
                 drone.setPartecipant(false);
@@ -66,15 +84,36 @@ public class electionImpl extends electionImplBase{
                 //save id master
                 drone.setIdMaster(idDroneInMessage);
 
-                if (myId != idDroneInMessage){
+                if (myId != idDroneInMessage) {
                     //propagate message as is
+                    propagatedMessage= request;
 
                 }
-            }
-            else{ //type message not ELECTION and not ELECTED
+            } else { //type message not ELECTION and not ELECTED
                 //type error
                 System.err.println("message type error");
             }
+        }
+        if(propagatedMessage!=null) {
+            stub.election(propagatedMessage, new StreamObserver<message>() {
+                @Override
+                public void onNext(message value) {
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    channel.shutdown();
+                }
+            });
+        }
+        else {
+            System.out.println("message not sent");
         }
     }
 }
