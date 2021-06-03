@@ -1,8 +1,11 @@
+package DroneThreads;
+
+import GrpcImpl.NewDroneImpl;
+import GrpcImpl.PingDroneImpl;
+import GrpcImpl.electionImpl;
 import REST.beans.Drone;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
-import java.io.IOException;
 
 public class ServerGrpcThread extends Thread {
     private Drone drone;

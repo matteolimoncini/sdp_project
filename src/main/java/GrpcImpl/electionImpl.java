@@ -1,3 +1,5 @@
+package GrpcImpl;
+
 import REST.beans.Drone;
 import com.example.grpc.Election;
 import com.example.grpc.Election.message;
@@ -27,7 +29,7 @@ public class electionImpl extends electionImplBase {
         electionGrpc.electionStub stub = electionGrpc.newStub(channel);
         message propagatedMessage = null;
 
-        System.out.println("message received: " + typeMessage + " from: " + idDroneInMessage);
+        System.out.println("message received: " + typeMessage + " whit id inside4: " + idDroneInMessage);
 
         if (typeMessage.equals("ELECTION")) {
 

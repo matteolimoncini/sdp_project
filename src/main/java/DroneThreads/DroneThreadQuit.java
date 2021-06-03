@@ -1,4 +1,4 @@
-package REST.beans;
+package DroneThreads;
 
 import java.util.Scanner;
 

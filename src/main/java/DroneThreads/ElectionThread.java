@@ -1,5 +1,6 @@
-package REST.beans;
+package DroneThreads;
 
+import REST.beans.Drone;
 import com.example.grpc.Election;
 
 import com.example.grpc.Election.message;

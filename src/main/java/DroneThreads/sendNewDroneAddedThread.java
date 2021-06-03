@@ -1,5 +1,6 @@
-package REST.beans;
+package DroneThreads;
 
+import REST.beans.Drone;
 import com.example.grpc.newDroneGrpc;
 import com.example.grpc.newDroneGrpc.newDroneStub;
 import io.grpc.ManagedChannel;

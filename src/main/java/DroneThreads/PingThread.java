@@ -1,8 +1,8 @@
-package REST.beans;
+package DroneThreads;
 
-import com.example.grpc.AddDrone;
+import DroneThreads.ElectionThread;
+import REST.beans.Drone;
 import com.example.grpc.Ping;
-import com.example.grpc.newDroneGrpc;
 import com.example.grpc.pingServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;

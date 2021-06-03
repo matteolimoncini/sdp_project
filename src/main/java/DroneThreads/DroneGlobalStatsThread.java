@@ -1,4 +1,6 @@
-package REST.beans;
+package DroneThreads;
+
+import REST.beans.Drone;
 
 public class DroneGlobalStatsThread extends Thread {
     private Drone drone;
