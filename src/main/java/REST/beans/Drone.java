@@ -237,10 +237,10 @@ public class Drone {
                 return d;
             }
         }
-        if(this.drones.size()>1){
+        System.out.println("size:"+drones.size());
+        if(this.drones.size()>=1){
             return this.drones.get(0);
         };
-        System.out.println("size:"+drones.size());
         System.out.println(this.idDrone);
         return null;
     }
