@@ -9,6 +9,8 @@ public class DroneGlobalStatsThread extends Thread {
 
     @Override
     public void run() {
+        super.run();
+        /*
         try {
             while (true) {
                 if (!drone.iAmMaster())
@@ -19,5 +21,7 @@ public class DroneGlobalStatsThread extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+         */
     }
 }

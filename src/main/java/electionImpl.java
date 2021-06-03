@@ -19,7 +19,7 @@ public class electionImpl extends electionImplBase {
 
         int idDroneInMessage = request.getIdDrone();
         String typeMessage = request.getType();
-        int myId = drone.getIdDrone();
+        Integer myId = drone.getIdDrone();
 
         Drone nextDroneInRing = drone.getNextInRing();
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
@@ -27,7 +27,7 @@ public class electionImpl extends electionImplBase {
         electionGrpc.electionStub stub = electionGrpc.newStub(channel);
         message propagatedMessage = null;
 
-        System.out.print("message received: " + typeMessage + " from: " + idDroneInMessage);
+        System.out.println("message received: " + typeMessage + " from: " + idDroneInMessage);
 
         if (typeMessage.equals("ELECTION")) {
 

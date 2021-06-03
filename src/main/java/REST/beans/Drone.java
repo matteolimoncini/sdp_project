@@ -15,10 +15,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-@XmlRootElement
 public class Drone {
     @Expose
-    private int idDrone;
+    private Integer idDrone;
     @Expose
     private String ipAddress;
     @Expose
@@ -75,11 +74,11 @@ public class Drone {
         return drones;
     }
 
-    public int getIdDrone() {
+    public Integer getIdDrone() {
         return idDrone;
     }
 
-    public void setIdDrone(int idDrone) {
+    public void setIdDrone(Integer idDrone) {
         this.idDrone = idDrone;
     }
 
@@ -211,7 +210,7 @@ public class Drone {
         System.out.println(clientId + " Subscribed to topics : " + topic);
     }
 
-    private int chooseDeliver(Order order) {
+    private Integer chooseDeliver(Order order) {
         int idDrone=-1;
         if (!iAmMaster()) {
             System.err.println("only master can manage orders");
@@ -238,10 +237,12 @@ public class Drone {
                 return d;
             }
         }
-        assert drones.size()>0;
-        System.out.println(drones.size());
+        if(this.drones.size()>1){
+            return this.drones.get(0);
+        };
+        System.out.println("size:"+drones.size());
         System.out.println(this.idDrone);
-        return drones.get(0);
+        return null;
     }
 
 

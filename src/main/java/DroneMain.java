@@ -4,7 +4,8 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(8, "localhost", 1108, "localhost", 1337);
+        Drone drone = new Drone(4, "localhost", 1104, "localhost", 1337);
+        System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
         /*
@@ -40,6 +41,7 @@ public class DroneMain {
             if (drones.size() == 0) {
                 //i am alone in the system, i'm master
                 drone.setIdMaster(drone.getIdDrone());
+                System.out.println("i am master");
             } else {
                 //find the master
                 //send a message to all other drone that i'm entering in the system
@@ -49,6 +51,9 @@ public class DroneMain {
                 }
             }
 
+        }else{
+            drone.setIdMaster(drone.getIdDrone());
+            System.out.println("i am master");
         }
 
         pingThread = new PingThread(drone);
@@ -69,8 +74,10 @@ public class DroneMain {
 
 
             //send global stats if is master and thread to send global stats is crashed
-            if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster())
-                sendGlobalStatsThread.start();
+            if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster()){
+                assert true;
+                //sendGlobalStatsThread.start();
+            }
 
             //manage one order
 
