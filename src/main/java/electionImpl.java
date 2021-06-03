@@ -32,12 +32,12 @@ public class electionImpl extends electionImplBase {
         if (typeMessage.equals("ELECTION")) {
 
             if (drone.getPartecipant()) {   //if drone is participant
-                if (myId > idDroneInMessage) {
+                if (myId < idDroneInMessage) {
                     //propagate message as is
                     propagatedMessage= request;
 
                 } else {
-                    if (myId < idDroneInMessage) {
+                    if (myId > idDroneInMessage) {
                         //not propagate message
                         propagatedMessage = null;
                     } else {

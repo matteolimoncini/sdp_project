@@ -40,7 +40,6 @@ public class ElectionThread extends Thread {
         stub.election(request, new StreamObserver<message>() {
             @Override
             public void onNext(message value) {
-                System.out.println("type drone" + value.getType() + "id drone:" + value.getIdDrone());
 
             }
 
