@@ -8,9 +8,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.eclipse.paho.client.mqttv3.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -141,6 +138,14 @@ public class Drone {
         this.countPosition = countPosition;
     }
 
+    public Integer getBattery() {
+        return battery;
+    }
+
+    public void setBattery(Integer battery) {
+        this.battery = battery;
+    }
+
     public synchronized List<Order> getPendingOrders() {
         return this.pendingOrders;
     }
@@ -160,11 +165,15 @@ public class Drone {
             return null;
     }
 
+    public synchronized boolean areTherePendingOrders(){
+        return this.pendingOrders!= null && this.pendingOrders.size()>0;
+    }
+
     public boolean iAmMaster() {
         return idMaster.equals(idDrone);
     }
 
-    private boolean iAmProcessingDelivery() {
+    private boolean isProcessingDelivery() {
         return processingDelivery;
     }
 
@@ -190,7 +199,7 @@ public class Drone {
         System.out.println("Subscriber already disconnected");
     }
 
-    public void subscribe() throws MqttException {
+    public void subscribeAndPutInQueue() throws MqttException {
         if (!iAmMaster()) {
             System.err.println("only master can subscribe");
             return;
@@ -223,7 +232,8 @@ public class Drone {
                         "\n\tQoS:     " + message.getQos() + "\n");
                 Gson gson = new Gson();
                 Order order = gson.fromJson(receivedMessage,Order.class);
-                Drone.this.chooseDeliver(order);
+
+                Drone.this.addPendingOrder(order);
             }
 
             public void connectionLost(Throwable cause) {
@@ -240,23 +250,62 @@ public class Drone {
         System.out.println(clientId + " Subscribed to topics : " + topic);
     }
 
-    private Integer chooseDeliver(Order order) {
+    public Drone chooseDeliver(Order order) {
         int idDrone=-1;
         if (!iAmMaster()) {
             System.err.println("only master can manage orders");
-            return idDrone;
+            return null;
             //throw exception?
         }
 
         //extract drone list
-        //List<Drone> drones =
-        //not consider drone already at work
 
-        //choose the drone nearest with greater battery
+        List<Drone> dronesCopy = this.getDrones();
+
+        //not consider drone already at work
+        dronesCopy.removeIf(Drone::isProcessingDelivery);
+
+        //choose the drone nearest
+        int xPickUpPoint=order.getPickUpPoint().getxCoordinate();
+        int yPickUpPoint=order.getPickUpPoint().getyCoordinate();
+        int xDrone;
+        int yDrone;
+        double distance;
+        double minDistance = Double.MAX_VALUE;
+
+        //find min distance
+        for (Drone d:dronesCopy) {
+            xDrone = d.getMyPosition().getxCoordinate();
+            yDrone = d.getMyPosition().getyCoordinate();
+            distance = distance(xDrone, yDrone,xPickUpPoint,yPickUpPoint);
+            if (distance<minDistance) minDistance = distance;
+        }
+
+        //remove drone with distance > mindistance
+        for (Drone d:dronesCopy) {
+            xDrone = d.getMyPosition().getxCoordinate();
+            yDrone = d.getMyPosition().getyCoordinate();
+            distance = distance(xDrone, yDrone,xPickUpPoint,yPickUpPoint);
+            if (distance> minDistance) dronesCopy.remove(d);
+        }
+
+        //select drone with greatest battery
+        dronesCopy.sort(Comparator.comparing(Drone::getBattery));
+        Integer maxBattery = dronesCopy.get(0).getBattery();
+        dronesCopy.removeIf(d -> !d.getBattery().equals(maxBattery));
 
         //select drone with id greater
+        dronesCopy.sort(Comparator.comparing(Drone::getIdDrone));
 
-        return idDrone;
+        return dronesCopy.get(0);
+    }
+
+    public void manageOrder(Order order){
+        return;
+    }
+
+    private double distance(int xOne, int yOne, int xTwo, int yTwo){
+        return Math.sqrt(Math.pow((xTwo-xOne),2)+Math.pow((yTwo-yOne),2));
     }
 
     public synchronized Drone getNextInRing(){
@@ -274,7 +323,6 @@ public class Drone {
         System.out.println(this.idDrone);
         return null;
     }
-
 
     public synchronized void insertDroneInList(Drone insertDrone){
         if (this.drones == null)
@@ -375,6 +423,10 @@ public class Drone {
 
     }
 
+    public void addCountPosition() {
+        this.countPosition++;
+    }
+
     @Override
     public String toString() {
         return "Drone{" +
@@ -382,9 +434,5 @@ public class Drone {
                 ", ipAddress='" + this.getIpAddress() + '\'' +
                 ", portNumber=" + this.getPortNumber() +
                 '}';
-    }
-
-    public void addCountPosition() {
-        this.countPosition++;
     }
 }

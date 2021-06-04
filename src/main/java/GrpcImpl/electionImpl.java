@@ -99,6 +99,7 @@ public class electionImpl extends electionImplBase {
 
                     //send position to master
                     Thread sendPosition = new sendPositionDroneThread(drone);
+                    sendPosition.start();
 
                 }
             } else { //type message not ELECTION and not ELECTED

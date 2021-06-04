@@ -1,6 +1,7 @@
 package DroneThreads;
 
 import REST.beans.Drone;
+import REST.beans.Order;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class DroneManageOrderThread extends Thread {
@@ -12,7 +13,16 @@ public class DroneManageOrderThread extends Thread {
 
     public DroneManageOrderThread(Drone drone) {
         try {
-            this.drone.subscribe();
+            this.drone.subscribeAndPutInQueue();
+
+            Order firstPendingOrder;
+            while(true){
+                if(this.drone.areTherePendingOrders()){
+                    firstPendingOrder = this.drone.getFirstPendingOrder();
+                    Drone droneChoosen = this.drone.chooseDeliver(firstPendingOrder);
+                    droneChoosen.manageOrder(firstPendingOrder);
+                }
+            }
         } catch (MqttException e) {
             e.printStackTrace();
         }

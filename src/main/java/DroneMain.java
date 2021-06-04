@@ -74,7 +74,7 @@ public class DroneMain {
         System.out.println("before while");
 
         if(drone.iAmMaster()) {
-            System.out.println("waiting that all drone sent their position");
+            System.out.println("waiting that all drone sent their position...");
             while (drone.iAmMaster() && (drone.getCountPosition() < drone.getDrones().size())) {
                 assert true;
             }
