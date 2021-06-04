@@ -38,6 +38,8 @@ public class Drone {
     private boolean partecipant;
 
     private List<Drone> drones;
+    private List<Order> pendingOrders;
+    private int countPosition=0;
     //String clientId;
 
     /*
@@ -55,7 +57,7 @@ public class Drone {
         this.processingDelivery = false;
         this.partecipant = false;
         this.drones = new ArrayList<>();
-
+        this.pendingOrders = new ArrayList<>();
     }
 
     public Drone(Integer id, String ipAddress, Integer portNumber, String ipServerAdmin, Integer portServerAdmin) {
@@ -68,6 +70,7 @@ public class Drone {
         this.processingDelivery = false;
         this.partecipant = false;
         this.drones = new ArrayList<>();
+        this.pendingOrders = new ArrayList<>();
     }
 
     public synchronized List<Drone> getDrones() {
@@ -128,6 +131,33 @@ public class Drone {
 
     public void setPartecipant(boolean partecipant) {
         this.partecipant = partecipant;
+    }
+
+    public int getCountPosition() {
+        return this.countPosition;
+    }
+
+    public void setCountPosition(int countPosition) {
+        this.countPosition = countPosition;
+    }
+
+    public synchronized List<Order> getPendingOrders() {
+        return this.pendingOrders;
+    }
+
+    public synchronized void setPendingOrders(List<Order> pendingOrders) {
+        this.pendingOrders = pendingOrders;
+    }
+
+    public synchronized void addPendingOrder(Order order){
+        this.pendingOrders.add(order);
+    }
+
+    public synchronized Order getFirstPendingOrder(){
+        if (this.pendingOrders!= null && this.pendingOrders.size()>0)
+            return this.pendingOrders.get(0);
+        else
+            return null;
     }
 
     public boolean iAmMaster() {
@@ -240,7 +270,7 @@ public class Drone {
         System.out.println("size:"+drones.size());
         if(this.drones.size()>=1){
             return this.drones.get(0);
-        };
+        }
         System.out.println(this.idDrone);
         return null;
     }
@@ -352,5 +382,9 @@ public class Drone {
                 ", ipAddress='" + this.getIpAddress() + '\'' +
                 ", portNumber=" + this.getPortNumber() +
                 '}';
+    }
+
+    public void addCountPosition() {
+        this.countPosition++;
     }
 }

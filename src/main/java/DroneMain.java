@@ -1,5 +1,6 @@
 import DroneThreads.*;
 import REST.beans.*;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class DroneMain {
         Thread sendNewDroneAdded;
         Thread serverThread;
         Thread pingThread;
+        Thread manageOrder;
         List<Drone> drones = drone.getDrones();
 
         //start grpc server thread
@@ -71,7 +73,20 @@ public class DroneMain {
 
         System.out.println("before while");
 
+        if(drone.iAmMaster()) {
+            System.out.println("waiting that all drone sent their position");
+            while (drone.iAmMaster() && (drone.getCountPosition() < drone.getDrones().size())) {
+                assert true;
+            }
+            System.out.println("received all positions");
+
+            drone.setCountPosition(0);
+            manageOrder = new DroneManageOrderThread(drone);
+            manageOrder.start();
+        }
+
         while (quitThread.isAlive()) {
+
 
 
             //send global stats if is master and thread to send global stats is crashed

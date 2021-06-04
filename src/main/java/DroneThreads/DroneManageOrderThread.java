@@ -1,6 +1,7 @@
 package DroneThreads;
 
 import REST.beans.Drone;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class DroneManageOrderThread extends Thread {
     private Drone drone;
@@ -10,6 +11,10 @@ public class DroneManageOrderThread extends Thread {
     }
 
     public DroneManageOrderThread(Drone drone) {
-        this.drone = drone;
+        try {
+            this.drone.subscribe();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }

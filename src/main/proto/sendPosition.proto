@@ -1,0 +1,17 @@
+syntax='proto3';
+package com.example.grpc;
+
+message position {
+  int32 idDrone = 1;
+  int32 xPosition = 2;
+  int32 yPosition = 3;
+}
+
+message responsePosition {
+  string messageResponse= 1;
+}
+
+
+service positionService {
+  rpc positionDrone(position) returns (responsePosition);
+}

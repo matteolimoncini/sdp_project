@@ -1,13 +1,21 @@
 package GrpcImpl;
 
+import DroneThreads.sendPositionDroneThread;
 import REST.beans.Drone;
+import REST.beans.Position;
 import com.example.grpc.Election;
 import com.example.grpc.Election.message;
+import com.example.grpc.SendPosition;
+import com.example.grpc.SendPosition.position;
 import com.example.grpc.electionGrpc;
 import com.example.grpc.electionGrpc.electionImplBase;
+import com.example.grpc.positionServiceGrpc;
+import com.example.grpc.positionServiceGrpc.positionServiceStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+
+import java.util.List;
 
 public class electionImpl extends electionImplBase {
     private Drone drone;
@@ -30,7 +38,6 @@ public class electionImpl extends electionImplBase {
         message propagatedMessage = null;
 
         System.out.println("message received: " + typeMessage + " whit id inside4: " + idDroneInMessage);
-
         if (typeMessage.equals("ELECTION")) {
 
             if (drone.getPartecipant()) {   //if drone is participant
@@ -89,6 +96,9 @@ public class electionImpl extends electionImplBase {
                 if (myId != idDroneInMessage) {
                     //propagate message as is
                     propagatedMessage= request;
+
+                    //send position to master
+                    Thread sendPosition = new sendPositionDroneThread(drone);
 
                 }
             } else { //type message not ELECTION and not ELECTED
