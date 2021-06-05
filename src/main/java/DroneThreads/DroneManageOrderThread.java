@@ -20,7 +20,11 @@ public class DroneManageOrderThread extends Thread {
                 if(this.drone.areTherePendingOrders()){
                     firstPendingOrder = this.drone.getFirstPendingOrder();
                     Drone droneChoosen = this.drone.chooseDeliver(firstPendingOrder);
-                    droneChoosen.manageOrder(firstPendingOrder);
+                    if (droneChoosen != null){
+                        this.drone.removePendingOrder(firstPendingOrder);
+                        droneChoosen.manageOrder(firstPendingOrder);
+                    }
+
                 }
             }
         } catch (MqttException e) {

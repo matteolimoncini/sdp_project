@@ -1,6 +1,5 @@
 import DroneThreads.*;
 import REST.beans.*;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.List;
 
@@ -15,8 +14,6 @@ public class DroneMain {
         - effettuare una consegna
         - inviare global statistics al server (se master)
         - elezione master
-        -
-
         */
 
 
@@ -73,9 +70,9 @@ public class DroneMain {
 
         System.out.println("before while");
 
-        if(drone.iAmMaster()) {
+        if(drone.isMaster()) {
             System.out.println("waiting that all drone sent their position...");
-            while (drone.iAmMaster() && (drone.getCountPosition() < drone.getDrones().size())) {
+            while (drone.isMaster() && drone.getDrones()!= null && (drone.getCountPosition() < drone.getDrones().size())) {
                 assert true;
             }
             System.out.println("received all positions");
@@ -90,7 +87,7 @@ public class DroneMain {
 
 
             //send global stats if is master and thread to send global stats is crashed
-            if (!sendGlobalStatsThread.isAlive() && drone.iAmMaster()){
+            if (!sendGlobalStatsThread.isAlive() && drone.isMaster()){
                 assert true;
                 //sendGlobalStatsThread.start();
             }

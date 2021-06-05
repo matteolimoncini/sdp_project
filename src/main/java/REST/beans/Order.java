@@ -8,6 +8,9 @@ public class Order {
     private Position pickUpPoint;
     private Position deliveryPoint;
 
+    public Order(){
+
+    }
     public Order(int id, Position pickUpPoint, Position deliveryPoint) {
         this.id = id;
         this.pickUpPoint = pickUpPoint;
