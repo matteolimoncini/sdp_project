@@ -280,8 +280,7 @@ public class Drone {
         List<Drone> dronesCopy = this.getDrones();
         if (dronesCopy == null || dronesCopy.size()==0)
             return this;
-        //not consider drone already at work
-        dronesCopy.removeIf(Drone::isProcessingDelivery);
+
 
         //choose the drone nearest
         int xPickUpPoint = order.getPickUpPoint().getxCoordinate();
@@ -292,6 +291,10 @@ public class Drone {
         double minDistance = Double.MAX_VALUE;
         Drone chosenDrone = null;
         for (Drone currentDrone : dronesCopy) {
+            //not consider drone already at work
+            if (currentDrone.isProcessingDelivery()){
+                continue;
+            }
             xDrone = currentDrone.getMyPosition().getxCoordinate();
             yDrone = currentDrone.getMyPosition().getyCoordinate();
             distance = distance(xDrone, yDrone, xPickUpPoint, yPickUpPoint);
@@ -309,6 +312,9 @@ public class Drone {
 
             }
         }
+        if (chosenDrone == null)
+            return this;
+        System.out.println("###CHOSEN DRONE: "+chosenDrone.getIdDrone()+"########");
         return chosenDrone;
     }
         /*
@@ -331,7 +337,7 @@ public class Drone {
 
     public void manageOrder(Order order) {
         this.setProcessingDelivery(true);
-        System.out.println("order in progress...");
+        System.out.println("order in progress by drone with:"+this.getIdDrone());
         try {
             Thread.sleep(15 * 1000);
         } catch (InterruptedException e) {
