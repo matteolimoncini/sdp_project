@@ -1,6 +1,7 @@
 package GrpcImpl;
 
 import REST.beans.Drone;
+import REST.beans.Position;
 import com.example.grpc.AddDrone;
 import com.example.grpc.AddDrone.responseAddNewDrone;
 import com.example.grpc.newDroneGrpc;
@@ -17,6 +18,7 @@ public class NewDroneImpl extends newDroneImplBase {
     public void messageAddDrone(AddDrone.addNewDrone request, StreamObserver<responseAddNewDrone> responseObserver) {
 
         Drone droneToInsert = new Drone(request.getIdDrone(),request.getIpAddress(),request.getPortNumber(),this.myDrone.getIpServerAdmin(),this.myDrone.getPortServerAdmin());
+        droneToInsert.setMyPosition(new Position(request.getXPosition(),request.getYPosition()));
         this.myDrone.insertDroneInList(droneToInsert);
 
         //server

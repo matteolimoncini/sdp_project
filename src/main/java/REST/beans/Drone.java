@@ -151,6 +151,11 @@ public class Drone {
         this.battery = battery;
     }
 
+
+    public synchronized void setProcessingDelivery(boolean processingDelivery) {
+        this.processingDelivery = processingDelivery;
+    }
+
     public synchronized List<Order> getPendingOrders() {
         return this.pendingOrders;
     }
@@ -185,7 +190,7 @@ public class Drone {
         return idMaster.equals(idDrone);
     }
 
-    private boolean isProcessingDelivery() {
+    private synchronized boolean isProcessingDelivery() {
         return processingDelivery;
     }
 
@@ -221,11 +226,11 @@ public class Drone {
         MqttConnectOptions connOpts;
         String clientId = MqttClient.generateClientId();
         String broker = "tcp://localhost:1883";
-        String topic = "dronazon/smarcity/orders";
+        String topic = "dronazon/smartcity/orders";
         int qos = 2;
 
         this.clientDrone = new MqttClient(broker, clientId);
-
+        this.clientDrone.connect();
         // Connect the client
         System.out.println(clientId + " Connecting Broker " + broker);
         System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
@@ -273,7 +278,8 @@ public class Drone {
         //extract drone list
 
         List<Drone> dronesCopy = this.getDrones();
-
+        if (dronesCopy == null || dronesCopy.size()==0)
+            return this;
         //not consider drone already at work
         dronesCopy.removeIf(Drone::isProcessingDelivery);
 
@@ -324,13 +330,15 @@ public class Drone {
         */
 
     public void manageOrder(Order order) {
+        this.setProcessingDelivery(true);
         System.out.println("order in progress...");
         try {
-            Thread.sleep(5 * 1000);
+            Thread.sleep(15 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("order completed");
+        this.setProcessingDelivery(false);
         this.sendStatToMaster();
     }
 
@@ -427,6 +435,7 @@ public class Drone {
             - battery
         */
         System.out.println("sending statistics to master...");
+        /*
         Drone masterDrone = null;
         for (Drone d:this.getDrones())
             if (d.isMaster()) {
@@ -439,7 +448,10 @@ public class Drone {
         String targetAddress = ipMaster +":"+portMaster;
 
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+
+        */
         /*newDroneGrpc.newDroneStub stub = newDroneGrpc.newStub(channel);
+
         AddDrone.addNewDrone request = AddDrone.addNewDrone
                 .newBuilder()
                 .set
