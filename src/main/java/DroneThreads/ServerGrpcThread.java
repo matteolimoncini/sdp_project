@@ -1,9 +1,6 @@
 package DroneThreads;
 
-import GrpcImpl.NewDroneImpl;
-import GrpcImpl.PingDroneImpl;
-import GrpcImpl.PositionDroneImpl;
-import GrpcImpl.electionImpl;
+import GrpcImpl.*;
 import REST.beans.Drone;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -24,6 +21,7 @@ public class ServerGrpcThread extends Thread {
                     .addService(new PingDroneImpl(this.drone))
                     .addService(new electionImpl(this.drone))
                     .addService(new PositionDroneImpl(this.drone))
+                    .addService(new PropagateOrderImpl(this.drone))
                     .build();
 
             server.start();

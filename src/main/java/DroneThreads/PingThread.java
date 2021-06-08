@@ -23,10 +23,12 @@ public class PingThread extends Thread {
             while (true) {
                 Thread.sleep(10 * 1000);
 
-                List<Drone> drones = this.drone.getDrones();
-                if (drones == null)
+                List<Drone> droneListPing = this.drone.getDrones();
+                if (droneListPing == null)
                     continue;
-                for (Drone d : drones) {
+                if(droneListPing.size()==0)
+                    continue;
+                for (Drone d : droneListPing) {
                     //System.out.println("inside ping thread loop for");
                     //System.out.println("id:"+d.getIdDrone());
                     String ipReceiverDrone = d.getIpAddress();

@@ -23,7 +23,7 @@ public class ResponseAddModel {
         return drones;
     }
 
-    public void setDrones(List<Drone> drones) {
+    public synchronized void setDrones(List<Drone> drones) {
         this.drones = drones;
     }
 

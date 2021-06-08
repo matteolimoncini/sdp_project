@@ -39,7 +39,7 @@ public class Drone {
     private GlobalStats globalStats;
     private boolean partecipant;
 
-    private List<Drone> drones;
+    private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
     private int countPosition = 0;
     //String clientId;
@@ -58,7 +58,6 @@ public class Drone {
         this.battery = 100;
         this.processingDelivery = false;
         this.partecipant = false;
-        this.drones = new ArrayList<>();
         this.pendingOrders = new ArrayList<>();
     }
 
@@ -71,7 +70,6 @@ public class Drone {
         this.battery = 100;
         this.processingDelivery = false;
         this.partecipant = false;
-        this.drones = new ArrayList<>();
         this.pendingOrders = new ArrayList<>();
     }
 
@@ -103,11 +101,11 @@ public class Drone {
         this.portNumber = portNumber;
     }
 
-    public Position getMyPosition() {
+    public synchronized Position getMyPosition() {
         return myPosition;
     }
 
-    public void setMyPosition(Position myPosition) {
+    public synchronized void setMyPosition(Position myPosition) {
         this.myPosition = myPosition;
     }
 
@@ -123,7 +121,7 @@ public class Drone {
         return idMaster;
     }
 
-    public void setIdMaster(Integer idMaster) {
+    public synchronized void setIdMaster(Integer idMaster) {
         this.idMaster = idMaster;
     }
 
@@ -151,7 +149,6 @@ public class Drone {
         this.battery = battery;
     }
 
-
     public synchronized void setProcessingDelivery(boolean processingDelivery) {
         this.processingDelivery = processingDelivery;
     }
@@ -169,12 +166,7 @@ public class Drone {
     }
 
     public synchronized Order getFirstPendingOrder() {
-        if (this.pendingOrders != null && this.pendingOrders.size() > 0) {
-            Order order = this.pendingOrders.get(0);
-            this.pendingOrders.remove(0);
-            return order;
-        } else
-            return null;
+        return ((this.pendingOrders != null) && (this.pendingOrders.size() > 0)) ? this.pendingOrders.get(0) : null;
     }
 
     public synchronized void removePendingOrder(Order order) {
@@ -186,7 +178,7 @@ public class Drone {
         return this.pendingOrders != null && this.pendingOrders.size() > 0;
     }
 
-    public boolean isMaster() {
+    public synchronized boolean isMaster() {
         return idMaster.equals(idDrone);
     }
 
@@ -268,7 +260,6 @@ public class Drone {
     }
 
     public Drone chooseDeliver(Order order) {
-        int idDrone = -1;
         if (!isMaster()) {
             System.err.println("only master can manage orders");
             return null;
@@ -277,9 +268,12 @@ public class Drone {
 
         //extract drone list
 
-        List<Drone> dronesCopy = this.getDrones();
-        if (dronesCopy == null || dronesCopy.size()==0)
-            return this;
+        List<Drone> dronesCopyChooseDeliver = this.getDrones();
+
+        if (dronesCopyChooseDeliver == null){
+            dronesCopyChooseDeliver = new ArrayList<Drone>();
+        }
+        //dronesCopyChooseDeliver.add(this);
 
 
         //choose the drone nearest
@@ -290,9 +284,10 @@ public class Drone {
         double distance;
         double minDistance = Double.MAX_VALUE;
         Drone chosenDrone = null;
-        for (Drone currentDrone : dronesCopy) {
+        for (int i = 0; i < dronesCopyChooseDeliver.size(); i++) {
+            Drone currentDrone = dronesCopyChooseDeliver.get(i);
             //not consider drone already at work
-            if (currentDrone.isProcessingDelivery()){
+            if (currentDrone.isProcessingDelivery()) {
                 continue;
             }
             xDrone = currentDrone.getMyPosition().getxCoordinate();
@@ -312,28 +307,13 @@ public class Drone {
 
             }
         }
-        if (chosenDrone == null)
-            return this;
+        if (chosenDrone == null){
+            //System.out.println("###CHOSEN DRONE NULL!");
+            return null;
+        }
         System.out.println("###CHOSEN DRONE: "+chosenDrone.getIdDrone()+"########");
         return chosenDrone;
     }
-        /*
-        //remove drone with distance > mindistance
-        for (Drone d : dronesCopy) {
-            xDrone = d.getMyPosition().getxCoordinate();
-            yDrone = d.getMyPosition().getyCoordinate();
-            distance = distance(xDrone, yDrone, xPickUpPoint, yPickUpPoint);
-            if (distance > minDistance) dronesCopy.remove(d);
-        }
-
-        //select drone with greatest battery
-        dronesCopy.sort(Comparator.comparing(Drone::getBattery));
-        Integer maxBattery = dronesCopy.get(0).getBattery();
-        dronesCopy.removeIf(d -> !d.getBattery().equals(maxBattery));
-
-        //select drone with id greater
-        dronesCopy.sort(Comparator.comparing(Drone::getIdDrone));
-        */
 
     public void manageOrder(Order order) {
         this.setProcessingDelivery(true);
@@ -353,16 +333,16 @@ public class Drone {
     }
 
     public synchronized Drone getNextInRing() {
-        assert this.drones != null;
-        for (Drone d : this.drones) {
+        assert this.getDrones() != null;
+        for (Drone d : this.getDrones()) {
             System.out.println("HERE");
             if (d.getIdDrone() > this.getIdDrone()) {
                 return d;
             }
         }
-        System.out.println("size:" + drones.size());
-        if (this.drones.size() >= 1) {
-            return this.drones.get(0);
+        System.out.println("size:" + this.getDrones().size());
+        if (this.getDrones().size() >= 1) {
+            return this.getDrones().get(0);
         }
         System.out.println(this.idDrone);
         return null;
@@ -379,7 +359,7 @@ public class Drone {
         this.drones.remove(removeDrone);
     }
 
-    public void addDrone() {
+    public synchronized void addDrone() {
         System.out.println("start addDrone");
         List<Drone> droneList;
 
