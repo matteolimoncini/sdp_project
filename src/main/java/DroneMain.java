@@ -1,5 +1,6 @@
 import DroneThreads.*;
 import REST.beans.*;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class DroneMain {
         serverThread.start();
 
         //start a thread that wait that user type "quit" and exit
-        quitThread = new DroneThreadQuit();
+        quitThread = new DroneThreadQuit(drone);
         quitThread.start();
 
 
@@ -74,6 +75,12 @@ public class DroneMain {
 
 
         while (quitThread.isAlive()) {
+            if (drone.getBattery()<15){
+                System.out.println("battery level is less than 15%");
+                System.out.println("drone with id "+drone.getIdDrone()+" need to exit from the system");
+                drone.setQuit(true);
+                break;
+            }
 
             if(drone.isMaster() && !manageOrder.isAlive()) {
                 System.out.println("waiting that all drone sent their position...");
@@ -103,18 +110,42 @@ public class DroneMain {
 
         //manage exit from the system
 
-        //manage current order
-
         //if is master disconnect from broker mqtt
+        if(drone.isMaster()){
+            try {
+                drone.disconnect();
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         //if is master manage pending orders
+        try {
+            manageOrder.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //wait until current order is in progress
+        while (drone.isProcessingDelivery()){
+            assert true;
+        }
 
         //close communication channels with others drones
         serverThread.stop();
+        System.out.println("communication channels with others drones closed");
+
         //if is master send global stats to server
+        if(drone.isMaster()){
+            //TODO
+            System.out.println("TODO sent global stats to server");
+        }
 
         //ask to exit to server
         drone.removeDrone();
+        System.out.println("exit confirmed from the server");
+
         //close all thread
         System.exit(0);
     }

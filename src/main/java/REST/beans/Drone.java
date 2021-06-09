@@ -42,6 +42,7 @@ public class Drone {
     private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
     private int countPosition = 0;
+    private boolean quit =false;
     //String clientId;
 
     /*
@@ -141,16 +142,26 @@ public class Drone {
         this.countPosition = countPosition;
     }
 
-    public Integer getBattery() {
+    public synchronized Integer getBattery() {
         return battery;
     }
 
-    public void setBattery(Integer battery) {
+    public synchronized void setBattery(Integer battery) {
         this.battery = battery;
     }
 
+
+
     public synchronized void setProcessingDelivery(boolean processingDelivery) {
         this.processingDelivery = processingDelivery;
+    }
+
+    public synchronized boolean isQuit() {
+        return quit;
+    }
+
+    public synchronized void setQuit(boolean quit) {
+        this.quit = quit;
     }
 
     public synchronized List<Order> getPendingOrders() {
@@ -182,7 +193,7 @@ public class Drone {
         return idMaster.equals(idDrone);
     }
 
-    private synchronized boolean isProcessingDelivery() {
+    public synchronized boolean isProcessingDelivery() {
         return processingDelivery;
     }
 
@@ -324,6 +335,9 @@ public class Drone {
             e.printStackTrace();
         }
         System.out.println("order completed");
+        this.setBattery(this.getBattery()-10);
+        System.out.println("battery level decreased");
+        System.out.println("now battery level is:"+this.getBattery());
         this.setProcessingDelivery(false);
         this.sendStatToMaster();
     }
