@@ -1,0 +1,21 @@
+syntax='proto3';
+package com.example.grpc;
+
+message globalStatsToMaster {
+  int32 idDrone = 1;
+  int64 timestamp = 2;
+  int32 newPositionX = 3;
+  int32 newPositionY = 4;
+  double kmTravelled = 5;
+  int32 battery = 6;
+  double avgPm10 = 7;
+}
+
+message responseGlobalStats {
+  string messageResponse = 1;
+}
+
+
+service globalStatsService {
+  rpc globalStatsMaster(globalStatsToMaster) returns (responseGlobalStats);
+}

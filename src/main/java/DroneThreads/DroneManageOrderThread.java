@@ -23,11 +23,13 @@ public class DroneManageOrderThread extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("thread to manage order starting...");
             this.drone.subscribeAndPutInQueue();
 
             Order firstPendingOrder;
             while(true){
                 if(this.drone.areTherePendingOrders()){
+                    //System.out.println("try to manage pending order...");
                     firstPendingOrder = this.drone.getFirstPendingOrder();
                     Drone droneChoosen = this.drone.chooseDeliver(firstPendingOrder);
                     if (droneChoosen != null){

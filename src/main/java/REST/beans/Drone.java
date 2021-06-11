@@ -1,7 +1,6 @@
 package REST.beans;
 
-import com.example.grpc.AddDrone;
-import com.example.grpc.newDroneGrpc;
+import com.example.grpc.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -10,12 +9,17 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.*;
 
+import java.sql.DatabaseMetaData;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 public class Drone {
     @Expose
@@ -42,7 +46,7 @@ public class Drone {
     private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
     private int countPosition = 0;
-    private boolean quit =false;
+    private boolean quit = false;
     //String clientId;
 
     /*
@@ -149,7 +153,6 @@ public class Drone {
     public synchronized void setBattery(Integer battery) {
         this.battery = battery;
     }
-
 
 
     public synchronized void setProcessingDelivery(boolean processingDelivery) {
@@ -279,13 +282,19 @@ public class Drone {
 
         //extract drone list
 
-        List<Drone> dronesCopyChooseDeliver = this.getDrones();
-
-        if (dronesCopyChooseDeliver == null){
+        List<Drone> drones = this.getDrones();
+        List<Drone> dronesCopyChooseDeliver;
+        if (drones == null) {
             dronesCopyChooseDeliver = new ArrayList<Drone>();
         }
-        //dronesCopyChooseDeliver.add(this);
+        else{
+            dronesCopyChooseDeliver = new ArrayList<>(drones);
+        }
 
+
+        dronesCopyChooseDeliver.add(this);
+
+        dronesCopyChooseDeliver.removeIf(d -> d.getBattery() < 15);
 
         //choose the drone nearest
         int xPickUpPoint = order.getPickUpPoint().getxCoordinate();
@@ -318,28 +327,31 @@ public class Drone {
 
             }
         }
-        if (chosenDrone == null){
+        if (chosenDrone == null) {
             //System.out.println("###CHOSEN DRONE NULL!");
             return null;
         }
-        System.out.println("###CHOSEN DRONE: "+chosenDrone.getIdDrone()+"########");
+        System.out.println("###CHOSEN DRONE: " + chosenDrone.getIdDrone() + "########");
         return chosenDrone;
     }
 
     public void manageOrder(Order order) {
         this.setProcessingDelivery(true);
-        System.out.println("order in progress by drone with:"+this.getIdDrone());
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        Position oldPosition = this.getMyPosition();
+        System.out.println("order in progress by drone with:" + this.getIdDrone());
         try {
             Thread.sleep(15 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("order completed");
-        this.setBattery(this.getBattery()-10);
+        this.setBattery(this.getBattery() - 10);
         System.out.println("battery level decreased");
-        System.out.println("now battery level is:"+this.getBattery());
+        System.out.println("now battery level is:" + this.getBattery());
         this.setProcessingDelivery(false);
-        this.sendStatToMaster();
+        this.sendStatToMaster(order, timestamp, oldPosition);
     }
 
     private double distance(int xOne, int yOne, int xTwo, int yTwo) {
@@ -420,7 +432,7 @@ public class Drone {
 
     }
 
-    private void sendStatToMaster() {
+    private void sendStatToMaster(Order order, Timestamp timestamp, Position oldPosition) {
         /*
             drone send after a delivery
 
@@ -435,29 +447,60 @@ public class Drone {
             - battery
         */
         System.out.println("sending statistics to master...");
-        /*
+
         Drone masterDrone = null;
-        for (Drone d:this.getDrones())
-            if (d.isMaster()) {
-                masterDrone = d;
-                break;
-            }
-        assert masterDrone!=null;
-        String ipMaster = masterDrone.getIpAddress();
-        Integer portMaster = masterDrone.getPortNumber();
-        String targetAddress = ipMaster +":"+portMaster;
+        List<Drone> dronesList = this.getDrones();
 
-        final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+        if(this.isMaster() || dronesList==null || dronesList.size()==0){
+            System.out.println("sono il master, memorizzo le informazioni senza grpc");
+        }
+        else {
+            System.out.println("starting grpc...");
+            for (Drone d : dronesList)
+                if (d.getIdDrone().equals(this.getIdMaster())) {
+                    masterDrone = d;
+                    break;
+                }
+            assertNotNull(masterDrone);
+            String ipMaster = masterDrone.getIpAddress();
+            Integer portMaster = masterDrone.getPortNumber();
+            String targetAddress = ipMaster + ":" + portMaster;
 
-        */
-        /*newDroneGrpc.newDroneStub stub = newDroneGrpc.newStub(channel);
+            final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
 
-        AddDrone.addNewDrone request = AddDrone.addNewDrone
-                .newBuilder()
-                .set
-                .build();
+            newDroneGrpc.newDroneStub stub = newDroneGrpc.newStub(channel);
+            globalStatsServiceGrpc.globalStatsServiceStub stub1 = globalStatsServiceGrpc.newStub(channel);
 
-         */
+            Position deliveryPoint = order.getDeliveryPoint();
+            Position pickUpPoint = order.getPickUpPoint();
+            double distanceFromOldToPickup = distance(oldPosition.getxCoordinate(), oldPosition.getyCoordinate(), pickUpPoint.getxCoordinate(), pickUpPoint.getyCoordinate());
+            double distanceFromPickupTpDelivery = distance(pickUpPoint.getxCoordinate(), pickUpPoint.getxCoordinate(), deliveryPoint.getxCoordinate(), deliveryPoint.getyCoordinate());
+            GlobalStatsToMaster.globalStatsToMaster request1 = GlobalStatsToMaster.globalStatsToMaster
+                    .newBuilder()
+                    .setIdDrone(this.getIdDrone())
+                    .setTimestamp(timestamp.getTime())
+                    .setBattery(this.getBattery())
+                    .setNewPositionX(deliveryPoint.getxCoordinate())
+                    .setNewPositionY(deliveryPoint.getyCoordinate())
+                    .setKmTravelled(distanceFromPickupTpDelivery)
+                    .build();
+            stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
+                @Override
+                public void onNext(GlobalStatsToMaster.responseGlobalStats value) {
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+
+                }
+            });
+        }
     }
 
     public void sendGlobalStatistics() {

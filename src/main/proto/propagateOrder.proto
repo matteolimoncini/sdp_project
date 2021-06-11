@@ -1,0 +1,19 @@
+syntax='proto3';
+package com.example.grpc;
+
+message propagateOrder {
+  int32 idOrder = 1;
+  int32 xPositionPickup = 2;
+  int32 yPositionPickup = 3;
+  int32 xPositionDelivery = 4;
+  int32 yPositionDelivery = 5;
+}
+
+message responseOrder {
+  string response = 1;
+}
+
+
+service sendOrder {
+  rpc MessagePropagateOrder(propagateOrder) returns (responseOrder);
+}

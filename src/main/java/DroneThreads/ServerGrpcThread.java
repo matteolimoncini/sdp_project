@@ -22,6 +22,7 @@ public class ServerGrpcThread extends Thread {
                     .addService(new electionImpl(this.drone))
                     .addService(new PositionDroneImpl(this.drone))
                     .addService(new PropagateOrderImpl(this.drone))
+                    .addService(new GlobalStatsMasterImpl(this.drone))
                     .build();
 
             server.start();
