@@ -11,19 +11,16 @@ public class DroneGlobalStatsThread extends Thread {
 
     @Override
     public void run() {
-        super.run();
-        /*
+        if (!drone.isMaster())
+            return;
+
         try {
             while (true) {
-                if (!drone.iAmMaster())
-                    return;
                 drone.sendGlobalStatistics();
                 Thread.sleep(1000 * 10);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-         */
     }
 }

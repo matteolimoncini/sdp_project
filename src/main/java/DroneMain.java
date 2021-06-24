@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(4, "localhost", 1104, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 1101, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -97,7 +97,7 @@ public class DroneMain {
             //send global stats if is master and thread to send global stats is crashed
             if (!sendGlobalStatsThread.isAlive() && drone.isMaster()){
                 assert true;
-                //sendGlobalStatsThread.start();
+                sendGlobalStatsThread.start();
             }
 
             //manage one order

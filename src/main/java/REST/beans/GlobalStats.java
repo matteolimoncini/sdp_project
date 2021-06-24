@@ -1,27 +1,30 @@
 package REST.beans;
 
-import com.sun.xml.txw2.annotation.XmlElement;
+import com.google.gson.annotations.Expose;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.sql.Timestamp;
+import java.util.Date;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 //implements Comparator<GlobalStats>, Comparable<GlobalStats>
 public class GlobalStats {
-    private int avgDelivery;
-    private int avgKilometers;
-    private int avgPollution;
-    private int avgBattery;
+
+    private double avgDelivery;
+    private double avgKilometers;
+    private double avgPollution;
+    private double avgBattery;
 
     private Timestamp timestamp;
 
     public GlobalStats() {
     }
 
-    public GlobalStats(int avgDelivery, int avgKilometers, int avgPollution, int avgBattery, String timestamp) {
+    public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery, String timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
@@ -29,20 +32,28 @@ public class GlobalStats {
         //String t = timestamp.substring(3,timestamp.length()-3);
         this.timestamp = Timestamp.valueOf(timestamp);
     }
-
-    public int getAvgDelivery() {
+    public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery) {
+        this.avgDelivery = avgDelivery;
+        this.avgKilometers = avgKilometers;
+        this.avgPollution = avgPollution;
+        this.avgBattery = avgBattery;
+        //String t = timestamp.substring(3,timestamp.length()-3);
+        Date date = new Date();
+        this.timestamp = new Timestamp(date.getTime());
+    }
+    public double getAvgDelivery() {
         return avgDelivery;
     }
 
-    public int getAvgKilometers() {
+    public double getAvgKilometers() {
         return avgKilometers;
     }
 
-    public int getAvgPollution() {
+    public double getAvgPollution() {
         return avgPollution;
     }
 
-    public int getAvgBattery() {
+    public double getAvgBattery() {
         return avgBattery;
     }
 
@@ -61,18 +72,24 @@ public class GlobalStats {
         this.avgBattery = globalStats.getAvgBattery();
         this.timestamp = globalStats.getTimestamp();
     }
-/*
-    @Override
-    public int compareTo(GlobalStats o) {
-        return this.getTimestamp().compareTo(o.getTimestamp());
+
+    public void setAvgDelivery(double avgDelivery) {
+        this.avgDelivery = avgDelivery;
     }
 
-    @Override
-    public int compare(GlobalStats o1, GlobalStats o2) {
-        Timestamp t1 = o1.getTimestamp();
-        Timestamp t2 = o2.getTimestamp();
-        return t1.compareTo(t2);
+    public void setAvgKilometers(double avgKilometers) {
+        this.avgKilometers = avgKilometers;
     }
 
- */
+    public void setAvgPollution(double avgPollution) {
+        this.avgPollution = avgPollution;
+    }
+
+    public void setAvgBattery(double avgBattery) {
+        this.avgBattery = avgBattery;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 }

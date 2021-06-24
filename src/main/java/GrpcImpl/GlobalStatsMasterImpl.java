@@ -2,6 +2,7 @@ package GrpcImpl;
 
 import DroneThreads.sendPositionDroneThread;
 import REST.beans.Drone;
+import REST.beans.GlobalStats;
 import REST.beans.Position;
 import com.example.grpc.GlobalStatsToMaster;
 import com.example.grpc.globalStatsServiceGrpc;
@@ -9,6 +10,10 @@ import com.example.grpc.electionGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsServiceImplBase{
     private Drone drone;
@@ -39,6 +44,13 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
         droneInMessage.setProcessingDelivery(false);
         System.out.println("setted processing delivery");
 
+        double avgb = request.getBattery();
+        double avgkm = request.getKmTravelled();
+        double avgpol = request.getAvgPm10();
+        double avgd = 1;
+
+        GlobalStats gstats = new GlobalStats(avgd,avgkm,avgpol,avgb);
+        drone.addToStatsList(gstats);
     }
 }
 

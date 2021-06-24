@@ -39,10 +39,9 @@ public class Drone {
     private double kmTotDelivery;
     private String ipServerAdmin;
     private Integer portServerAdmin;
-
-    private GlobalStats globalStats;
     private boolean partecipant;
 
+    private List<GlobalStats> gStatsList = new ArrayList<>();
     private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
     private int countPosition = 0;
@@ -157,6 +156,17 @@ public class Drone {
 
     public synchronized void setProcessingDelivery(boolean processingDelivery) {
         this.processingDelivery = processingDelivery;
+    }
+
+    public synchronized List<GlobalStats> getgStatsList() {
+        return gStatsList;
+    }
+    public synchronized void addToStatsList(GlobalStats gStat) {
+        gStatsList.add(gStat);
+    }
+
+    public synchronized void setgStatsList(List<GlobalStats> gStatsList) {
+        this.gStatsList = gStatsList;
     }
 
     public synchronized boolean isQuit() {
@@ -462,6 +472,8 @@ public class Drone {
                     break;
                 }
             assertNotNull(masterDrone);
+
+
             String ipMaster = masterDrone.getIpAddress();
             Integer portMaster = masterDrone.getPortNumber();
             String targetAddress = ipMaster + ":" + portMaster;
@@ -487,7 +499,7 @@ public class Drone {
             stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
                 @Override
                 public void onNext(GlobalStatsToMaster.responseGlobalStats value) {
-
+                    System.out.println("global stats received");
                 }
 
                 @Override
@@ -511,10 +523,25 @@ public class Drone {
         }*/
 
         Client client = Client.create();
+        double sumDel = 0,sumKm=0,sumPol=0,sumBat=0;
+        int len=0;
+        for (GlobalStats g:this.getgStatsList()) {
+            sumDel+=g.getAvgDelivery();
+            sumKm+=g.getAvgKilometers();
+            sumPol+=g.getAvgPollution();
+            sumBat+=g.getAvgBattery();
+            len+=1;
+        }
+
+        //calculate avg
+        GlobalStats gstats = new GlobalStats(sumDel/len,sumKm/len,sumPol/len,sumPol/len);
+
+        //remove all elements from the list
+        this.setgStatsList(new ArrayList<>());
 
         WebResource webResource = client.resource("http://localhost:1337/statistics/globals");
         Gson gson = new Gson();
-        String input = gson.toJson(this.globalStats);
+        String input = gson.toJson(gstats);
         ClientResponse response = webResource.accept("application/json").post(ClientResponse.class, input);
 
         if (response.getStatus() != 200) {
