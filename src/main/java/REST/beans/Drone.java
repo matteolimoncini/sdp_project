@@ -495,6 +495,7 @@ public class Drone {
                     .setNewPositionX(deliveryPoint.getxCoordinate())
                     .setNewPositionY(deliveryPoint.getyCoordinate())
                     .setKmTravelled(distanceFromPickupTpDelivery)
+                    .setAvgPm10(100)
                     .build();
             stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
                 @Override
@@ -532,28 +533,29 @@ public class Drone {
             sumBat+=g.getAvgBattery();
             len+=1;
         }
-
+        System.out.println("len =0");
         //calculate avg
-        GlobalStats gstats = new GlobalStats(sumDel/len,sumKm/len,sumPol/len,sumPol/len);
+        if (len!=0) {
+            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumPol / len);
+            System.out.println("sending gstats to server...");
+            //remove all elements from the list
+            this.setgStatsList(new ArrayList<>());
+            String url = "http://" + this.getIpServerAdmin() + ":" + this.getPortServerAdmin();
+            WebResource webResource = client.resource(url +"/statistics/globals");
+            Gson gson = new Gson();
+            String input = gson.toJson(gstats);
+            ClientResponse response = webResource.accept("application/json").post(ClientResponse.class, input);
 
-        //remove all elements from the list
-        this.setgStatsList(new ArrayList<>());
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + response.getStatus());
+            }
 
-        WebResource webResource = client.resource("http://localhost:1337/statistics/globals");
-        Gson gson = new Gson();
-        String input = gson.toJson(gstats);
-        ClientResponse response = webResource.accept("application/json").post(ClientResponse.class, input);
+            String output = response.getEntity(String.class);
 
-        if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + response.getStatus());
+            System.out.println("Output from Server .... \n");
+            System.out.println(output);
         }
-
-        String output = response.getEntity(String.class);
-
-        System.out.println("Output from Server .... \n");
-        System.out.println(output);
-
 
     }
 

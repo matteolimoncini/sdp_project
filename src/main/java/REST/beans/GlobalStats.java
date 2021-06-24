@@ -9,28 +9,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-//implements Comparator<GlobalStats>, Comparable<GlobalStats>
 public class GlobalStats {
 
+    @Expose
     private double avgDelivery;
+    @Expose
     private double avgKilometers;
+    @Expose
     private double avgPollution;
+    @Expose
     private double avgBattery;
-
-    private Timestamp timestamp;
+    @Expose
+    private long timestamp;
 
     public GlobalStats() {
     }
 
-    public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery, String timestamp) {
+    public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery, long timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
         this.avgBattery = avgBattery;
         //String t = timestamp.substring(3,timestamp.length()-3);
-        this.timestamp = Timestamp.valueOf(timestamp);
+        this.timestamp = timestamp;
     }
     public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery) {
         this.avgDelivery = avgDelivery;
@@ -39,7 +40,7 @@ public class GlobalStats {
         this.avgBattery = avgBattery;
         //String t = timestamp.substring(3,timestamp.length()-3);
         Date date = new Date();
-        this.timestamp = new Timestamp(date.getTime());
+        this.timestamp = date.getTime();
     }
     public double getAvgDelivery() {
         return avgDelivery;
@@ -57,12 +58,12 @@ public class GlobalStats {
         return avgBattery;
     }
 
-    public Timestamp getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
     public String getTimestampAsString() {
-        return timestamp.toString();
+        return "";
     }
 
     public void setGlobalStats(GlobalStats globalStats) {
@@ -89,7 +90,7 @@ public class GlobalStats {
         this.avgBattery = avgBattery;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 }

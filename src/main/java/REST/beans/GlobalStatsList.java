@@ -51,7 +51,7 @@ public class GlobalStatsList {
         List<GlobalStats> subList = new ArrayList<>();
 
         for (GlobalStats stats : globalStatsList) {
-            iTimestamp = stats.getTimestamp();
+            iTimestamp = new Timestamp(stats.getTimestamp());
             greaterOrEqualThanT1 = iTimestamp.compareTo(timestamp1) >= 0;
             lessOrEqualThanT2 = iTimestamp.compareTo(timestamp2) <= 0;
             if (greaterOrEqualThanT1 && lessOrEqualThanT2)

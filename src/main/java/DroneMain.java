@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 1101, "localhost", 1337);
+        Drone drone = new Drone(8, "localhost", 8888, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -64,7 +64,6 @@ public class DroneMain {
 
         //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
-        //sendGlobalStatsThread.start();
 
 
         //manageOrderThread = new DroneManageOrderThread(drone);
