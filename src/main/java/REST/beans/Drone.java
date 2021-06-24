@@ -461,18 +461,23 @@ public class Drone {
         Drone masterDrone = null;
         List<Drone> dronesList = this.getDrones();
 
-        if(this.isMaster() || dronesList==null || dronesList.size()==0){
-            System.out.println("sono il master, memorizzo le informazioni senza grpc");
-        }
-        else {
-            System.out.println("starting grpc...");
-            for (Drone d : dronesList)
-                if (d.getIdDrone().equals(this.getIdMaster())) {
-                    masterDrone = d;
-                    break;
-                }
-            assertNotNull(masterDrone);
 
+        if((dronesList!=null && dronesList.size()!=0) || (this.isMaster())){
+
+            System.out.println("starting grpc...");
+            if(dronesList!=null && dronesList.size()!=0) {
+                for (Drone d : dronesList)
+                    if (d.getIdDrone().equals(this.getIdMaster())) {
+                        masterDrone = d;
+                        break;
+                    }
+            }
+            else{
+                if (this.isMaster()){
+                    masterDrone= this;
+                }
+            }
+            assertNotNull(masterDrone);
 
             String ipMaster = masterDrone.getIpAddress();
             Integer portMaster = masterDrone.getPortNumber();
@@ -510,7 +515,7 @@ public class Drone {
 
                 @Override
                 public void onCompleted() {
-
+                    channel.shutdown();
                 }
             });
         }
@@ -534,12 +539,15 @@ public class Drone {
             len+=1;
         }
         System.out.println("len =0");
-        //calculate avg
+
         if (len!=0) {
+            //calculate avg
             GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumPol / len);
             System.out.println("sending gstats to server...");
+
             //remove all elements from the list
             this.setgStatsList(new ArrayList<>());
+
             String url = "http://" + this.getIpServerAdmin() + ":" + this.getPortServerAdmin();
             WebResource webResource = client.resource(url +"/statistics/globals");
             Gson gson = new Gson();

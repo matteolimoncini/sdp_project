@@ -8,18 +8,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.sql.Timestamp;
 import java.util.Date;
-
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class GlobalStats {
 
-    @Expose
     private double avgDelivery;
-    @Expose
     private double avgKilometers;
-    @Expose
     private double avgPollution;
-    @Expose
     private double avgBattery;
-    @Expose
     private long timestamp;
 
     public GlobalStats() {
@@ -90,7 +86,7 @@ public class GlobalStats {
         this.avgBattery = avgBattery;
     }
 
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 }

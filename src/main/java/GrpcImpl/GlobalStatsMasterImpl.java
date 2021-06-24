@@ -15,6 +15,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+
 public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsServiceImplBase{
     private Drone drone;
 
@@ -26,13 +28,19 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
     public void globalStatsMaster(GlobalStatsToMaster.globalStatsToMaster request, StreamObserver<GlobalStatsToMaster.responseGlobalStats> responseObserver) {
         int idDroneInMessage = request.getIdDrone();
         Drone droneInMessage = null;
-        for (Drone d: drone.getDrones()) {
-            if(d.getIdDrone().equals(idDroneInMessage)){
-                droneInMessage=d;
-                break;
+        List<Drone> drones = drone.getDrones();
+        if (drones!=null) {
+            for (Drone d : drones) {
+                if (d.getIdDrone().equals(idDroneInMessage)) {
+                    droneInMessage = d;
+                    break;
+                }
             }
         }
-        assert droneInMessage!=null;
+        if(idDroneInMessage == (drone.getIdDrone())){
+            droneInMessage=drone;
+        }
+        assertNotNull(droneInMessage);
         System.out.println("received global stats from one drone to master");
 
         droneInMessage.setBattery(request.getBattery());
@@ -51,6 +59,8 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
 
         GlobalStats gstats = new GlobalStats(avgd,avgkm,avgpol,avgb);
         drone.addToStatsList(gstats);
+        System.out.println("STATS ADDED TO LIST IN MASTER");
+        //responseObserver.onCompleted();
     }
 }
 

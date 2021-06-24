@@ -102,7 +102,7 @@ public class electionImpl extends electionImplBase {
                     sendPosition.start();
 
                 }
-
+                //responseObserver.onCompleted();
             } else { //type message not ELECTION and not ELECTED
                 //type error
                 System.err.println("message type error");
