@@ -1,5 +1,6 @@
 package REST.beans;
 
+import SimulatorPm10.Measurement;
 import com.example.grpc.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,6 +45,7 @@ public class Drone {
     private List<GlobalStats> gStatsList = new ArrayList<>();
     private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
+    private List<Double> measurementList = new ArrayList<>();
     private int countPosition = 0;
     private boolean quit = false;
     //String clientId;
@@ -153,20 +155,28 @@ public class Drone {
         this.battery = battery;
     }
 
+    public synchronized List<Double> getMeasurementList() {
+        return measurementList;
+    }
 
-    public synchronized void setProcessingDelivery(boolean processingDelivery) {
-        this.processingDelivery = processingDelivery;
+    public synchronized void setMeasurementList(List<Double> measurementList) {
+        this.measurementList = measurementList;
+    }
+
+    public synchronized void addToMeasurementList(Double measurement) {
+        this.measurementList.add(measurement);
     }
 
     public synchronized List<GlobalStats> getgStatsList() {
         return gStatsList;
     }
-    public synchronized void addToStatsList(GlobalStats gStat) {
-        gStatsList.add(gStat);
-    }
 
     public synchronized void setgStatsList(List<GlobalStats> gStatsList) {
         this.gStatsList = gStatsList;
+    }
+
+    public synchronized void addToStatsList(GlobalStats gStat) {
+        gStatsList.add(gStat);
     }
 
     public synchronized boolean isQuit() {
@@ -208,6 +218,10 @@ public class Drone {
 
     public synchronized boolean isProcessingDelivery() {
         return processingDelivery;
+    }
+
+    public synchronized void setProcessingDelivery(boolean processingDelivery) {
+        this.processingDelivery = processingDelivery;
     }
 
     private boolean batteryLow() {
@@ -295,9 +309,8 @@ public class Drone {
         List<Drone> drones = this.getDrones();
         List<Drone> dronesCopyChooseDeliver;
         if (drones == null) {
-            dronesCopyChooseDeliver = new ArrayList<Drone>();
-        }
-        else{
+            dronesCopyChooseDeliver = new ArrayList<>();
+        } else {
             dronesCopyChooseDeliver = new ArrayList<>(drones);
         }
 
@@ -462,20 +475,18 @@ public class Drone {
         List<Drone> dronesList = this.getDrones();
 
 
-        if((dronesList!=null && dronesList.size()!=0) || (this.isMaster())){
+        if ((dronesList != null && dronesList.size() != 0) || (this.isMaster())) {
 
             System.out.println("starting grpc...");
-            if(dronesList!=null && dronesList.size()!=0) {
+            if (dronesList != null && dronesList.size() != 0) {
                 for (Drone d : dronesList)
                     if (d.getIdDrone().equals(this.getIdMaster())) {
                         masterDrone = d;
                         break;
                     }
             }
-            else{
-                if (this.isMaster()){
-                    masterDrone= this;
-                }
+            if (this.isMaster()) {
+                masterDrone = this;
             }
             assertNotNull(masterDrone);
 
@@ -500,7 +511,7 @@ public class Drone {
                     .setNewPositionX(deliveryPoint.getxCoordinate())
                     .setNewPositionY(deliveryPoint.getyCoordinate())
                     .setKmTravelled(distanceFromPickupTpDelivery)
-                    .setAvgPm10(100)
+                    .addAllAvgPm10(this.getMeasurementList())
                     .build();
             stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
                 @Override
@@ -529,27 +540,32 @@ public class Drone {
         }*/
 
         Client client = Client.create();
-        double sumDel = 0,sumKm=0,sumPol=0,sumBat=0;
-        int len=0;
-        for (GlobalStats g:this.getgStatsList()) {
-            sumDel+=g.getAvgDelivery();
-            sumKm+=g.getAvgKilometers();
-            sumPol+=g.getAvgPollution();
-            sumBat+=g.getAvgBattery();
-            len+=1;
+        double sumDel = 0, sumKm = 0, sumPol = 0, sumBat = 0;
+        int len = 0, lenPol = 0;
+        for (GlobalStats g : this.getgStatsList()) {
+            sumDel += g.getAvgDelivery();
+            sumKm += g.getAvgKilometers();
+            sumBat += g.getAvgBattery();
+            len += 1;
+
+            List<Double> pollution = g.getAvgPollution();
+            for (Double d : pollution) {
+                sumPol += d;
+                lenPol += 1;
+            }
         }
         System.out.println("len =0");
 
-        if (len!=0) {
+        if (len != 0) {
             //calculate avg
-            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumPol / len);
+            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumPol / lenPol);
             System.out.println("sending gstats to server...");
 
             //remove all elements from the list
             this.setgStatsList(new ArrayList<>());
 
             String url = "http://" + this.getIpServerAdmin() + ":" + this.getPortServerAdmin();
-            WebResource webResource = client.resource(url +"/statistics/globals");
+            WebResource webResource = client.resource(url + "/statistics/globals");
             Gson gson = new Gson();
             String input = gson.toJson(gstats);
             System.out.println(input);

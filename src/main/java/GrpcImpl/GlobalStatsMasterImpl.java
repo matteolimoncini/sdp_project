@@ -54,7 +54,7 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
 
         double avgb = request.getBattery();
         double avgkm = request.getKmTravelled();
-        double avgpol = request.getAvgPm10();
+        List<Double> avgpol = request.getAvgPm10List();
         double avgd = 1;
 
         GlobalStats gstats = new GlobalStats(avgd,avgkm,avgpol,avgb);

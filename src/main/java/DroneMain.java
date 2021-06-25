@@ -1,12 +1,14 @@
 import DroneThreads.*;
+import REST.BufferImpl;
 import REST.beans.*;
+import SimulatorPm10.PM10Simulator;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(7, "localhost", 8777, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 8111, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -26,6 +28,8 @@ public class DroneMain {
         Thread serverThread;
         Thread pingThread;
         Thread manageOrder;
+        PM10Simulator pm10Sim;
+
         List<Drone> drones = drone.getDrones();
 
         //start grpc server thread
@@ -61,6 +65,13 @@ public class DroneMain {
         pingThread.start();
 
 
+        BufferImpl buffer = new BufferImpl();
+
+        pm10Sim = new PM10Simulator(buffer);
+        pm10Sim.start();
+
+        PollutionThread pollutionThread = new PollutionThread(drone,buffer);
+        pollutionThread.start();
 
         //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new DroneGlobalStatsThread(drone);

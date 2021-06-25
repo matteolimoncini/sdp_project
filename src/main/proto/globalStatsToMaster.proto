@@ -8,7 +8,7 @@ message globalStatsToMaster {
   int32 newPositionY = 4;
   double kmTravelled = 5;
   int32 battery = 6;
-  double avgPm10 = 7;
+  repeated double avgPm10 = 7;
 }
 
 message responseGlobalStats {

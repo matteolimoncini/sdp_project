@@ -1,20 +1,20 @@
 package REST.beans;
 
-import com.google.gson.annotations.Expose;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GlobalStats {
 
     private double avgDelivery;
     private double avgKilometers;
-    private double avgPollution;
+    private List<Double> avgPollution = new ArrayList<>();
     private double avgBattery;
     private long timestamp;
 
@@ -24,12 +24,29 @@ public class GlobalStats {
     public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery, long timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
-        this.avgPollution = avgPollution;
+        this.avgPollution.add(avgPollution);
         this.avgBattery = avgBattery;
         //String t = timestamp.substring(3,timestamp.length()-3);
         this.timestamp = timestamp;
     }
     public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery) {
+        this.avgDelivery = avgDelivery;
+        this.avgKilometers = avgKilometers;
+        this.avgPollution.add(avgPollution);
+        this.avgBattery = avgBattery;
+        //String t = timestamp.substring(3,timestamp.length()-3);
+        Date date = new Date();
+        this.timestamp = date.getTime();
+    }
+    public GlobalStats(double avgDelivery, double avgKilometers, List<Double> avgPollution, double avgBattery, long timestamp) {
+        this.avgDelivery = avgDelivery;
+        this.avgKilometers = avgKilometers;
+        this.avgPollution = avgPollution;
+        this.avgBattery = avgBattery;
+        //String t = timestamp.substring(3,timestamp.length()-3);
+        this.timestamp = timestamp;
+    }
+    public GlobalStats(double avgDelivery, double avgKilometers, List<Double> avgPollution, double avgBattery) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
@@ -46,8 +63,8 @@ public class GlobalStats {
         return avgKilometers;
     }
 
-    public double getAvgPollution() {
-        return avgPollution;
+    public List<Double> getAvgPollution() {
+        return this.avgPollution;
     }
 
     public double getAvgBattery() {
@@ -78,7 +95,7 @@ public class GlobalStats {
         this.avgKilometers = avgKilometers;
     }
 
-    public void setAvgPollution(double avgPollution) {
+    public void setAvgPollution(List<Double> avgPollution) {
         this.avgPollution = avgPollution;
     }
 
