@@ -13,7 +13,6 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.*;
 
-import java.sql.DatabaseMetaData;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,8 +35,6 @@ public class Drone {
     private Integer battery;
     private boolean processingDelivery;
     private Position myPosition;
-    private Timestamp lastDelivery;
-    private double kmTotDelivery;
     private String ipServerAdmin;
     private Integer portServerAdmin;
     private boolean partecipant;
@@ -327,8 +324,7 @@ public class Drone {
         double distance;
         double minDistance = Double.MAX_VALUE;
         Drone chosenDrone = null;
-        for (int i = 0; i < dronesCopyChooseDeliver.size(); i++) {
-            Drone currentDrone = dronesCopyChooseDeliver.get(i);
+        for (Drone currentDrone : dronesCopyChooseDeliver) {
             //not consider drone already at work
             if (currentDrone.isProcessingDelivery()) {
                 continue;
@@ -533,11 +529,6 @@ public class Drone {
     }
 
     public void sendGlobalStatistics() {
-        /*if (!iAmMaster()) {
-            System.err.println("only master can send global statistics");
-            return ;
-            //throw exception?
-        }*/
 
         Client client = Client.create();
         double sumDel = 0, sumKm = 0, sumPol = 0, sumBat = 0;
@@ -558,7 +549,7 @@ public class Drone {
 
         if (len != 0) {
             //calculate avg
-            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumPol / lenPol);
+            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumBat / lenPol);
             System.out.println("sending gstats to server...");
 
             //remove all elements from the list
