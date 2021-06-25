@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(37, "localhost", 8373, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 8111, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -22,7 +22,7 @@ public class DroneMain {
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
-        Thread sendGlobalStatsThread;
+        DroneGlobalStatsThread sendGlobalStatsThread;
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         Thread serverThread;
@@ -120,6 +120,9 @@ public class DroneMain {
 
         //manage exit from the system
 
+
+
+
         //if is master disconnect from broker mqtt
         if(drone.isMaster()){
             try {
@@ -142,6 +145,9 @@ public class DroneMain {
             assert true;
         }
 
+        pm10Sim.stopMeGently();
+        pollutionThread.stopMeGently();
+
         //close communication channels with others drones
         serverThread.stop();
         System.out.println("communication channels with others drones closed");
@@ -152,6 +158,7 @@ public class DroneMain {
             System.out.println("TODO sent global stats to server");
         }
 
+        sendGlobalStatsThread.stopMeGently();
         //ask to exit to server
         drone.removeDrone();
         System.out.println("exit confirmed from the server");

@@ -22,6 +22,6 @@ public class PingDroneImpl extends pingServiceImplBase{
 
         Ping.responsePing response = Ping.responsePing.newBuilder().setResponse("I AM ALIVE! "+this.myDrone.getIdDrone()).build();
         responseObserver.onNext(response);
-        //responseObserver.onCompleted();
+        responseObserver.onCompleted();
     }
 }
