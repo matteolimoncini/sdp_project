@@ -26,7 +26,7 @@ public class StatisticsService {
         System.out.println(globalStats.getTimestamp());
 
         GlobalStatsList.getInstance().addGlobalStats(globalStats);
-        return Response.ok().entity("{\"message\": \"Global statistics added\"}").build();
+        return Response.ok().build();//.entity("{\"message\": \"Global statistics added\"}").build();
     }
 
     @Path("globals/{lastN}")

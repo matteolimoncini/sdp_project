@@ -552,17 +552,18 @@ public class Drone {
             WebResource webResource = client.resource(url +"/statistics/globals");
             Gson gson = new Gson();
             String input = gson.toJson(gstats);
-            ClientResponse response = webResource.accept("application/json").post(ClientResponse.class, input);
+            System.out.println(input);
+            ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
             if (response.getStatus() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + response.getStatus());
             }
 
-            String output = response.getEntity(String.class);
+            //String output = response.getEntity(String.class);
 
             System.out.println("Output from Server .... \n");
-            System.out.println(output);
+            //System.out.println(output);
         }
 
     }
