@@ -59,8 +59,7 @@ public class DroneManageOrderThread extends Thread {
 
                             @Override
                             public void onError(Throwable t) {
-                                System.err.print("on error! : ");
-                                System.err.println(t.getMessage());
+
                             }
 
                             @Override

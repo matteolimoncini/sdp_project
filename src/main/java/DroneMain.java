@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 8111, "localhost", 1337);
+        Drone drone = new Drone(7, "localhost", 8777, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -25,7 +25,7 @@ public class DroneMain {
         DroneGlobalStatsThread sendGlobalStatsThread;
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
-        Thread serverThread;
+        ServerGrpcThread serverThread;
         Thread pingThread;
         Thread manageOrder;
         PM10Simulator pm10Sim;
@@ -88,7 +88,6 @@ public class DroneMain {
             if (drone.getBattery()<15){
                 System.out.println("battery level is less than 15%");
                 System.out.println("drone with id "+drone.getIdDrone()+" need to exit from the system");
-                drone.setQuit(true);
                 break;
             }
 
@@ -98,7 +97,6 @@ public class DroneMain {
                     assert true;
                 }
                 System.out.println("received all positions");
-
                 drone.setCountPosition(0);
                 manageOrder.start();
             }
@@ -154,7 +152,7 @@ public class DroneMain {
         pollutionThread.stopMeGently();
 
         //close communication channels with others drones
-        serverThread.stop();
+        serverThread.stopMeGently();
         System.out.println("communication channels with others drones closed");
 
         //if is master send global stats to server

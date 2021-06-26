@@ -7,15 +7,16 @@ import io.grpc.ServerBuilder;
 
 public class ServerGrpcThread extends Thread {
     private Drone drone;
-
+    private Server server;
     public ServerGrpcThread(Drone drone) {
         this.drone = drone;
     }
 
     @Override
     public void run() {
+
         try {
-            Server server = ServerBuilder
+            this.server = ServerBuilder
                     .forPort(this.drone.getPortNumber())
                     .addService(new NewDroneImpl(this.drone))
                     .addService(new PingDroneImpl(this.drone))
@@ -25,10 +26,14 @@ public class ServerGrpcThread extends Thread {
                     .addService(new GlobalStatsMasterImpl(this.drone))
                     .build();
 
-            server.start();
-            server.awaitTermination();
+            this.server.start();
+            this.server.awaitTermination();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopMeGently(){
+        this.server.shutdownNow();
     }
 }
