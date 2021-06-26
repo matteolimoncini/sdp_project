@@ -115,6 +115,8 @@ public class DroneMain {
 
         }
         System.out.println("fuori while");
+        drone.setQuit(true);
+
         //TODO ?
         //drone.sendGlobalStatistics();
 
@@ -132,6 +134,7 @@ public class DroneMain {
             }
 
         }
+        System.out.println("disconnected mqtt");
 
         //if is master manage pending orders
         try {
@@ -139,6 +142,8 @@ public class DroneMain {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("managed pending orders");
+
 
         //wait until current order is in progress
         while (drone.isProcessingDelivery()){
@@ -159,6 +164,7 @@ public class DroneMain {
         }
 
         sendGlobalStatsThread.stopMeGently();
+        System.out.println("executed stop me gently");
         //ask to exit to server
         drone.removeDrone();
         System.out.println("exit confirmed from the server");
