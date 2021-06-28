@@ -26,7 +26,7 @@ public class DroneMain {
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         ServerGrpcThread serverThread;
-        Thread pingThread;
+        PingThread pingThread;
         Thread manageOrder;
         PM10Simulator pm10Sim;
 
@@ -151,14 +151,16 @@ public class DroneMain {
         pm10Sim.stopMeGently();
         pollutionThread.stopMeGently();
 
+        pingThread.stopMeGently();
+
         //close communication channels with others drones
         serverThread.stopMeGently();
         System.out.println("communication channels with others drones closed");
 
         //if is master send global stats to server
         if(drone.isMaster()){
-            //TODO
-            System.out.println("TODO sent global stats to server");
+            drone.sendGlobalStatistics();
+            System.out.println("sent global stats to server");
         }
 
         sendGlobalStatsThread.stopMeGently();

@@ -11,6 +11,7 @@ import io.grpc.stub.StreamObserver;
 import java.util.List;
 
 public class PingThread extends Thread {
+    private volatile boolean stopCondition = false;
     private Drone drone;
 
     public PingThread(Drone drone) {
@@ -20,7 +21,7 @@ public class PingThread extends Thread {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!stopCondition) {
                 Thread.sleep(10 * 1000);
 
                 List<Drone> droneListPing = this.drone.getDrones();
@@ -82,6 +83,10 @@ public class PingThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopMeGently() {
+        this.stopCondition=true;
     }
 }
 
