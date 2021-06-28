@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(3, "localhost", 8333, "localhost", 1337);
+        Drone drone = new Drone(5, "localhost", 8474, "localhost", 1337);
         System.out.println("i am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -79,7 +79,7 @@ public class DroneMain {
 
         //manageOrderThread = new DroneManageOrderThread(drone);
 
-        System.out.println("before while");
+        //System.out.println("before while");
 
         manageOrder = new ManageOrderThread(drone);
 
@@ -92,11 +92,11 @@ public class DroneMain {
             }
 
             if(drone.isMaster() && !manageOrder.isAlive()) {
-                System.out.println("waiting that all drone sent their position...");
+                //System.out.println("waiting that all drone sent their position...");
                 while (drone.isMaster() && drone.getDrones()!= null && (drone.getCountPosition() < drone.getDrones().size())) {
                     assert true;
                 }
-                System.out.println("received all positions");
+                //System.out.println("received all positions");
                 drone.setCountPosition(0);
                 manageOrder.start();
             }
@@ -112,7 +112,7 @@ public class DroneMain {
 
 
         }
-        System.out.println("fuori while");
+        //System.out.println("fuori while");
         drone.setQuit(true);
 
         //TODO ?
@@ -162,11 +162,11 @@ public class DroneMain {
         }
 
         sendGlobalStatsThread.stopMeGently();
-        System.out.println("executed stop me gently");
+        //System.out.println("executed stop me gently");
 
         //ask to exit to server
         drone.removeDrone();
-        System.out.println("exit confirmed from the server");
+        //System.out.println("exit confirmed from the server");
 
         pingThread.stopMeGently();
 

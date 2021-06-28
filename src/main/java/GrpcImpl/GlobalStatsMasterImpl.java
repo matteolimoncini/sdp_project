@@ -39,13 +39,13 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
         System.out.println("received global stats from one drone to master");
 
         droneInMessage.setBattery(request.getBattery());
-        System.out.println("setted battery");
+        //System.out.println("setted battery");
 
         droneInMessage.setMyPosition(new Position(request.getNewPositionX(), request.getNewPositionY()));
-        System.out.println("setted new position");
+        //System.out.println("setted new position");
 
         droneInMessage.setProcessingDelivery(false);
-        System.out.println("setted processing delivery");
+        //System.out.println("setted processing delivery");
 
         double avgb = request.getBattery();
         double avgkm = request.getKmTravelled();

@@ -22,14 +22,14 @@ public class ElectionThread extends Thread {
 
         //marca come partecipante
         drone.setPartecipant(true);
-        System.out.println(drone.getIdDrone()+" setted as partecipant");
+        //System.out.println(drone.getIdDrone()+" setted as partecipant");
 
         //invia al successivo un msg ELECTION,<id>
-        System.out.println("ID DRONE: "+drone.getIdDrone());
-        System.out.println("drones:"+drone.getDrones());
+        //System.out.println("ID DRONE: "+drone.getIdDrone());
+        //System.out.println("drones:"+drone.getDrones());
         Drone nextDroneInRing = drone.getNextInRing();
         assert nextDroneInRing!= null;
-        System.out.println(drone.getIdDrone()+" has next id:" +nextDroneInRing.getIdDrone());
+        //System.out.println(drone.getIdDrone()+" has next id:" +nextDroneInRing.getIdDrone());
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
         electionStub stub = electionGrpc.newStub(channel);

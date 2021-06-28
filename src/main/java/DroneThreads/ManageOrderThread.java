@@ -33,7 +33,7 @@ public class ManageOrderThread extends Thread {
                     firstPendingOrder = this.drone.getFirstPendingOrder();
                     Drone droneChoosen = this.drone.chooseDeliver(firstPendingOrder);
                     if (droneChoosen != null){
-                        System.out.println("**droneChoosen != null**");
+                        //System.out.println("**droneChoosen != null**");
                         this.drone.removePendingOrder(firstPendingOrder);
                         droneChoosen.setProcessingDelivery(true);
 
@@ -54,7 +54,7 @@ public class ManageOrderThread extends Thread {
                         stub.messagePropagateOrder(request, new StreamObserver<PropagateOrder.responseOrder>() {
                             @Override
                             public void onNext(PropagateOrder.responseOrder value) {
-                                System.out.println("on next");
+
                             }
 
                             @Override
@@ -73,12 +73,12 @@ public class ManageOrderThread extends Thread {
                 }
                 else {
                     if(this.drone.isQuit()){
-                        System.out.println("no pending order and quit flag set as true");
+                        //System.out.println("no pending order and quit flag set as true");
                         break;
                     }
                 }
             }
-            System.out.println("ending manage order thread...");
+            //System.out.println("ending manage order thread...");
 
         } catch (Exception e) {
             e.printStackTrace();

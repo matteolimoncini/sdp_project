@@ -54,19 +54,19 @@ public class PingThread extends Thread {
 
                         @Override
                         public void onError(Throwable t) {
-                            System.out.println("PING FAILED!");
+                            //System.out.println("PING FAILED!");
                             drone.removeDroneFromList(d);
-                            System.out.println("DRONE REMOVED");
+                            //System.out.println("DRONE REMOVED");
                             if(drone.getDrones()!= null && drone.getDrones().size()>0) {
                                 if (drone.getIdMaster().equals(d.getIdDrone())) {
                                     //start election
-                                    System.out.println("Election starting...");
+                                    //System.out.println("Election starting...");
                                     Thread electionThread = new ElectionThread(drone);
                                     electionThread.start();
                                 }
                             }
                             else{
-                                System.out.println("i am alone in system, became master");
+                                //System.out.println("i am alone in system, became master");
                                 drone.setIdMaster(drone.getIdDrone());
                             }
                         }

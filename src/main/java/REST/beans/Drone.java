@@ -350,7 +350,7 @@ public class Drone {
             //System.out.println("###CHOSEN DRONE NULL!");
             return null;
         }
-        System.out.println("###CHOSEN DRONE: " + chosenDrone.getIdDrone() + "########");
+        //System.out.println("###CHOSEN DRONE: " + chosenDrone.getIdDrone() + "########");
         return chosenDrone;
     }
 
@@ -380,7 +380,7 @@ public class Drone {
     public synchronized Drone getNextInRing() {
         assert this.getDrones() != null;
         for (Drone d : this.getDrones()) {
-            System.out.println("HERE");
+            //System.out.println("HERE");
             if (d.getIdDrone() > this.getIdDrone()) {
                 return d;
             }
