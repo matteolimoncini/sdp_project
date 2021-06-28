@@ -1,5 +1,6 @@
 package REST.services;
 
+import REST.beans.AvgStatisticsModel;
 import REST.beans.GlobalStats;
 import REST.beans.GlobalStatsList;
 
@@ -62,7 +63,7 @@ public class StatisticsService {
             sumDelivery += globalStats.getAvgDelivery();
 
         avgDelivery = (double) sumDelivery / globalStatsList.size();
-        return Response.ok().entity("{\"AvgDelivery\":"+avgDelivery+ "}").build();
+        return Response.ok().entity(new AvgStatisticsModel(avgDelivery)).build();
     }
 
     @Path("kilometers/avg")

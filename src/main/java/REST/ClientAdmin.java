@@ -1,5 +1,6 @@
 package REST;
 
+import REST.beans.AvgStatisticsModel;
 import REST.beans.Drone;
 import REST.beans.DroneList;
 import com.google.gson.Gson;
@@ -97,12 +98,15 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    String outputString2 = response.getEntity(String.class);
+                    AvgStatisticsModel avgModel = response.getEntity(AvgStatisticsModel.class);
                     System.out.println("Output from Server .... \n");
-                    System.out.println(outputString2);
-
-                    //DroneList list = gson.fromJson(output,DroneList.class);
-
+                    double avg = avgModel.getAvg();
+                    if(Double.isNaN(avg)){
+                        System.out.println("media non disponibile");
+                    }
+                    else{
+                        System.out.println("The average number of delivery is"+avg);
+                    }
 
                     break;
                 case 4:
