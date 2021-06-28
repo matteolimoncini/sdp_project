@@ -545,7 +545,7 @@ public class Drone {
                 lenPol += 1;
             }
         }
-        System.out.println("len =0");
+        //System.out.println("len =0");
 
         if (len != 0) {
             //calculate avg

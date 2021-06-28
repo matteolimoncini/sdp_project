@@ -35,6 +35,8 @@ public class PositionDroneImpl extends positionServiceGrpc.positionServiceImplBa
             }
         }
         myDrone.addCountPosition();
+        SendPosition.responsePosition response = SendPosition.responsePosition.newBuilder().setMessageResponse("").build();
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
