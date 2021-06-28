@@ -73,9 +73,9 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(DroneList.class);
+                    String outputString = response.getEntity(String.class);
                     System.out.println("Output from Server .... \n");
-                    System.out.println(output);
+                    System.out.println(outputString);
 
                     //DroneList list = gson.fromJson(output,DroneList.class);
                     break;
@@ -97,9 +97,9 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(DroneList.class);
+                    String outputString2 = response.getEntity(String.class);
                     System.out.println("Output from Server .... \n");
-                    System.out.println(output);
+                    System.out.println(outputString2);
 
                     //DroneList list = gson.fromJson(output,DroneList.class);
 
