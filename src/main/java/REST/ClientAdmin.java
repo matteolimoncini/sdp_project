@@ -10,6 +10,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 @XmlRootElement
 public class ClientAdmin {
@@ -26,15 +27,18 @@ public class ClientAdmin {
         String t2;
 
         while (true) {
-            System.out.println("Welcome to the admin page");
-            System.out.print("<1> list of drones in the city \n" +
+            System.out.println("\nWelcome to the admin page");
+            System.out.print(
+                    "<1> list of drones in the city \n" +
                     "<2> last n global statistics \n" +
                     "<3> average number of delivery between two timestamp \n" +
                     "<4> average number of kilometers between two timestamp \n" +
                     "press any other key to exit\n");
-
-            numberMenu = in.nextInt();
-
+            try {
+                numberMenu = in.nextInt();
+            }catch (InputMismatchException e){
+                break;
+            }
 
             switch (numberMenu) {
                 case 1:
@@ -49,7 +53,7 @@ public class ClientAdmin {
                     }
 
                     output = response.getEntity(DroneList.class);
-                    System.out.println("Output from Server .... \n");
+                    System.out.print("Output from Server .... \n");
                     for (Drone d:output.getDrones()) {
                         System.out.println(d.toString());
                     }
