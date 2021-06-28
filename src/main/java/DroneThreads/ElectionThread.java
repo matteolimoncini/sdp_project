@@ -37,6 +37,7 @@ public class ElectionThread extends Thread {
                 .newBuilder()
                 .setType("ELECTION")
                 .setIdDrone(drone.getIdDrone())
+                .setBatteryDrone(drone.getBattery())
                 .build();
         stub.election(request, new StreamObserver<message>() {
             @Override

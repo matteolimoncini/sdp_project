@@ -9,6 +9,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import static org.junit.Assert.assertNotNull;
+
 public class ElectionImpl extends electionImplBase {
     private Drone drone;
 
@@ -20,8 +22,12 @@ public class ElectionImpl extends electionImplBase {
     public void election(message request, StreamObserver<message> responseObserver) {
 
         int idDroneInMessage = request.getIdDrone();
+        int myId = drone.getIdDrone();
+
+        int batteryDroneInMessage = request.getBatteryDrone();
         String typeMessage = request.getType();
-        Integer myId = drone.getIdDrone();
+        int myBattery = drone.getBattery();
+
 
         Drone nextDroneInRing = drone.getNextInRing();
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
@@ -29,49 +35,77 @@ public class ElectionImpl extends electionImplBase {
         electionGrpc.electionStub stub = electionGrpc.newStub(channel);
         message propagatedMessage = null;
 
-        System.out.println("message received: " + typeMessage + " whit id inside4: " + idDroneInMessage);
+        System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
         if (typeMessage.equals("ELECTION")) {
 
             if (drone.getPartecipant()) {   //if drone is participant
-                if (myId < idDroneInMessage) {
+                if (myBattery < batteryDroneInMessage) {
                     //propagate message as is
                     propagatedMessage = request;
 
                 } else {
-                    if (myId > idDroneInMessage) {
+                    if (myBattery > batteryDroneInMessage) {
                         //not propagate message
                         propagatedMessage = null;
                     } else {
-                        //in this case myId = idDroneInMessage
+                        //same battery
+                        if(myId == idDroneInMessage) {
+                            //in this case myBattery = batteryIdDroneInMessage
 
-                        //i am elected as master
-                        drone.setIdMaster(myId);
+                            //i am elected as master
+                            drone.setIdMaster(myId);
 
-                        //set as not participant
-                        drone.setPartecipant(false);
+                            //set as not participant
+                            drone.setPartecipant(false);
 
-                        //send ELECTED message
-                        propagatedMessage = message.newBuilder()
-                                .setType("ELECTED")
-                                .setIdDrone(myId)
-                                .build();
+                            //send ELECTED message
+                            propagatedMessage = message.newBuilder()
+                                    .setType("ELECTED")
+                                    .setIdDrone(myId)
+                                    .build();
+                        }
+                        if(myId<idDroneInMessage){
+                            //propagate message as is
+                            propagatedMessage = request;
+                        }
+                        if(myId>idDroneInMessage){
+                            //not propagate message
+                            propagatedMessage = null;
+                        }
+
                     }
                 }
-            } else {                //if drone is not participant
+            } else {      //if drone is not participant
 
                 //set as participant
                 drone.setPartecipant(true);
 
-                if (myId > idDroneInMessage) {
+                if (myBattery > batteryDroneInMessage) {
                     //change idDroneInMessage with myId and send message
                     propagatedMessage = message.newBuilder()
                             .setType("ELECTION")
                             .setIdDrone(myId)
+                            .setBatteryDrone(myBattery)
                             .build();
                 } else {
-                    if (myId < idDroneInMessage) {
+                    if (myBattery < batteryDroneInMessage) {
                         //propagate message as is
                         propagatedMessage = request;
+                    }
+
+                    if(myBattery==batteryDroneInMessage){
+                        if(myId<idDroneInMessage){
+                            //propagate message as is
+                            propagatedMessage = request;
+                        }
+                        if(myId>idDroneInMessage){
+                            //change idDroneInMessage with myId and send message
+                            propagatedMessage = message.newBuilder()
+                                    .setType("ELECTION")
+                                    .setIdDrone(myId)
+                                    .setBatteryDrone(myBattery)
+                                    .build();
+                        }
                     }
                 }
 

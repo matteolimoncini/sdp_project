@@ -4,6 +4,7 @@ package com.example.grpc;
 message message {
   string type = 1;
   int32 idDrone = 2;
+  int32 batteryDrone = 3;
 }
 
 
