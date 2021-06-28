@@ -22,6 +22,6 @@ public class PropagateOrderImpl extends sendOrderImplBase{
         Order order = new Order(request.getIdOrder(),pickupPosition,deliveryPosition);
 
         drone.manageOrder(order);
-        //responseObserver.onCompleted();
+        responseObserver.onCompleted();
     }
 }

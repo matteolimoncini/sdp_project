@@ -1,5 +1,6 @@
 package REST;
 
+import REST.beans.Drone;
 import REST.beans.DroneList;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
@@ -20,7 +21,7 @@ public class ClientAdmin {
         WebResource webResource;
         ClientResponse response;
         MultivaluedMap<String, String> params;
-        String output;
+        DroneList output;
         String t1;
         String t2;
 
@@ -47,9 +48,11 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(String.class);
+                    output = response.getEntity(DroneList.class);
                     System.out.println("Output from Server .... \n");
-                    System.out.println(output);
+                    for (Drone d:output.getDrones()) {
+                        System.out.println(d.toString());
+                    }
 
                     //DroneList list = gson.fromJson(output,DroneList.class);
 
@@ -66,7 +69,7 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(String.class);
+                    output = response.getEntity(DroneList.class);
                     System.out.println("Output from Server .... \n");
                     System.out.println(output);
 
@@ -90,7 +93,7 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(String.class);
+                    output = response.getEntity(DroneList.class);
                     System.out.println("Output from Server .... \n");
                     System.out.println(output);
 
@@ -116,7 +119,7 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                     }
 
-                    output = response.getEntity(String.class);
+                    output = response.getEntity(DroneList.class);
                     System.out.println("Output from Server .... \n");
                     System.out.println(output);
 

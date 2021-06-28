@@ -54,7 +54,7 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
         GlobalStats gstats = new GlobalStats(avgd,avgkm,avgpol,avgb);
         drone.addToStatsList(gstats);
         System.out.println("STATS ADDED TO LIST IN MASTER");
-        //responseObserver.onCompleted();
+        responseObserver.onCompleted();
     }
 }
 

@@ -29,6 +29,6 @@ public class NewDroneImpl extends newDroneImplBase {
 
         responseAddNewDrone response = responseAddNewDrone.newBuilder().setIdDroneMaster(this.myDrone.getIdMaster()).build();
         responseObserver.onNext(response);
-        //responseObserver.onCompleted();
+        responseObserver.onCompleted();
     }
 }

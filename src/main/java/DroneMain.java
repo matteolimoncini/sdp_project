@@ -151,8 +151,6 @@ public class DroneMain {
         pm10Sim.stopMeGently();
         pollutionThread.stopMeGently();
 
-        pingThread.stopMeGently();
-
         //close communication channels with others drones
         serverThread.stopMeGently();
         System.out.println("communication channels with others drones closed");
@@ -165,9 +163,12 @@ public class DroneMain {
 
         sendGlobalStatsThread.stopMeGently();
         System.out.println("executed stop me gently");
+
         //ask to exit to server
         drone.removeDrone();
         System.out.println("exit confirmed from the server");
+
+        pingThread.stopMeGently();
 
         //close all thread
         System.exit(0);

@@ -35,7 +35,7 @@ public class ElectionImpl extends electionImplBase {
             if (drone.getPartecipant()) {   //if drone is participant
                 if (myId < idDroneInMessage) {
                     //propagate message as is
-                    propagatedMessage= request;
+                    propagatedMessage = request;
 
                 } else {
                     if (myId > idDroneInMessage) {
@@ -51,7 +51,7 @@ public class ElectionImpl extends electionImplBase {
                         drone.setPartecipant(false);
 
                         //send ELECTED message
-                        propagatedMessage= message.newBuilder()
+                        propagatedMessage = message.newBuilder()
                                 .setType("ELECTED")
                                 .setIdDrone(myId)
                                 .build();
@@ -64,14 +64,14 @@ public class ElectionImpl extends electionImplBase {
 
                 if (myId > idDroneInMessage) {
                     //change idDroneInMessage with myId and send message
-                    propagatedMessage= message.newBuilder()
+                    propagatedMessage = message.newBuilder()
                             .setType("ELECTION")
                             .setIdDrone(myId)
                             .build();
                 } else {
                     if (myId < idDroneInMessage) {
                         //propagate message as is
-                        propagatedMessage= request;
+                        propagatedMessage = request;
                     }
                 }
 
@@ -87,20 +87,20 @@ public class ElectionImpl extends electionImplBase {
 
                 if (myId != idDroneInMessage) {
                     //propagate message as is
-                    propagatedMessage= request;
+                    propagatedMessage = request;
 
                     //send position to master
                     Thread sendPosition = new PositionDroneThread(drone);
                     sendPosition.start();
 
                 }
-                //responseObserver.onCompleted();
+                responseObserver.onCompleted();
             } else { //type message not ELECTION and not ELECTED
                 //type error
                 System.err.println("message type error");
             }
         }
-        if(propagatedMessage!=null) {
+        if (propagatedMessage != null) {
             stub.election(propagatedMessage, new StreamObserver<message>() {
                 @Override
                 public void onNext(message value) {
@@ -117,8 +117,7 @@ public class ElectionImpl extends electionImplBase {
                     channel.shutdown();
                 }
             });
-        }
-        else {
+        } else {
             System.out.println("message not sent");
         }
     }
