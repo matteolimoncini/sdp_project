@@ -405,7 +405,7 @@ public class Drone {
     }
 
     public synchronized void addDrone() {
-        System.out.println("start addDrone");
+        //System.out.println("start addDrone");
         List<Drone> droneList;
 
         Client client = Client.create();
@@ -415,7 +415,7 @@ public class Drone {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
-        System.out.println("middle addDrone");
+        //System.out.println("middle addDrone");
 
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
@@ -425,10 +425,28 @@ public class Drone {
         ResponseAddModel output = response.getEntity(ResponseAddModel.class);
 
         droneList = output.getDrones();
-        this.setMyPosition(output.getMyPosition());
+        Position myPosition = output.getMyPosition();
+        this.setMyPosition(myPosition);
 
         System.out.println("Output from Server .... \n");
-        System.out.println(output);
+        System.out.println("my position is: ("+ myPosition.getxCoordinate()+","+myPosition.getyCoordinate()+")");
+        if(droneList==null || droneList.isEmpty()){
+            System.out.println("There aren't other drones in the systems");
+        }
+        else {
+            System.out.print("other drones in the systems are: ");
+            for (int i = 0; i < droneList.size(); i++) {
+                Drone d = droneList.get(i);
+                System.out.print(d.getIdDrone());
+                if (i < droneList.size() - 1) {
+                    System.out.print(",");
+                }
+                if (i == droneList.size() - 1) {
+                    System.out.print("\n");
+                }
+            }
+        }
+        //System.out.println(output);
         this.drones = droneList;
     }
 
