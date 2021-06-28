@@ -12,10 +12,10 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-public class DroneManageOrderThread extends Thread {
+public class ManageOrderThread extends Thread {
     private Drone drone;
 
-    public DroneManageOrderThread(Drone drone) {
+    public ManageOrderThread(Drone drone) {
         this.drone = drone;
 
     }

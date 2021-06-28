@@ -2,11 +2,11 @@ package DroneThreads;
 
 import REST.beans.Drone;
 
-public class DroneGlobalStatsThread extends Thread {
+public class GlobalStatsThread extends Thread {
     private volatile boolean stopCondition = false;
     private Drone drone;
 
-    public DroneGlobalStatsThread(Drone drone) {
+    public GlobalStatsThread(Drone drone) {
         this.drone = drone;
     }
 

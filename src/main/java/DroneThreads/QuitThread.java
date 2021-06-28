@@ -4,9 +4,9 @@ import REST.beans.Drone;
 
 import java.util.Scanner;
 
-public class DroneThreadQuit extends Thread{
+public class QuitThread extends Thread{
     private Drone drone;
-    public DroneThreadQuit(Drone drone) {
+    public QuitThread(Drone drone) {
         this.drone=drone;
     }
 

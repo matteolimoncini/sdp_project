@@ -22,7 +22,7 @@ public class DroneMain {
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
-        DroneGlobalStatsThread sendGlobalStatsThread;
+        GlobalStatsThread sendGlobalStatsThread;
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         ServerGrpcThread serverThread;
@@ -37,7 +37,7 @@ public class DroneMain {
         serverThread.start();
 
         //start a thread that wait that user type "quit" and exit
-        quitThread = new DroneThreadQuit(drone);
+        quitThread = new QuitThread(drone);
         quitThread.start();
 
 
@@ -51,7 +51,7 @@ public class DroneMain {
                 //find the master
                 //send a message to all other drone that i'm entering in the system
                 for (Drone droneReceiver : drones) {
-                    sendNewDroneAdded = new sendNewDroneAddedThread(droneReceiver.getIpAddress(), droneReceiver.getPortNumber(), "new drone added", drone);
+                    sendNewDroneAdded = new NewDroneThread(droneReceiver.getIpAddress(), droneReceiver.getPortNumber(), "new drone added", drone);
                     sendNewDroneAdded.start();
                 }
             }
@@ -74,14 +74,14 @@ public class DroneMain {
         pollutionThread.start();
 
         //start a thread that send global stats if this drone is master
-        sendGlobalStatsThread = new DroneGlobalStatsThread(drone);
+        sendGlobalStatsThread = new GlobalStatsThread(drone);
 
 
         //manageOrderThread = new DroneManageOrderThread(drone);
 
         System.out.println("before while");
 
-        manageOrder = new DroneManageOrderThread(drone);
+        manageOrder = new ManageOrderThread(drone);
 
 
         while (quitThread.isAlive()) {

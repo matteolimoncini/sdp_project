@@ -11,9 +11,9 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.List;
 
-public class sendPositionDroneThread extends Thread {
+public class PositionDroneThread extends Thread {
     private Drone drone;
-    public sendPositionDroneThread(Drone drone) {
+    public PositionDroneThread(Drone drone) {
         this.drone = drone;
     }
 

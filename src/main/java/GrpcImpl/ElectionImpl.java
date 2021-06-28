@@ -1,26 +1,18 @@
 package GrpcImpl;
 
-import DroneThreads.sendPositionDroneThread;
+import DroneThreads.PositionDroneThread;
 import REST.beans.Drone;
-import REST.beans.Position;
-import com.example.grpc.Election;
 import com.example.grpc.Election.message;
-import com.example.grpc.SendPosition;
-import com.example.grpc.SendPosition.position;
 import com.example.grpc.electionGrpc;
 import com.example.grpc.electionGrpc.electionImplBase;
-import com.example.grpc.positionServiceGrpc;
-import com.example.grpc.positionServiceGrpc.positionServiceStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-import java.util.List;
-
-public class electionImpl extends electionImplBase {
+public class ElectionImpl extends electionImplBase {
     private Drone drone;
 
-    public electionImpl(Drone drone) {
+    public ElectionImpl(Drone drone) {
         this.drone = drone;
     }
 
@@ -98,7 +90,7 @@ public class electionImpl extends electionImplBase {
                     propagatedMessage= request;
 
                     //send position to master
-                    Thread sendPosition = new sendPositionDroneThread(drone);
+                    Thread sendPosition = new PositionDroneThread(drone);
                     sendPosition.start();
 
                 }

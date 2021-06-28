@@ -20,7 +20,7 @@ public class ServerGrpcThread extends Thread {
                     .forPort(this.drone.getPortNumber())
                     .addService(new NewDroneImpl(this.drone))
                     .addService(new PingDroneImpl(this.drone))
-                    .addService(new electionImpl(this.drone))
+                    .addService(new ElectionImpl(this.drone))
                     .addService(new PositionDroneImpl(this.drone))
                     .addService(new PropagateOrderImpl(this.drone))
                     .addService(new GlobalStatsMasterImpl(this.drone))

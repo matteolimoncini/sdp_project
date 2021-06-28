@@ -9,13 +9,13 @@ import io.grpc.stub.StreamObserver;
 
 import static com.example.grpc.AddDrone.*;
 
-public class sendNewDroneAddedThread extends Thread {
+public class NewDroneThread extends Thread {
     private Drone myDrone;
     private String ipReceiverDrone;
     private int portReceiverDrone;
     private String message;
 
-    public sendNewDroneAddedThread(String ipReceiverDrone, int portReceiverDrone, String message, Drone newDrone) {
+    public NewDroneThread(String ipReceiverDrone, int portReceiverDrone, String message, Drone newDrone) {
         this.ipReceiverDrone = ipReceiverDrone;
         this.portReceiverDrone = portReceiverDrone;
         this.message = message;
