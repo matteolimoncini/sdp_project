@@ -70,6 +70,7 @@ public class PingThread extends Thread {
                                 //System.out.println("i am alone in system, became master");
                                 drone.setIdMaster(drone.getIdDrone());
                             }
+                            channel.shutdown();
                         }
 
                         @Override

@@ -53,7 +53,8 @@ public class PositionDroneThread extends Thread {
 
             @Override
             public void onCompleted() {
-                channelWithMaster.shutdown();
+                if(!channelWithMaster.isShutdown())
+                    channelWithMaster.shutdown();
             }
         });
     }

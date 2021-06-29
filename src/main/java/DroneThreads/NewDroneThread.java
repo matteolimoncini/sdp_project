@@ -49,7 +49,7 @@ public class NewDroneThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
-
+                channel.shutdown();
             }
 
             @Override

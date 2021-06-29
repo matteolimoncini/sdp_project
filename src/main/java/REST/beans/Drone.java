@@ -503,7 +503,7 @@ public class Drone {
             if (this.isMaster()) {
                 masterDrone = this;
             }
-            assertNotNull(masterDrone);
+            //assertNotNull(masterDrone);
 
             String ipMaster = masterDrone.getIpAddress();
             Integer portMaster = masterDrone.getPortNumber();
