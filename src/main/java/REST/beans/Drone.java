@@ -259,8 +259,8 @@ public class Drone {
         this.clientDrone = new MqttClient(broker, clientId);
         this.clientDrone.connect();
         // Connect the client
-        System.out.println(clientId + " Connecting Broker " + broker);
-        System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
+        //System.out.println(clientId + " Connecting Broker " + broker);
+        //System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
 
         // Callback
         this.clientDrone.setCallback(new MqttCallback() {
@@ -289,9 +289,9 @@ public class Drone {
             }
 
         });
-        System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
+        //System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
         this.clientDrone.subscribe(topic, qos);
-        System.out.println(clientId + " Subscribed to topics : " + topic);
+        System.out.println("Connected broker and subscribed to topics : " + topic);
     }
 
     public Drone chooseDeliver(Order order) {
@@ -429,7 +429,7 @@ public class Drone {
         this.setMyPosition(myPosition);
 
         //System.out.println("Output from Server .... \n");
-        System.out.println("my position is: ("+ myPosition.getxCoordinate()+","+myPosition.getyCoordinate()+")");
+        System.out.println("My position is: ("+ myPosition.getxCoordinate()+","+myPosition.getyCoordinate()+")");
         if(droneList==null || droneList.isEmpty()){
             System.out.println("There aren't other drones in the systems");
         }

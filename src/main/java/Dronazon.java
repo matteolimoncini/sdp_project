@@ -23,9 +23,9 @@ public class Dronazon {
         client = new MqttClient(broker, clientId);
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
-        System.out.println(clientId + " Connecting Broker " + broker);
+        //System.out.println(clientId + " Connecting Broker " + broker);
         client.connect(connOpts);
-        System.out.println(clientId + " Connected");
+        System.out.println("Connected to broker");
 
         while (true) {
             //generate an order
@@ -35,9 +35,13 @@ public class Dronazon {
             message.setQos(qos);
 
             //publish order on dronazon/smartcity/orders/
-            System.out.println(clientId + " Publishing message: " + payload + " ...");
             client.publish(topic, message);
-            System.out.println(clientId + " Message published");
+            Position pickUpPoint = randomOrder.getPickUpPoint();
+            Position deliveryPoint = randomOrder.getDeliveryPoint();
+            System.out.println("Published order with id: " + randomOrder.getId() +
+                    " from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
+                    ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")");
+            //System.out.println(clientId + " Message published");
 
             Thread.sleep(5 * 1000);
         }
