@@ -239,9 +239,9 @@ public class Drone {
         }
         if (this.clientDrone.isConnected()) {
             this.clientDrone.disconnect();
-            System.out.println("Subscriber " + this.clientDrone.getClientId() + " disconnected");
+            System.out.println("Subscriber disconnected");
         }
-        System.out.println("Subscriber already disconnected");
+        //System.out.println("Subscriber already disconnected");
     }
 
     public void subscribeAndPutInQueue() throws MqttException {
@@ -280,7 +280,7 @@ public class Drone {
                 Order order = gson.fromJson(receivedMessage, Order.class);
                 Position pickUpPoint = order.getPickUpPoint();
                 Position deliveryPoint = order.getDeliveryPoint();
-                System.out.println("Received order with id: " + order.getId() +" from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
+                System.out.println("Received order from Dronazon with id: " + order.getId() +" from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
                                 ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")" );
                 Drone.this.addPendingOrder(order);
             }
@@ -296,7 +296,7 @@ public class Drone {
         });
         //System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
         this.clientDrone.subscribe(topic, qos);
-        System.out.println("Connected broker and subscribed to topics : " + topic);
+        System.out.println("Connected broker and subscribed to topic : " + topic);
     }
 
     public Drone chooseDeliver(Order order) {
@@ -351,11 +351,6 @@ public class Drone {
 
             }
         }
-        if (chosenDrone == null) {
-            //System.out.println("###CHOSEN DRONE NULL!");
-            return null;
-        }
-        //System.out.println("###CHOSEN DRONE: " + chosenDrone.getIdDrone() + "########");
         return chosenDrone;
     }
 
@@ -364,16 +359,16 @@ public class Drone {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         Position oldPosition = this.getMyPosition();
-        System.out.println("order in progress by drone with:" + this.getIdDrone());
+        System.out.println("Order in progress by drone with id:" + this.getIdDrone());
         try {
             Thread.sleep(15 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("order "+order.getId()+" completed");
+        System.out.println("Order "+order.getId()+" completed");
         this.setBattery(this.getBattery() - 10);
-        System.out.println("battery level decreased");
-        System.out.println("now battery level is:" + this.getBattery());
+        //System.out.println("battery level decreased");
+        System.out.println("now battery level is: " + this.getBattery());
         this.setProcessingDelivery(false);
         this.sendStatToMaster(order, timestamp, oldPosition);
     }
@@ -467,10 +462,10 @@ public class Drone {
                     + response.getStatus());
         }
 
-        String output = response.getEntity(String.class);
+        //String output = response.getEntity(String.class);
 
-        System.out.println("Output from Server .... \n");
-        System.out.println(output);
+        System.out.println("Drone removed from the system");
+        //System.out.println(output);
 
     }
 
@@ -488,7 +483,7 @@ public class Drone {
             - km_tot_travelled
             - battery
         */
-        System.out.println("sending statistics to master...");
+        //System.out.println("sending statistics to master...");
 
         Drone masterDrone = null;
         List<Drone> dronesList = this.getDrones();
@@ -535,7 +530,7 @@ public class Drone {
             stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
                 @Override
                 public void onNext(GlobalStatsToMaster.responseGlobalStats value) {
-                    System.out.println("global stats received");
+                    //System.out.println("global stats received");
                 }
 
                 @Override
@@ -573,7 +568,7 @@ public class Drone {
         if (len != 0) {
             //calculate avg
             GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumBat / lenPol);
-            System.out.println("sending gstats to server...");
+            System.out.println("Sent global statistics to server");
 
             //remove all elements from the list
             this.setgStatsList(new ArrayList<>());
@@ -582,7 +577,7 @@ public class Drone {
             WebResource webResource = client.resource(url + "/statistics/globals");
             Gson gson = new Gson();
             String input = gson.toJson(gstats);
-            System.out.println(input);
+            //System.out.println(input);
             ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
             if (response.getStatus() != 200) {
