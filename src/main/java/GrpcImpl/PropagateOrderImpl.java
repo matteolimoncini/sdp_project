@@ -24,6 +24,6 @@ public class PropagateOrderImpl extends sendOrderImplBase{
         drone.manageOrder(order);
         PropagateOrder.responseOrder response = PropagateOrder.responseOrder.newBuilder().setResponse("").build();
         responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        //responseObserver.onCompleted();
     }
 }

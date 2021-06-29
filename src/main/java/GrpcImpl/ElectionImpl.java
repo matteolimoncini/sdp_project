@@ -9,6 +9,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.assertNotNull;
 
 public class ElectionImpl extends electionImplBase {
@@ -131,7 +133,7 @@ public class ElectionImpl extends electionImplBase {
                 else {
                     System.out.println("Election finished. I am master");
                 }
-                //responseObserver.onCompleted();
+                responseObserver.onCompleted();
             } else { //type message not ELECTION and not ELECTED
                 //type error
                 System.err.println("message type error");

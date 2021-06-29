@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -361,7 +362,7 @@ public class Drone {
         Position oldPosition = this.getMyPosition();
         System.out.println("Order in progress by drone with id:" + this.getIdDrone());
         try {
-            Thread.sleep(15 * 1000);
+            Thread.sleep(5 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -510,7 +511,6 @@ public class Drone {
 
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
 
-            newDroneGrpc.newDroneStub stub = newDroneGrpc.newStub(channel);
             globalStatsServiceGrpc.globalStatsServiceStub stub1 = globalStatsServiceGrpc.newStub(channel);
 
             Position deliveryPoint = order.getDeliveryPoint();
@@ -524,7 +524,7 @@ public class Drone {
                     .setBattery(this.getBattery())
                     .setNewPositionX(deliveryPoint.getxCoordinate())
                     .setNewPositionY(deliveryPoint.getyCoordinate())
-                    .setKmTravelled(distanceFromPickupTpDelivery)
+                    .setKmTravelled(distanceFromPickupTpDelivery+distanceFromOldToPickup)
                     .addAllAvgPm10(this.getMeasurementList())
                     .build();
             stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
@@ -587,7 +587,7 @@ public class Drone {
 
             //String output = response.getEntity(String.class);
 
-            System.out.println("Output from Server .... \n");
+            //System.out.println("Output from Server .... \n");
             //System.out.println(output);
         }
 

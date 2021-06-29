@@ -9,6 +9,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PingThread extends Thread {
     private volatile boolean stopCondition = false;
