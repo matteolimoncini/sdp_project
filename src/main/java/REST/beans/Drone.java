@@ -370,7 +370,7 @@ public class Drone {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("order completed");
+        System.out.println("order "+order.getId()+" completed");
         this.setBattery(this.getBattery() - 10);
         System.out.println("battery level decreased");
         System.out.println("now battery level is:" + this.getBattery());
@@ -390,11 +390,11 @@ public class Drone {
                 return d;
             }
         }
-        System.out.println("size:" + this.getDrones().size());
+        //System.out.println("size:" + this.getDrones().size());
         if (this.getDrones().size() >= 1) {
             return this.getDrones().get(0);
         }
-        System.out.println(this.idDrone);
+        //System.out.println(this.idDrone);
         return null;
     }
 
@@ -496,7 +496,7 @@ public class Drone {
 
         if ((dronesList != null && dronesList.size() != 0) || (this.isMaster())) {
 
-            System.out.println("starting grpc...");
+            //System.out.println("starting grpc...");
             if (dronesList != null && dronesList.size() != 0) {
                 for (Drone d : dronesList)
                     if (d.getIdDrone().equals(this.getIdMaster())) {

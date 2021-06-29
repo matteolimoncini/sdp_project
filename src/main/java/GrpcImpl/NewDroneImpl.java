@@ -22,8 +22,8 @@ public class NewDroneImpl extends newDroneImplBase {
         this.myDrone.insertDroneInList(droneToInsert);
 
         //server
-        System.out.println("message received: "+request.getMessage());
-        System.out.println("inserted drone into the system: "+request.getIdDrone());
+        //System.out.println("message received: "+request.getMessage());
+        System.out.println("Inserted drone into the system with id "+request.getIdDrone());
         //System.out.println(request.getXPosition());
         //System.out.println(request.getYPosition());
 

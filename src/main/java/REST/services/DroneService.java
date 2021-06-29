@@ -33,7 +33,7 @@ public class DroneService {
      If insert successfully return drone's list present in the city.
     */
     public Response addDrone(Drone droneToAdd) {
-        System.out.println(droneToAdd);
+        System.out.print("Added drone. Id: "+droneToAdd.getIdDrone()+",address: "+droneToAdd.getIpAddress()+":"+droneToAdd.getPortNumber()+", ");
 
         int pos = DroneList.getInstance().checkDrone(droneToAdd.getIdDrone());
         boolean droneNotFound = pos == -1;
@@ -47,7 +47,24 @@ public class DroneService {
 
             DroneList.getInstance().add(droneToAdd);
             ResponseAddModel responseAddModel = new ResponseAddModel(droneList, myPosition);
-            System.out.println(responseAddModel);
+            Position dronePosition = responseAddModel.getMyPosition();
+            System.out.println("position: ("+dronePosition.getxCoordinate()+","+dronePosition.getyCoordinate()+")");
+            if(droneList==null || droneList.isEmpty()){
+                System.out.println("There aren't other drones in the systems");
+            }
+            else {
+                System.out.print("other drones in the systems are: ");
+                for (int i = 0; i < droneList.size(); i++) {
+                    Drone d = droneList.get(i);
+                    System.out.print(d.getIdDrone());
+                    if (i < droneList.size() - 1) {
+                        System.out.print(",");
+                    }
+                    if (i == droneList.size() - 1) {
+                        System.out.print("\n");
+                    }
+                }
+            }
             return Response.ok().entity(responseAddModel).build();
 
         } else
