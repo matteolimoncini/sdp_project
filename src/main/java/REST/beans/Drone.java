@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.WebResource;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import javafx.geometry.Pos;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
@@ -269,14 +270,18 @@ public class Drone {
                 // Called when a message arrives from the server that matches any subscription made by the client
                 String time = new Timestamp(System.currentTimeMillis()).toString();
                 String receivedMessage = new String(message.getPayload());
-                System.out.println(clientId + " Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
+                /*System.out.println(clientId + " Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
                         "\n\tTime:    " + time +
                         "\n\tTopic:   " + topic +
                         "\n\tMessage: " + receivedMessage +
                         "\n\tQoS:     " + message.getQos() + "\n");
+                 */
                 Gson gson = new Gson();
                 Order order = gson.fromJson(receivedMessage, Order.class);
-
+                Position pickUpPoint = order.getPickUpPoint();
+                Position deliveryPoint = order.getDeliveryPoint();
+                System.out.println("Received order with id: " + order.getId() +" from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
+                                ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")" );
                 Drone.this.addPendingOrder(order);
             }
 
