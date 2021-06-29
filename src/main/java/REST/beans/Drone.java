@@ -428,7 +428,7 @@ public class Drone {
         Position myPosition = output.getMyPosition();
         this.setMyPosition(myPosition);
 
-        System.out.println("Output from Server .... \n");
+        //System.out.println("Output from Server .... \n");
         System.out.println("my position is: ("+ myPosition.getxCoordinate()+","+myPosition.getyCoordinate()+")");
         if(droneList==null || droneList.isEmpty()){
             System.out.println("There aren't other drones in the systems");

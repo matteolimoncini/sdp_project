@@ -9,7 +9,7 @@ import java.util.List;
 public class DroneMain {
     public static void main(String[] args) {
         Drone drone = new Drone(4, "localhost", 8474, "localhost", 1337);
-        System.out.println("i am drone: "+drone.getIdDrone());
+        System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 
         /*
@@ -46,7 +46,7 @@ public class DroneMain {
             if (drones.size() == 0) {
                 //i am alone in the system, i'm master
                 drone.setIdMaster(drone.getIdDrone());
-                System.out.println("i am master");
+                System.out.println("I am master");
             } else {
                 //find the master
                 //send a message to all other drone that i'm entering in the system
@@ -58,7 +58,7 @@ public class DroneMain {
 
         }else{
             drone.setIdMaster(drone.getIdDrone());
-            System.out.println("i am master");
+            System.out.println("I am master");
         }
 
         pingThread = new PingThread(drone);

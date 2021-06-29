@@ -23,7 +23,7 @@ public class ManageOrderThread extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println("thread to manage order starting...");
+            //System.out.println("thread to manage order starting...");
             this.drone.subscribeAndPutInQueue();
 
             Order firstPendingOrder;
