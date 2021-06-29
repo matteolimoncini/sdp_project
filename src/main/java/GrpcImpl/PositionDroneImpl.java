@@ -26,7 +26,7 @@ public class PositionDroneImpl extends positionServiceGrpc.positionServiceImplBa
         int xPosition = request.getXPosition();
         int yPosition = request.getYPosition();
         int idDrone = request.getIdDrone();
-        System.out.println("message received. idDrone: "+ idDrone +"position: "+ xPosition +":"+ yPosition);
+        //System.out.println("message received. idDrone: "+ idDrone +"position: "+ xPosition +":"+ yPosition);
         List<Drone> listDrones = myDrone.getDrones();
         for (Drone d:listDrones){
             if (d.getIdDrone().equals(idDrone)){

@@ -58,7 +58,7 @@ public class DroneService {
                     Drone d = droneList.get(i);
                     System.out.print(d.getIdDrone());
                     if (i < droneList.size() - 1) {
-                        System.out.print(",");
+                        System.out.print(", ");
                     }
                     if (i == droneList.size() - 1) {
                         System.out.print("\n");

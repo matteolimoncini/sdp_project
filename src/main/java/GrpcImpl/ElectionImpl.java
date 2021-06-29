@@ -35,7 +35,7 @@ public class ElectionImpl extends electionImplBase {
         electionGrpc.electionStub stub = electionGrpc.newStub(channel);
         message propagatedMessage = null;
 
-        System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
+        //System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
         if (typeMessage.equals("ELECTION")) {
 
             if (drone.getPartecipant()) {   //if drone is participant
@@ -128,7 +128,10 @@ public class ElectionImpl extends electionImplBase {
                     sendPosition.start();
 
                 }
-                responseObserver.onCompleted();
+                else {
+                    System.out.println("Election finished. I am master");
+                }
+                //responseObserver.onCompleted();
             } else { //type message not ELECTION and not ELECTED
                 //type error
                 System.err.println("message type error");
@@ -152,7 +155,7 @@ public class ElectionImpl extends electionImplBase {
                 }
             });
         } else {
-            System.out.println("message not sent");
+            //System.out.println("message not sent");
         }
     }
 }

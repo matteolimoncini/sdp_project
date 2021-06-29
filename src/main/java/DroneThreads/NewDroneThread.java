@@ -40,7 +40,7 @@ public class NewDroneThread extends Thread {
         stub.messageAddDrone(request, new StreamObserver<responseAddNewDrone>() {
             @Override
             public void onNext(responseAddNewDrone value) {
-                System.out.println("id master:"+value.getIdDroneMaster());
+                System.out.println("Id master:"+value.getIdDroneMaster());
                 myDrone.setIdMaster(value.getIdDroneMaster());
 
             }
