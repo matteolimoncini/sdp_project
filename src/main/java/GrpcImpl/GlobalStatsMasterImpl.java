@@ -36,7 +36,7 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
             droneInMessage=drone;
         }
         assertNotNull(droneInMessage);
-        System.out.println("received global stats from one drone to master");
+        //System.out.println("received global stats from one drone to master");
 
         droneInMessage.setBattery(request.getBattery());
         //System.out.println("setted battery");
@@ -54,7 +54,7 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
 
         GlobalStats gstats = new GlobalStats(avgd,avgkm,avgpol,avgb);
         drone.addToStatsList(gstats);
-        System.out.println("STATS ADDED TO LIST IN MASTER");
+        //System.out.println("STATS ADDED TO LIST IN MASTER");
         GlobalStatsToMaster.responseGlobalStats response = GlobalStatsToMaster.responseGlobalStats.newBuilder().setMessageResponse("").build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();

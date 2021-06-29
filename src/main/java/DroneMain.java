@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 8111, "localhost", 1337);
+        Drone drone = new Drone(5, "localhost", 8553, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -132,7 +132,7 @@ public class DroneMain {
             }
 
         }
-        System.out.println("disconnected mqtt");
+        //System.out.println("disconnected mqtt");
 
         //if is master manage pending orders
         try {
@@ -140,7 +140,7 @@ public class DroneMain {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("managed pending orders");
+        System.out.println("Managed pending orders");
 
 
         //wait until current order is in progress
@@ -153,12 +153,12 @@ public class DroneMain {
 
         //close communication channels with others drones
         serverThread.stopMeGently();
-        System.out.println("communication channels with others drones closed");
+        System.out.println("Communication channels with others drones closed");
 
         //if is master send global stats to server
         if(drone.isMaster()){
             drone.sendGlobalStatistics();
-            System.out.println("sent global stats to server");
+            System.out.println("Sent global statistics to server");
         }
 
         sendGlobalStatsThread.stopMeGently();

@@ -33,7 +33,7 @@ public class DroneService {
      If insert successfully return drone's list present in the city.
     */
     public Response addDrone(Drone droneToAdd) {
-        System.out.print("Added drone. Id: "+droneToAdd.getIdDrone()+",address: "+droneToAdd.getIpAddress()+":"+droneToAdd.getPortNumber()+", ");
+        System.out.print("Added drone. Id: "+droneToAdd.getIdDrone()+", address: "+droneToAdd.getIpAddress()+":"+droneToAdd.getPortNumber()+", ");
 
         int pos = DroneList.getInstance().checkDrone(droneToAdd.getIdDrone());
         boolean droneNotFound = pos == -1;
@@ -53,7 +53,7 @@ public class DroneService {
                 System.out.println("There aren't other drones in the systems");
             }
             else {
-                System.out.print("other drones in the systems are: ");
+                System.out.print("Other drones in the systems are: ");
                 for (int i = 0; i < droneList.size(); i++) {
                     Drone d = droneList.get(i);
                     System.out.print(d.getIdDrone());

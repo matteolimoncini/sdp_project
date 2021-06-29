@@ -15,7 +15,7 @@ public class PropagateOrderImpl extends sendOrderImplBase{
     @Override
     public void messagePropagateOrder(PropagateOrder.propagateOrder request, StreamObserver<PropagateOrder.responseOrder> responseObserver) {
         //TODO
-        System.out.println("order received: "+request.getIdOrder());
+        System.out.println("Received order from master drone: "+request.getIdOrder());
         Position pickupPosition = new Position(request.getXPositionPickup(),request.getYPositionPickup());
         Position deliveryPosition = new Position(request.getXPositionDelivery(),request.getYPositionDelivery());
 
