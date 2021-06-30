@@ -153,7 +153,7 @@ public class ElectionImpl extends electionImplBase {
 
                     @Override
                     public void onError(Throwable t) {
-
+                        channel.shutdown();
                     }
 
                     @Override

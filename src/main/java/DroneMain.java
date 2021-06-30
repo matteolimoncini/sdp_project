@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(3, "localhost", 8333, "localhost", 1337);
+        Drone drone = new Drone(20, "localhost", 8220, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 

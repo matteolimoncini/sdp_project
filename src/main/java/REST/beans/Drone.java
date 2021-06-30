@@ -79,7 +79,9 @@ public class Drone {
     }
 
     public synchronized List<Drone> getDrones() {
-        return drones;
+        if(drones!=null)
+            return new ArrayList<>(drones);
+        return null;
     }
 
     public Integer getIdDrone() {

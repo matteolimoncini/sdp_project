@@ -49,6 +49,7 @@ public class ElectionThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
+                channel.shutdown();
             }
 
             @Override
