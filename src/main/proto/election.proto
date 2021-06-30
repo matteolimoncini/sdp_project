@@ -7,6 +7,9 @@ message message {
   int32 batteryDrone = 3;
 }
 
+message responseElection {
+  string messageResponse = 1;
+}
 
 service election {
   rpc Election(message) returns (message);

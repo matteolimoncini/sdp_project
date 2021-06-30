@@ -22,7 +22,7 @@ public class PositionDroneImpl extends positionServiceGrpc.positionServiceImplBa
 
     @Override
     public void positionDrone(SendPosition.position request, StreamObserver<SendPosition.responsePosition> responseObserver) {
-        super.positionDrone(request, responseObserver);
+        //super.positionDrone(request, responseObserver);
         int xPosition = request.getXPosition();
         int yPosition = request.getYPosition();
         int idDrone = request.getIdDrone();
@@ -36,7 +36,7 @@ public class PositionDroneImpl extends positionServiceGrpc.positionServiceImplBa
         }
         myDrone.addCountPosition();
         SendPosition.responsePosition response = SendPosition.responsePosition.newBuilder().setMessageResponse("").build();
-        //responseObserver.onNext(response);
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 

@@ -61,7 +61,6 @@ public class ManageOrderThread extends Thread {
 
                             @Override
                             public void onError(Throwable t) {
-
                             }
 
                             @Override
@@ -69,6 +68,11 @@ public class ManageOrderThread extends Thread {
                                 channel.shutdown();
                             }
                         });
+                        try {
+                            channel.awaitTermination(10,TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         //droneChoosen.manageOrder(firstPendingOrder);
                     }
 

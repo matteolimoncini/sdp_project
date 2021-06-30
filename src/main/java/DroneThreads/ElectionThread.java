@@ -49,7 +49,6 @@ public class ElectionThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
-
             }
 
             @Override
@@ -57,6 +56,11 @@ public class ElectionThread extends Thread {
                 channel.shutdown();
             }
         });
+        try {
+            channel.awaitTermination(10,TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

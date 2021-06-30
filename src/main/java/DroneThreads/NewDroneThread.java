@@ -49,7 +49,6 @@ public class NewDroneThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
-                channel.shutdown();
             }
 
             @Override
@@ -57,5 +56,10 @@ public class NewDroneThread extends Thread {
                 channel.shutdown();
             }
         });
+        try {
+            channel.awaitTermination(10,TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

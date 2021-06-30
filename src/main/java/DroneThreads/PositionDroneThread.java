@@ -10,6 +10,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PositionDroneThread extends Thread {
     private Drone drone;
@@ -48,14 +49,17 @@ public class PositionDroneThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
-
             }
 
             @Override
             public void onCompleted() {
-                if(!channelWithMaster.isShutdown())
-                    channelWithMaster.shutdown();
+                channelWithMaster.shutdown();
             }
         });
+        try {
+            channelWithMaster.awaitTermination(10,TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -18,7 +18,7 @@ public class PingDroneImpl extends pingServiceImplBase{
     public void pingDrones(Ping.ping request, StreamObserver<responsePing> responseObserver) {
 
         //server
-        //System.out.println("message received: "+request.getMessage());
+        System.out.println("message received: "+request.getMessage());
 
         Ping.responsePing response = Ping.responsePing.newBuilder().setResponse("I AM ALIVE! "+this.myDrone.getIdDrone()).build();
         responseObserver.onNext(response);

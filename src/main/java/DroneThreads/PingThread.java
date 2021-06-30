@@ -30,7 +30,8 @@ public class PingThread extends Thread {
                     continue;
                 if(droneListPing.size()==0)
                     continue;
-                for (Drone d : droneListPing) {
+                for (int i = 0; i < droneListPing.size(); i++) {
+                    Drone d = droneListPing.get(i);
                     //System.out.println("inside ping thread loop for");
                     //System.out.println("id:"+d.getIdDrone());
                     String ipReceiverDrone = d.getIpAddress();
@@ -57,16 +58,15 @@ public class PingThread extends Thread {
                         public void onError(Throwable t) {
                             //System.out.println("PING FAILED!");
                             drone.removeDroneFromList(d);
-                            //System.out.println("DRONE REMOVED");
-                            if(drone.getDrones()!= null && drone.getDrones().size()>0) {
+                            System.out.println("DRONE REMOVED");
+                            if (drone.getDrones() != null && drone.getDrones().size() > 0) {
                                 if (drone.getIdMaster().equals(d.getIdDrone())) {
                                     //start election
-                                    //System.out.println("Election starting...");
+                                    System.out.println("Election starting...");
                                     Thread electionThread = new ElectionThread(drone);
                                     electionThread.start();
                                 }
-                            }
-                            else{
+                            } else {
                                 //System.out.println("i am alone in system, became master");
                                 drone.setIdMaster(drone.getIdDrone());
                             }
@@ -78,6 +78,11 @@ public class PingThread extends Thread {
                             channel.shutdown();
                         }
                     });
+                    try {
+                        channel.awaitTermination(10, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
