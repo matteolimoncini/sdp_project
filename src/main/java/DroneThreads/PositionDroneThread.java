@@ -49,6 +49,7 @@ public class PositionDroneThread extends Thread {
 
             @Override
             public void onError(Throwable t) {
+                channelWithMaster.shutdown();
             }
 
             @Override

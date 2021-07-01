@@ -37,11 +37,10 @@ public class ElectionImpl extends electionImplBase {
         Drone nextDroneInRing = drone.getNextInRing();
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         Context.current().fork().run(() -> {
-            final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
-            electionGrpc.electionStub stub = electionGrpc.newStub(channel);
+
             message propagatedMessage = null;
 
-            //System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
+            System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
             if (typeMessage.equals("ELECTION")) {
 
                 if (drone.getPartecipant()) {   //if drone is participant
@@ -145,6 +144,8 @@ public class ElectionImpl extends electionImplBase {
                 }
             }
             if (propagatedMessage != null) {
+                final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+                electionGrpc.electionStub stub = electionGrpc.newStub(channel);
                 stub.election(propagatedMessage, new StreamObserver<message>() {
                     @Override
                     public void onNext(message value) {
@@ -168,7 +169,10 @@ public class ElectionImpl extends electionImplBase {
                 }
             } else {
                 //System.out.println("message not sent");
+                //responseObserver.onNext(Election.message.newBuilder().build());
+                //responseObserver.onCompleted();
             }
+
         });
         responseObserver.onNext(Election.message.newBuilder().build());
         responseObserver.onCompleted();
