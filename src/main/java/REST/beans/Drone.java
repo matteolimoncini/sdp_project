@@ -393,10 +393,11 @@ public class Drone {
     }
 
     public synchronized Drone getNextInRing() {
-        assert this.getDrones() != null;
-        for (Drone d : this.getDrones()) {
+        assert this.drones != null;
+        for (Drone d : this.drones) {
             //System.out.println("HERE");
             if (d.getIdDrone() > this.getIdDrone()) {
+                System.out.println("id drone: "+d.getIdDrone());
                 return d;
             }
         }
@@ -404,7 +405,7 @@ public class Drone {
         if (this.getDrones().size() >= 1) {
             return this.getDrones().get(0);
         }
-        //System.out.println(this.idDrone);
+
         return null;
     }
 

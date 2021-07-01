@@ -12,6 +12,7 @@ message addNewDrone {
 
 message responseAddNewDrone {
   int32 idDroneMaster = 1;
+  bool electionInProgress = 2;
 }
 
 

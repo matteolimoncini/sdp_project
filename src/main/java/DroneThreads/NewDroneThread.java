@@ -42,8 +42,9 @@ public class NewDroneThread extends Thread {
         stub.messageAddDrone(request, new StreamObserver<responseAddNewDrone>() {
             @Override
             public void onNext(responseAddNewDrone value) {
-                System.out.println("Id master:"+value.getIdDroneMaster());
-                myDrone.setIdMaster(value.getIdDroneMaster());
+                System.out.println("Id master:"+value.getIdDroneMaster()+" election in progress: "+value.getElectionInProgress());
+                if(!value.getElectionInProgress())
+                    myDrone.setIdMaster(value.getIdDroneMaster());
 
             }
 

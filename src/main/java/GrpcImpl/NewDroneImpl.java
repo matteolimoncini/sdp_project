@@ -27,7 +27,7 @@ public class NewDroneImpl extends newDroneImplBase {
         //System.out.println(request.getXPosition());
         //System.out.println(request.getYPosition());
 
-        responseAddNewDrone response = responseAddNewDrone.newBuilder().setIdDroneMaster(this.myDrone.getIdMaster()).build();
+        responseAddNewDrone response = responseAddNewDrone.newBuilder().setIdDroneMaster(this.myDrone.getIdMaster()).setElectionInProgress(this.myDrone.getElectionInProgress()).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
