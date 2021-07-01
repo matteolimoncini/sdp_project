@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -157,7 +158,9 @@ public class Drone {
     }
 
     public synchronized List<Double> getMeasurementList() {
-        return measurementList;
+        if (measurementList!=null)
+            return new ArrayList<>(measurementList);
+        return null;
     }
 
     public synchronized void setMeasurementList(List<Double> measurementList) {
@@ -169,7 +172,9 @@ public class Drone {
     }
 
     public synchronized List<GlobalStats> getgStatsList() {
-        return gStatsList;
+        if (gStatsList!=null)
+            return new ArrayList<>(gStatsList);
+        return null;
     }
 
     public synchronized void setgStatsList(List<GlobalStats> gStatsList) {
@@ -511,49 +516,51 @@ public class Drone {
             Integer portMaster = masterDrone.getPortNumber();
             String targetAddress = ipMaster + ":" + portMaster;
 
-            final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+            Context.current().fork().run(() -> {
+                final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
 
-            globalStatsServiceGrpc.globalStatsServiceStub stub1 = globalStatsServiceGrpc.newStub(channel);
+                globalStatsServiceGrpc.globalStatsServiceStub stub = globalStatsServiceGrpc.newStub(channel);
 
-            Position deliveryPoint = order.getDeliveryPoint();
-            Position pickUpPoint = order.getPickUpPoint();
-            double distanceFromOldToPickup = distance(oldPosition.getxCoordinate(), oldPosition.getyCoordinate(), pickUpPoint.getxCoordinate(), pickUpPoint.getyCoordinate());
-            double distanceFromPickupTpDelivery = distance(pickUpPoint.getxCoordinate(), pickUpPoint.getxCoordinate(), deliveryPoint.getxCoordinate(), deliveryPoint.getyCoordinate());
-            GlobalStatsToMaster.globalStatsToMaster request1 = GlobalStatsToMaster.globalStatsToMaster
-                    .newBuilder()
-                    .setIdDrone(this.getIdDrone())
-                    .setTimestamp(timestamp.getTime())
-                    .setBattery(this.getBattery())
-                    .setNewPositionX(deliveryPoint.getxCoordinate())
-                    .setNewPositionY(deliveryPoint.getyCoordinate())
-                    .setKmTravelled(distanceFromPickupTpDelivery+distanceFromOldToPickup)
-                    .addAllAvgPm10(this.getMeasurementList())
-                    .build();
-            stub1.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
-                @Override
-                public void onNext(GlobalStatsToMaster.responseGlobalStats value) {
-                    //System.out.println("global stats received");
-                }
+                Position deliveryPoint = order.getDeliveryPoint();
+                Position pickUpPoint = order.getPickUpPoint();
+                double distanceFromOldToPickup = distance(oldPosition.getxCoordinate(), oldPosition.getyCoordinate(), pickUpPoint.getxCoordinate(), pickUpPoint.getyCoordinate());
+                double distanceFromPickupTpDelivery = distance(pickUpPoint.getxCoordinate(), pickUpPoint.getxCoordinate(), deliveryPoint.getxCoordinate(), deliveryPoint.getyCoordinate());
+                GlobalStatsToMaster.globalStatsToMaster request1 = GlobalStatsToMaster.globalStatsToMaster
+                        .newBuilder()
+                        .setIdDrone(this.getIdDrone())
+                        .setTimestamp(timestamp.getTime())
+                        .setBattery(this.getBattery())
+                        .setNewPositionX(deliveryPoint.getxCoordinate())
+                        .setNewPositionY(deliveryPoint.getyCoordinate())
+                        .setKmTravelled(distanceFromPickupTpDelivery + distanceFromOldToPickup)
+                        .addAllAvgPm10(this.getMeasurementList())
+                        .build();
+                stub.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {
+                    @Override
+                    public void onNext(GlobalStatsToMaster.responseGlobalStats value) {
+                        //System.out.println("global stats received");
+                    }
 
-                @Override
-                public void onError(Throwable t) {
+                    @Override
+                    public void onError(Throwable t) {
+                        channel.shutdown();
+                    }
 
-                }
-
-                @Override
-                public void onCompleted() {
-                    channel.shutdown();
+                    @Override
+                    public void onCompleted() {
+                        channel.shutdown();
+                    }
+                });
+                try {
+                    channel.awaitTermination(10, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             });
-            try {
-                channel.awaitTermination(10,TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    public void sendGlobalStatistics() {
+    public void sendGlobalStatisticsToServer() {
 
         Client client = Client.create();
         double sumDel = 0, sumKm = 0, sumPol = 0, sumBat = 0;

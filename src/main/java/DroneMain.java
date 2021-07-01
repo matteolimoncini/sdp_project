@@ -22,7 +22,7 @@ public class DroneMain {
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
-        GlobalStatsThread sendGlobalStatsThread;
+        GlobalStatsToServerThread sendGlobalStatsThread;
         Thread manageOrderThread;
         Thread sendNewDroneAdded;
         ServerGrpcThread serverThread;
@@ -74,7 +74,7 @@ public class DroneMain {
         pollutionThread.start();
 
         //start a thread that send global stats if this drone is master
-        sendGlobalStatsThread = new GlobalStatsThread(drone);
+        sendGlobalStatsThread = new GlobalStatsToServerThread(drone);
 
 
         //manageOrderThread = new DroneManageOrderThread(drone);
@@ -157,7 +157,7 @@ public class DroneMain {
 
         //if is master send global stats to server
         if(drone.isMaster()){
-            drone.sendGlobalStatistics();
+            drone.sendGlobalStatisticsToServer();
             System.out.println("Sent global statistics to server");
         }
 

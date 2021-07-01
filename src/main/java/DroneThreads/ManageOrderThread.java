@@ -61,6 +61,7 @@ public class ManageOrderThread extends Thread {
 
                             @Override
                             public void onError(Throwable t) {
+                                channel.shutdown();
                             }
 
                             @Override
@@ -80,6 +81,7 @@ public class ManageOrderThread extends Thread {
                 else {
                     if(this.drone.isQuit()){
                         //System.out.println("no pending order and quit flag set as true");
+
                         break;
                     }
                 }

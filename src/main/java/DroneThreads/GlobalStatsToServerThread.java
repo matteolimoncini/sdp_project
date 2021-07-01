@@ -2,11 +2,11 @@ package DroneThreads;
 
 import REST.beans.Drone;
 
-public class GlobalStatsThread extends Thread {
+public class GlobalStatsToServerThread extends Thread {
     private volatile boolean stopCondition = false;
     private Drone drone;
 
-    public GlobalStatsThread(Drone drone) {
+    public GlobalStatsToServerThread(Drone drone) {
         this.drone = drone;
     }
 
@@ -21,7 +21,7 @@ public class GlobalStatsThread extends Thread {
 
         try {
             while (!stopCondition) {
-                drone.sendGlobalStatistics();
+                drone.sendGlobalStatisticsToServer();
                 Thread.sleep(1000 * 10);
             }
         } catch (Exception e) {

@@ -167,14 +167,16 @@ public class ElectionImpl extends electionImplBase {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                responseObserver.onNext(Election.message.newBuilder().build());
+                responseObserver.onCompleted();
             } else {
                 //System.out.println("message not sent");
-                //responseObserver.onNext(Election.message.newBuilder().build());
-                //responseObserver.onCompleted();
+                responseObserver.onNext(Election.message.newBuilder().build());
+                responseObserver.onCompleted();
             }
 
         });
-        responseObserver.onNext(Election.message.newBuilder().build());
-        responseObserver.onCompleted();
+        //responseObserver.onNext(Election.message.newBuilder().build());
+        //responseObserver.onCompleted();
     }
 }
