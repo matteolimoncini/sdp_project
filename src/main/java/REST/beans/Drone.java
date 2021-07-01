@@ -1,6 +1,5 @@
 package REST.beans;
 
-import SimulatorPm10.Measurement;
 import com.example.grpc.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,7 +11,6 @@ import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import javafx.geometry.Pos;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
@@ -48,6 +46,7 @@ public class Drone {
     private List<Double> measurementList = new ArrayList<>();
     private int countPosition = 0;
     private boolean quit = false;
+    private boolean electionInProgress = false;
     //String clientId;
 
     /*
@@ -107,6 +106,14 @@ public class Drone {
 
     public void setPortNumber(Integer portNumber) {
         this.portNumber = portNumber;
+    }
+
+    public synchronized boolean getElectionInProgress() {
+        return electionInProgress;
+    }
+
+    public synchronized void setElectionInProgress(boolean electionInProgress) {
+        this.electionInProgress = electionInProgress;
     }
 
     public synchronized Position getMyPosition() {

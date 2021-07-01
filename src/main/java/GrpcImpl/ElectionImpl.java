@@ -4,7 +4,6 @@ import DroneThreads.PositionDroneThread;
 import REST.beans.Drone;
 import com.example.grpc.Election;
 import com.example.grpc.Election.message;
-import com.example.grpc.Ping;
 import com.example.grpc.electionGrpc;
 import com.example.grpc.electionGrpc.electionImplBase;
 import io.grpc.Context;
@@ -42,6 +41,8 @@ public class ElectionImpl extends electionImplBase {
 
             System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
             if (typeMessage.equals("ELECTION")) {
+
+                drone.setElectionInProgress(true);
 
                 if (drone.getPartecipant()) {   //if drone is participant
                     if (myBattery < batteryDroneInMessage) {
@@ -138,10 +139,17 @@ public class ElectionImpl extends electionImplBase {
                     //Election.message response = Election.message.newBuilder().build();
                     //responseObserver.onNext(response);
                     //responseObserver.onCompleted();
+
+                    drone.setElectionInProgress(false);
                 } else { //type message not ELECTION and not ELECTED
                     //type error
                     System.err.println("message type error");
                 }
+            }
+            try {
+                Thread.sleep(5*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             if (propagatedMessage != null) {
                 final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();

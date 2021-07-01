@@ -1,7 +1,6 @@
 package DroneThreads;
 
 import REST.beans.Drone;
-import com.example.grpc.Election;
 
 import com.example.grpc.Election.message;
 import com.example.grpc.electionGrpc;
@@ -35,6 +34,7 @@ public class ElectionThread extends Thread {
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
         electionStub stub = electionGrpc.newStub(channel);
+        drone.setElectionInProgress(true);
         message request = message
                 .newBuilder()
                 .setType("ELECTION")

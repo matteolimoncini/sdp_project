@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 8111, "localhost", 1337);
+        Drone drone = new Drone(4, "localhost", 8444, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 
@@ -84,7 +84,7 @@ public class DroneMain {
         manageOrder = new ManageOrderThread(drone);
 
 
-        while (quitThread.isAlive()) {
+        while (quitThread.isAlive() || drone.getElectionInProgress()) {
             if (drone.getBattery()<15){
                 System.out.println("battery level is less than 15%");
                 System.out.println("drone with id "+drone.getIdDrone()+" need to exit from the system");
