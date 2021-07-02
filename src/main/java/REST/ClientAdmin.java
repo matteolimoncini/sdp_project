@@ -12,6 +12,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 @XmlRootElement
@@ -55,9 +56,12 @@ public class ClientAdmin {
                     }
 
                     output = response.getEntity(DroneList.class);
-                    System.out.print("Output from Server .... \n");
-                    for (Drone d : output.getDrones()) {
-                        System.out.println(d.toString());
+                    //System.out.print("Output from Server .... \n");
+                    List<Drone> drones = output.getDrones();
+                    System.out.println("Drones in the system:");
+                    for (int i = 0; i < drones.size(); i++) {
+                        Drone d = drones.get(i);
+                        System.out.println("Drone "+ d.getIdDrone());
                     }
 
                     //DroneList list = gson.fromJson(output,DroneList.class);
