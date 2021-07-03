@@ -1,14 +1,14 @@
 package REST.beans;
 
+import com.google.gson.annotations.Expose;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class DroneList {
-
+    @Expose
     private List<Drone> drones;
 
     private static DroneList instance;

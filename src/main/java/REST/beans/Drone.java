@@ -11,6 +11,7 @@ import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
@@ -42,6 +43,7 @@ public class Drone {
 
     private List<GlobalStats> gStatsList = new ArrayList<>();
     private List<Drone> drones = new ArrayList<>();
+    @JsonIgnore
     private List<Order> pendingOrders;
     private List<Double> measurementList = new ArrayList<>();
     private int countPosition = 0;

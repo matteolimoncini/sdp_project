@@ -106,4 +106,15 @@ public class GlobalStats {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "GlobalStats{" +
+                "avgDelivery=" + avgDelivery +
+                ", avgKilometers=" + avgKilometers +
+                ", avgPollution=" + avgPollution +
+                ", avgBattery=" + avgBattery +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

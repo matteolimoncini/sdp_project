@@ -2,10 +2,14 @@ package REST.beans;
 
 import REST.beans.Position;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 public class Order {
+    @Expose
     private int id;
+    @Expose
     private Position pickUpPoint;
+    @Expose
     private Position deliveryPoint;
 
     public Order(){

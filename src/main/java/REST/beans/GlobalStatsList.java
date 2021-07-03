@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement
@@ -37,7 +38,9 @@ public class GlobalStatsList {
         int length = globalStatsList.size();
         if (lastN > length)
             lastN = length;
-        return new ArrayList<>(globalStatsList.subList(0,lastN));
+        ArrayList<GlobalStats> globalStatsReturn = new ArrayList<>(globalStatsList.subList(globalStatsList.size() - lastN, globalStatsList.size()));
+        Collections.reverse(globalStatsReturn);
+        return globalStatsReturn;
     }
 
     public synchronized List<GlobalStats> getGlobalStatsList(String t1, String t2) {
@@ -58,5 +61,12 @@ public class GlobalStatsList {
                 subList.add(stats);
         }
         return subList;
+    }
+
+    @Override
+    public String toString() {
+        return "GlobalStatsList{" +
+                "globalStatsList=" + globalStatsList +
+                '}';
     }
 }

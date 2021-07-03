@@ -4,6 +4,9 @@ import REST.beans.Drone;
 import REST.beans.DroneList;
 import REST.beans.Position;
 import REST.beans.ResponseAddModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.jersey.api.client.ClientResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -17,7 +20,9 @@ public class DroneService {
      Method to return the list of drones into the system with a GET request http.
     */
     public Response getAllDrones() {
-        return Response.ok(DroneList.getInstance()).build();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String input = gson.toJson(DroneList.getInstance());
+        return Response.ok().entity(input).build();
     }
 
     @Path("add")
