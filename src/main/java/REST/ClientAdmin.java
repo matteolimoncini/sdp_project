@@ -1,7 +1,6 @@
 package REST;
 
 import REST.beans.*;
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
@@ -11,6 +10,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
@@ -62,13 +62,13 @@ public class ClientAdmin {
 
                     output = response.getEntity(DroneList.class);
                     List<Drone> drones = output.getDrones();
-                    if(drones.size()>0) {
+                    if (drones.size() > 0) {
                         System.out.println("Drones in the system:");
                         for (int i = 0; i < drones.size(); i++) {
                             Drone d = drones.get(i);
                             System.out.println("Drone " + d.getIdDrone());
                         }
-                    }else{
+                    } else {
                         System.out.println("There aren't drones in the system");
                     }
 
@@ -92,11 +92,11 @@ public class ClientAdmin {
                         throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
-                    List<GlobalStats> gstatsList = response.getEntity(new GenericType<List<GlobalStats>>() {});
-                    if (gstatsList.isEmpty()){
+                    List<GlobalStats> gstatsList = response.getEntity(new GenericType<List<GlobalStats>>() {
+                    });
+                    if (gstatsList.isEmpty()) {
                         System.out.println("There aren't statistics available");
-                    }
-                    else {
+                    } else {
                         for (int i = 0; i < gstatsList.size(); i++) {
                             System.out.println((i + 1) + ")");
                             GlobalStats globalStats = gstatsList.get(i);

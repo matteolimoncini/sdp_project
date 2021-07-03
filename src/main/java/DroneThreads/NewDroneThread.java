@@ -26,7 +26,7 @@ public class NewDroneThread extends Thread {
 
     @Override
     public void run() {
-        String targetAddress = this.ipReceiverDrone +":"+this.portReceiverDrone;
+        String targetAddress = this.ipReceiverDrone + ":" + this.portReceiverDrone;
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
         newDroneStub stub = newDroneGrpc.newStub(channel);
         addNewDrone request = addNewDrone
@@ -42,8 +42,8 @@ public class NewDroneThread extends Thread {
         stub.messageAddDrone(request, new StreamObserver<responseAddNewDrone>() {
             @Override
             public void onNext(responseAddNewDrone value) {
-                System.out.println("Id master:"+value.getIdDroneMaster()+" election in progress: "+value.getElectionInProgress());
-                if(!value.getElectionInProgress())
+                System.out.println("Id master:" + value.getIdDroneMaster() + " election in progress: " + value.getElectionInProgress());
+                if (!value.getElectionInProgress())
                     myDrone.setIdMaster(value.getIdDroneMaster());
 
             }
@@ -58,7 +58,7 @@ public class NewDroneThread extends Thread {
             }
         });
         try {
-            channel.awaitTermination(10,TimeUnit.SECONDS);
+            channel.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

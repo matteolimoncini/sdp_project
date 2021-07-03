@@ -13,8 +13,6 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertNotNull;
-
 public class ElectionImpl extends electionImplBase {
     private Drone drone;
 
@@ -136,9 +134,6 @@ public class ElectionImpl extends electionImplBase {
                     } else {
                         System.out.println("Election finished. I am master");
                     }
-                    //Election.message response = Election.message.newBuilder().build();
-                    //responseObserver.onNext(response);
-                    //responseObserver.onCompleted();
 
                     drone.setElectionInProgress(false);
                 } else { //type message not ELECTION and not ELECTED
@@ -146,11 +141,6 @@ public class ElectionImpl extends electionImplBase {
                     System.err.println("message type error");
                 }
             }
-            /*try {
-                Thread.sleep(5*1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
             if (propagatedMessage != null) {
                 final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
                 electionGrpc.electionStub stub = electionGrpc.newStub(channel);
@@ -171,7 +161,7 @@ public class ElectionImpl extends electionImplBase {
                     }
                 });
                 try {
-                    channel.awaitTermination(10,TimeUnit.SECONDS);
+                    channel.awaitTermination(10, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -184,7 +174,5 @@ public class ElectionImpl extends electionImplBase {
             }
 
         });
-        //responseObserver.onNext(Election.message.newBuilder().build());
-        //responseObserver.onCompleted();
     }
 }

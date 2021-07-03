@@ -3,7 +3,6 @@ package REST.services;
 import REST.beans.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.jersey.api.client.ClientResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -74,14 +73,6 @@ public class DroneService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ExceptionModel("Generic exception:" + e)).build();
         }
     }
-/*
-    private int[] setPosition() {
-        Random r = new Random();
-        int randIntX = r.nextInt(10);
-        int randIntY = r.nextInt(10);
-        return new int[]{randIntX,randIntY};
-    }
-*/
 
     @Path("delete/{idDrone}")
     @DELETE

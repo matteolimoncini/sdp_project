@@ -26,35 +26,35 @@ public class GlobalStats {
         this.avgKilometers = avgKilometers;
         this.avgPollution.add(avgPollution);
         this.avgBattery = avgBattery;
-        //String t = timestamp.substring(3,timestamp.length()-3);
         this.timestamp = timestamp;
     }
+
     public GlobalStats(double avgDelivery, double avgKilometers, double avgPollution, double avgBattery) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution.add(avgPollution);
         this.avgBattery = avgBattery;
-        //String t = timestamp.substring(3,timestamp.length()-3);
         Date date = new Date();
         this.timestamp = date.getTime();
     }
+
     public GlobalStats(double avgDelivery, double avgKilometers, List<Double> avgPollution, double avgBattery, long timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
         this.avgBattery = avgBattery;
-        //String t = timestamp.substring(3,timestamp.length()-3);
         this.timestamp = timestamp;
     }
+
     public GlobalStats(double avgDelivery, double avgKilometers, List<Double> avgPollution, double avgBattery) {
         this.avgDelivery = avgDelivery;
         this.avgKilometers = avgKilometers;
         this.avgPollution = avgPollution;
         this.avgBattery = avgBattery;
-        //String t = timestamp.substring(3,timestamp.length()-3);
         Date date = new Date();
         this.timestamp = date.getTime();
     }
+
     public double getAvgDelivery() {
         return avgDelivery;
     }
@@ -73,10 +73,6 @@ public class GlobalStats {
 
     public long getTimestamp() {
         return timestamp;
-    }
-
-    public String getTimestampAsString() {
-        return "";
     }
 
     public void setGlobalStats(GlobalStats globalStats) {

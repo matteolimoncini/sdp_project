@@ -6,33 +6,33 @@ import SimulatorPm10.Measurement;
 
 import java.util.List;
 
-public class PollutionThread extends Thread{
+public class PollutionThread extends Thread {
     private volatile boolean stopCondition = false;
     private Drone drone;
     private BufferImpl buffer;
 
     public PollutionThread(Drone drone, BufferImpl buffer) {
         this.drone = drone;
-        this.buffer=buffer;
+        this.buffer = buffer;
     }
 
 
     @Override
     public void run() {
         while (!stopCondition) {
-             List<Measurement> measurementList= buffer.readAllAndClean();
+            List<Measurement> measurementList = buffer.readAllAndClean();
 
             //put in local avg of this values
             double sum = 0;
-            for (Measurement m:measurementList) {
+            for (Measurement m : measurementList) {
                 sum += m.getValue();
             }
-            double avg =sum/measurementList.size();
+            double avg = sum / measurementList.size();
             drone.addToMeasurementList(avg);
         }
     }
 
-    public void stopMeGently(){
-        stopCondition=true;
+    public void stopMeGently() {
+        stopCondition = true;
     }
 }

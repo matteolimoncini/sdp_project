@@ -12,6 +12,7 @@ public class AvgStatisticsModel {
     public AvgStatisticsModel(double avg) {
         this.avg = avg;
     }
+
     public AvgStatisticsModel() {
     }
 

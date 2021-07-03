@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PositionDroneThread extends Thread {
     private Drone drone;
+
     public PositionDroneThread(Drone drone) {
         this.drone = drone;
     }
@@ -24,8 +25,8 @@ public class PositionDroneThread extends Thread {
         int portNumberMaster = -1;
         String ipAddressMaster = null;
 
-        for (Drone d:drones) {
-            if(d.getIdDrone().equals(drone.getIdMaster()))
+        for (Drone d : drones) {
+            if (d.getIdDrone().equals(drone.getIdMaster()))
                 portNumberMaster = d.getPortNumber();
             ipAddressMaster = d.getIpAddress();
         }
@@ -36,11 +37,11 @@ public class PositionDroneThread extends Thread {
         position messagePosition = position
                 .newBuilder()
                 .setIdDrone(drone.getIdDrone())
-                .setXPosition(drone.getMyPosition().getxCoordinate())
-                .setYPosition(drone.getMyPosition().getyCoordinate())
+                .setXPosition(myPosition.getxCoordinate())
+                .setYPosition(myPosition.getyCoordinate())
                 .build();
 
-        stubWithMaster.positionDrone(messagePosition,new StreamObserver<SendPosition.responsePosition>() {
+        stubWithMaster.positionDrone(messagePosition, new StreamObserver<SendPosition.responsePosition>() {
 
             @Override
             public void onNext(SendPosition.responsePosition value) {
@@ -58,7 +59,7 @@ public class PositionDroneThread extends Thread {
             }
         });
         try {
-            channelWithMaster.awaitTermination(10,TimeUnit.SECONDS);
+            channelWithMaster.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

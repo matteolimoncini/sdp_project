@@ -79,9 +79,9 @@ public class DroneMain {
             }
 
             if(drone.isMaster() && !manageOrder.isAlive()) {
-                //System.out.println("waiting that all drone sent their position...");
                 while (drone.isMaster() && drone.getDrones()!= null && (drone.getCountPosition() < drone.getDrones().size())) {
                     assert true;
+                    //System.out.println("waiting that all drone sent their position...");
                 }
                 //System.out.println("received all positions");
                 drone.setCountPosition(0);

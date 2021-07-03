@@ -1,6 +1,7 @@
 package REST.beans;
 
-import com.example.grpc.*;
+import com.example.grpc.GlobalStatsToMaster;
+import com.example.grpc.globalStatsServiceGrpc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -20,8 +21,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertNotNull;
 
 public class Drone {
     @Expose
@@ -43,22 +42,11 @@ public class Drone {
 
     private List<GlobalStats> gStatsList = new ArrayList<>();
     private List<Drone> drones = new ArrayList<>();
-    @JsonIgnore
     private List<Order> pendingOrders;
     private List<Double> measurementList = new ArrayList<>();
     private int countPosition = 0;
     private boolean quit = false;
     private boolean electionInProgress = false;
-    //String clientId;
-
-    /*
-    id_drone:  batteria
-               position
-               timestamp
-               tot_km_percorsi
-               avg_pollution ?
-               processingDelivery
-     */
 
 
     public Drone() {
@@ -81,7 +69,7 @@ public class Drone {
     }
 
     public synchronized List<Drone> getDrones() {
-        if(drones!=null)
+        if (drones != null)
             return new ArrayList<>(drones);
         return null;
     }
@@ -167,7 +155,7 @@ public class Drone {
     }
 
     public synchronized List<Double> getMeasurementList() {
-        if (measurementList!=null)
+        if (measurementList != null)
             return new ArrayList<>(measurementList);
         return null;
     }
@@ -181,7 +169,7 @@ public class Drone {
     }
 
     public synchronized List<GlobalStats> getgStatsList() {
-        if (gStatsList!=null)
+        if (gStatsList != null)
             return new ArrayList<>(gStatsList);
         return null;
     }
@@ -217,7 +205,6 @@ public class Drone {
     public synchronized Order getFirstPendingOrder() {
         return ((this.pendingOrders != null) && (this.pendingOrders.size() > 0)) ? this.pendingOrders.get(0) : null;
     }
-
 
     public synchronized void removePendingOrder(Order order) {
         if (this.pendingOrders != null && this.pendingOrders.size() > 0)
@@ -269,7 +256,6 @@ public class Drone {
             //throw exception?
         }
 
-        MqttConnectOptions connOpts;
         String clientId = MqttClient.generateClientId();
         String broker = "tcp://localhost:1883";
         String topic = "dronazon/smartcity/orders";
@@ -286,20 +272,13 @@ public class Drone {
 
             public void messageArrived(String topic, MqttMessage message) {
                 // Called when a message arrives from the server that matches any subscription made by the client
-                String time = new Timestamp(System.currentTimeMillis()).toString();
                 String receivedMessage = new String(message.getPayload());
-                /*System.out.println(clientId + " Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
-                        "\n\tTime:    " + time +
-                        "\n\tTopic:   " + topic +
-                        "\n\tMessage: " + receivedMessage +
-                        "\n\tQoS:     " + message.getQos() + "\n");
-                 */
                 Gson gson = new Gson();
                 Order order = gson.fromJson(receivedMessage, Order.class);
                 Position pickUpPoint = order.getPickUpPoint();
                 Position deliveryPoint = order.getDeliveryPoint();
-                System.out.println("Received order from Dronazon with id: " + order.getId() +" from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
-                                ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")" );
+                System.out.println("Received order from Dronazon with id: " + order.getId() + " from (" + pickUpPoint.getxCoordinate() + "," + pickUpPoint.getyCoordinate() +
+                        ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")");
                 Drone.this.addPendingOrder(order);
             }
 
@@ -321,11 +300,9 @@ public class Drone {
         if (!isMaster()) {
             System.err.println("only master can manage orders");
             return null;
-            //throw exception?
         }
 
         //extract drone list
-
         List<Drone> drones = this.getDrones();
         List<Drone> dronesCopyChooseDeliver;
         if (drones == null) {
@@ -334,9 +311,7 @@ public class Drone {
             dronesCopyChooseDeliver = new ArrayList<>(drones);
         }
 
-
         dronesCopyChooseDeliver.add(this);
-
         dronesCopyChooseDeliver.removeIf(d -> d.getBattery() < 15);
 
         //choose the drone nearest
@@ -383,12 +358,12 @@ public class Drone {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Order "+order.getId()+" completed");
+        System.out.println("Order " + order.getId() + " completed");
         this.setBattery(this.getBattery() - 10);
         //System.out.println("battery level decreased");
         System.out.println("now battery level is: " + this.getBattery());
         this.setProcessingDelivery(false);
-        synchronized (this){
+        synchronized (this) {
             this.notify();
         }
         this.sendStatToMaster(order, timestamp, oldPosition);
@@ -401,9 +376,8 @@ public class Drone {
     public synchronized Drone getNextInRing() {
         assert this.drones != null;
         for (Drone d : this.drones) {
-            //System.out.println("HERE");
             if (d.getIdDrone() > this.getIdDrone()) {
-                System.out.println("id drone: "+d.getIdDrone());
+                System.out.println("id drone: " + d.getIdDrone());
                 return d;
             }
         }
@@ -437,7 +411,6 @@ public class Drone {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
-        //System.out.println("middle addDrone");
 
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
@@ -450,11 +423,10 @@ public class Drone {
         this.setMyPosition(myPosition);
 
         //System.out.println("Output from Server .... \n");
-        System.out.println("My position is: ("+ myPosition.getxCoordinate()+","+myPosition.getyCoordinate()+")");
-        if(droneList==null || droneList.isEmpty()){
+        System.out.println("My position is: (" + myPosition.getxCoordinate() + "," + myPosition.getyCoordinate() + ")");
+        if (droneList == null || droneList.isEmpty()) {
             System.out.println("There aren't other drones in the systems");
-        }
-        else {
+        } else {
             System.out.print("other drones in the systems are: ");
             for (int i = 0; i < droneList.size(); i++) {
                 Drone d = droneList.get(i);
@@ -467,7 +439,6 @@ public class Drone {
                 }
             }
         }
-        //System.out.println(output);
         this.drones = droneList;
     }
 
@@ -475,34 +446,14 @@ public class Drone {
         Client client = Client.create();
         String url = "http://" + this.getIpServerAdmin() + ":" + this.getPortServerAdmin();
         WebResource webResource = client.resource(url + "/drone/delete/" + this.getIdDrone());
-
         ClientResponse response = webResource.type("application/json").delete(ClientResponse.class);
-
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
         }
-
-        //String output = response.getEntity(String.class);
-
         System.out.println("Drone removed from the system");
-        //System.out.println(output);
-
     }
 
     private void sendStatToMaster(Order order, Timestamp timestamp, Position oldPosition) {
-        /*
-            drone send after a delivery
-
-            - timestamp
-            - position = position of delivery
-            - km_travelled
-            - avg_pollution
-            - battery
-
-            - num_delivery
-            - km_tot_travelled
-            - battery
-        */
         //System.out.println("sending statistics to master...");
 
         Drone masterDrone = null;
@@ -589,7 +540,6 @@ public class Drone {
                 lenPol += 1;
             }
         }
-        //System.out.println("len =0");
 
         if (len != 0) {
             //calculate avg
@@ -609,11 +559,6 @@ public class Drone {
             if (response.getStatus() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
             }
-
-            //String output = response.getEntity(String.class);
-
-            //System.out.println("Output from Server .... \n");
-            //System.out.println(output);
         }
 
     }

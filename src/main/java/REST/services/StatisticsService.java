@@ -22,14 +22,9 @@ public class StatisticsService {
      Only master drone can add global statistic with POST request
     */
     public Response postGlobal(GlobalStats globalStats) {
-        //System.out.println(globalStats.getAvgDelivery());
-        //System.out.println(globalStats.getAvgKilometers());
-        //System.out.println(globalStats.getAvgPollution().get(0));
-        //System.out.println(globalStats.getAvgBattery());
-        //System.out.println(globalStats.getTimestamp());
         try {
             GlobalStatsList.getInstance().addGlobalStats(globalStats);
-            return Response.ok().build();//.entity("{\"message\": \"Global statistics added\"}").build();
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ExceptionModel("Generic exception:" + e)).build();
         }

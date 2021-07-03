@@ -2,16 +2,14 @@ package REST.beans;
 
 import com.google.gson.annotations.Expose;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class DroneList {
+    private static DroneList instance;
     @Expose
     private List<Drone> drones;
-
-    private static DroneList instance;
 
     private DroneList() {
         drones = new ArrayList<>();
@@ -31,15 +29,6 @@ public class DroneList {
     public synchronized List<Drone> getDrones() {
         return new ArrayList<>(drones);
     }
-    /*public Word getDefinition(String word) {
-        List<Word> copy = getDrones();
-        for (Word w: copy) {
-            if (w.getWord().equals(word)) {
-                return w;
-            }
-        }
-        return null;
-    }*/
 
     public synchronized void deleteDrone(int idDroneToRemove) {
         for (int i = 0; i < drones.size(); i++) {
@@ -59,9 +48,4 @@ public class DroneList {
         }
         return -1;
     }
-
-    /*public synchronized void updateDefinition(Word w) {
-        int posParola = this.checkWord(w);
-        drones.set(posParola, w);
-    }*/
 }

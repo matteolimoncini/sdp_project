@@ -8,6 +8,7 @@ import io.grpc.ServerBuilder;
 public class ServerGrpcThread extends Thread {
     private Drone drone;
     private Server server;
+
     public ServerGrpcThread(Drone drone) {
         this.drone = drone;
     }
@@ -33,7 +34,7 @@ public class ServerGrpcThread extends Thread {
         }
     }
 
-    public void stopMeGently(){
+    public void stopMeGently() {
         this.server.shutdownNow();
     }
 }

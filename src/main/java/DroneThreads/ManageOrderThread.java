@@ -10,7 +10,6 @@ import com.example.grpc.sendOrderGrpc.sendOrderStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,19 +28,18 @@ public class ManageOrderThread extends Thread {
             this.drone.subscribeAndPutInQueue();
 
             Order firstPendingOrder;
-            while(true){
-                if(this.drone.areTherePendingOrders()){
+            while (true) {
+                if (this.drone.areTherePendingOrders()) {
                     //System.out.println("try to manage pending order...");
                     firstPendingOrder = this.drone.getFirstPendingOrder();
                     Drone droneChoosen = this.drone.chooseDeliver(firstPendingOrder);
-                    if (droneChoosen != null){
-                        //System.out.println("**droneChoosen != null**");
+                    if (droneChoosen != null) {
                         this.drone.removePendingOrder(firstPendingOrder);
                         droneChoosen.setProcessingDelivery(true);
 
                         Position pickUpPoint = firstPendingOrder.getPickUpPoint();
                         Position deliveryPoint = firstPendingOrder.getDeliveryPoint();
-                        String targetAddress = droneChoosen.getIpAddress() +":"+droneChoosen.getPortNumber();
+                        String targetAddress = droneChoosen.getIpAddress() + ":" + droneChoosen.getPortNumber();
                         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
                         sendOrderStub stub = sendOrderGrpc.newStub(channel);
                         propagateOrder request = propagateOrder
@@ -70,18 +68,15 @@ public class ManageOrderThread extends Thread {
                             }
                         });
                         try {
-                            channel.awaitTermination(10,TimeUnit.SECONDS);
+                            channel.awaitTermination(10, TimeUnit.SECONDS);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        //droneChoosen.manageOrder(firstPendingOrder);
                     }
 
-                }
-                else {
-                    if(this.drone.isQuit()){
+                } else {
+                    if (this.drone.isQuit()) {
                         //System.out.println("no pending order and quit flag set as true");
-
                         break;
                     }
                 }

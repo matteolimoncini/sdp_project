@@ -20,9 +20,9 @@ public class GlobalStatsList {
     }
 
 
-    //singleton per ritornare l'istanza di globalStatsList
+    //singleton to return instance of globalStatsList
     public synchronized static GlobalStatsList getInstance() {
-        if (instance==null)
+        if (instance == null)
             instance = new GlobalStatsList();
         return instance;
     }
@@ -30,6 +30,7 @@ public class GlobalStatsList {
     public synchronized void addGlobalStats(GlobalStats globalStats) {
         globalStatsList.add(globalStats);
     }
+
     public synchronized List<GlobalStats> getGlobalStatsList() {
         return new ArrayList<>(globalStatsList);
     }

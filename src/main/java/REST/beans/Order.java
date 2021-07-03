@@ -1,6 +1,5 @@
 package REST.beans;
 
-import REST.beans.Position;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
@@ -12,9 +11,10 @@ public class Order {
     @Expose
     private Position deliveryPoint;
 
-    public Order(){
+    public Order() {
 
     }
+
     public Order(int id, Position pickUpPoint, Position deliveryPoint) {
         this.id = id;
         this.pickUpPoint = pickUpPoint;
@@ -37,13 +37,5 @@ public class Order {
     public String toString() {
         Gson gson = new Gson();
         return gson.toJson(this);
-        /*
-        return "REST.beans.Order{" +
-                "id=" + id +
-                ", pickUpPoint=" + pickUpPoint.toString() +
-                ", deliveryPoint=" + deliveryPoint.toString() +
-                '}';
-
-         */
     }
 }

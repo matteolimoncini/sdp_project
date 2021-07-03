@@ -1,6 +1,5 @@
 package DroneThreads;
 
-import DroneThreads.ElectionThread;
 import REST.beans.Drone;
 import com.example.grpc.Ping;
 import com.example.grpc.pingServiceGrpc;
@@ -58,7 +57,7 @@ public class PingThread extends Thread {
                         public void onError(Throwable t) {
                             //System.out.println("PING FAILED!");
                             drone.removeDroneFromList(d);
-                            System.out.println("DRONE REMOVED");
+                            //System.out.println("DRONE REMOVED");
                             if (drone.getDrones() != null && drone.getDrones().size() > 0) {
                                 if (drone.getIdMaster().equals(d.getIdDrone())) {
                                     //start election

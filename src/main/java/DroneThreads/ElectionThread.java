@@ -1,7 +1,6 @@
 package DroneThreads;
 
 import REST.beans.Drone;
-
 import com.example.grpc.Election.message;
 import com.example.grpc.electionGrpc;
 import com.example.grpc.electionGrpc.electionStub;
@@ -21,15 +20,13 @@ public class ElectionThread extends Thread {
     @Override
     public void run() {
 
-        //marca come partecipante
         drone.setPartecipant(true);
         //System.out.println(drone.getIdDrone()+" setted as partecipant");
 
-        //invia al successivo un msg ELECTION,<id>
         //System.out.println("ID DRONE: "+drone.getIdDrone());
         //System.out.println("drones:"+drone.getDrones());
         Drone nextDroneInRing = drone.getNextInRing();
-        assert nextDroneInRing!= null;
+        assert nextDroneInRing != null;
         //System.out.println(drone.getIdDrone()+" has next id:" +nextDroneInRing.getIdDrone());
         String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
@@ -58,7 +55,7 @@ public class ElectionThread extends Thread {
             }
         });
         try {
-            channel.awaitTermination(10,TimeUnit.SECONDS);
+            channel.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
