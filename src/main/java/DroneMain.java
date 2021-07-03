@@ -15,7 +15,6 @@ public class DroneMain {
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
         GlobalStatsToServerThread sendGlobalStatsThread;
-        Thread manageOrderThread;
         Thread sendNewDroneAdded;
         ServerGrpcThread serverThread;
         PingThread pingThread;
@@ -123,9 +122,18 @@ public class DroneMain {
 
 
         //wait until current order is in progress
-        while (drone.isProcessingDelivery()){
+
+        try {
+            synchronized (drone) {
+                drone.wait();
+            }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        /*while (drone.isProcessingDelivery()){
             assert true;
         }
+         */
 
         //stop pollutions threads
         pm10Sim.stopMeGently();

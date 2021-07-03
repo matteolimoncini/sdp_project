@@ -45,6 +45,9 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
         //System.out.println("setted new position");
 
         droneInMessage.setProcessingDelivery(false);
+        synchronized (droneInMessage){
+            droneInMessage.notify();
+        }
         //System.out.println("setted processing delivery");
 
         double avgb = request.getBattery();
