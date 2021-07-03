@@ -218,6 +218,7 @@ public class Drone {
         return ((this.pendingOrders != null) && (this.pendingOrders.size() > 0)) ? this.pendingOrders.get(0) : null;
     }
 
+
     public synchronized void removePendingOrder(Order order) {
         if (this.pendingOrders != null && this.pendingOrders.size() > 0)
             this.pendingOrders.remove(order);
@@ -436,8 +437,7 @@ public class Drone {
         //System.out.println("middle addDrone");
 
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + response.getStatus());
+            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
         }
 
         ResponseAddModel output = response.getEntity(ResponseAddModel.class);
@@ -476,8 +476,7 @@ public class Drone {
         ClientResponse response = webResource.type("application/json").delete(ClientResponse.class);
 
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + response.getStatus());
+            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
         }
 
         //String output = response.getEntity(String.class);
@@ -605,8 +604,7 @@ public class Drone {
             ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
             if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + response.getStatus());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
             }
 
             //String output = response.getEntity(String.class);
