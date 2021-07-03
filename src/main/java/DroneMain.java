@@ -12,14 +12,6 @@ public class DroneMain {
         System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 
-        /*
-        - sempre essere in attesa che io scriva quit sul terminale
-        - effettuare una consegna
-        - inviare global statistics al server (se master)
-        - elezione master
-        */
-
-
         //when we add a new drone we start a thread that wait that user type "quit" and exit
         Thread quitThread;
         GlobalStatsToServerThread sendGlobalStatsThread;
@@ -40,8 +32,6 @@ public class DroneMain {
         quitThread = new QuitThread(drone);
         quitThread.start();
 
-
-
         if (drones != null) {
             if (drones.size() == 0) {
                 //i am alone in the system, i'm master
@@ -61,26 +51,24 @@ public class DroneMain {
             System.out.println("I am master");
         }
 
+        //start a thread to manage ping between drones
         pingThread = new PingThread(drone);
         pingThread.start();
 
-
         BufferImpl buffer = new BufferImpl();
 
+        //start a thread to manage p10 simulator
         pm10Sim = new PM10Simulator(buffer);
         pm10Sim.start();
 
+        //start a thread to manage pollution values
         PollutionThread pollutionThread = new PollutionThread(drone,buffer);
         pollutionThread.start();
 
         //start a thread that send global stats if this drone is master
         sendGlobalStatsThread = new GlobalStatsToServerThread(drone);
 
-
-        //manageOrderThread = new DroneManageOrderThread(drone);
-
-        //System.out.println("before while");
-
+        //start a thread to manage orders
         manageOrder = new ManageOrderThread(drone);
 
 
@@ -108,20 +96,11 @@ public class DroneMain {
                 sendGlobalStatsThread.start();
             }
 
-            //manage one order
-
-
         }
-        //System.out.println("fuori while");
-        drone.setQuit(true);
-
-        //TODO ?
-        //drone.sendGlobalStatistics();
 
         //manage exit from the system
 
-
-
+        drone.setQuit(true);
 
         //if is master disconnect from broker mqtt
         if(drone.isMaster()){
@@ -148,6 +127,7 @@ public class DroneMain {
             assert true;
         }
 
+        //stop pollutions threads
         pm10Sim.stopMeGently();
         pollutionThread.stopMeGently();
 
@@ -166,8 +146,8 @@ public class DroneMain {
 
         //ask to exit to server
         drone.removeDrone();
-        //System.out.println("exit confirmed from the server");
 
+        //stop ping thread
         pingThread.stopMeGently();
 
         //close all thread
