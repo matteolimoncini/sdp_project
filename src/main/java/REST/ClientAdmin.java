@@ -138,7 +138,7 @@ public class ClientAdmin {
                     if (Double.isNaN(avg)) {
                         System.out.println("Average not available");
                     } else {
-                        System.out.println("The average number of delivery is " + avg);
+                        System.out.printf("The average number of delivery is %.2f \n", avg);
                     }
 
                     break;
@@ -165,7 +165,7 @@ public class ClientAdmin {
                     if (Double.isNaN(avgKm)) {
                         System.out.println("Average not available");
                     } else {
-                        System.out.println("The average number of kilometers is " + avgKm);
+                        System.out.printf("The average number of kilometers is %.2f \n", avgKm);
                     }
 
                     break;
