@@ -11,8 +11,6 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
@@ -26,16 +24,15 @@ public class ClientAdmin {
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         clientConfig.getClasses().add(JacksonJsonProvider.class);
-        int numberMenu;
-        Scanner in = new Scanner(System.in);
-        Gson gson = new Gson();
         Client client = Client.create(clientConfig);
+        Scanner in = new Scanner(System.in);
         WebResource webResource;
         ClientResponse response;
         MultivaluedMap<String, String> params;
         DroneList output;
         String t1;
         String t2;
+        int numberMenu;
 
         while (true) {
             System.out.println("\nWelcome to the admin page");
@@ -60,13 +57,10 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
-                    //String s = response.getEntity(String.class);
-                    //System.out.println(s);
                     output = response.getEntity(DroneList.class);
-                    //System.out.print("Output from Server .... \n");
                     List<Drone> drones = output.getDrones();
                     if(drones.size()>0) {
                         System.out.println("Drones in the system:");
@@ -77,17 +71,16 @@ public class ClientAdmin {
                     }else{
                         System.out.println("There aren't drones in the system");
                     }
-                    //DroneList list = gson.fromJson(output,DroneList.class);
 
                     break;
                 case 2:
-                    System.out.println("insert n");
+                    System.out.println("Insert number of statistics that you want to see");
                     int n;
                     try {
                         n = in.nextInt();
                     } catch (InputMismatchException e) {
                         in.next();
-                        System.err.println("input error. Not an integer");
+                        System.err.println("Input error. Not an integer");
                         break;
                     }
                     webResource = client.resource("http://localhost:1337/statistics/globals/" + n);
@@ -96,16 +89,10 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
-                    //String gstatString = response.getEntity(String.class);
-                    //System.out.println(gstatString);
-
                     List<GlobalStats> gstatsList = response.getEntity(new GenericType<List<GlobalStats>>() {});
-                    //System.out.println(gstatsList);
-                    //System.out.println(gList+ "\n");
-                    //System.out.println("Output from Server .... \n");
                     if (gstatsList.isEmpty()){
                         System.out.println("There aren't statistics available");
                     }
@@ -124,17 +111,15 @@ public class ClientAdmin {
                             System.out.printf("average battery: %.2f \n", avgBattery);
                             System.out.printf("average pollution: %.2f \n", avgPollutions.get(0));
 
-                            //System.out.println(gstatsList.get(i));
                         }
                     }
 
-                    //DroneList list = gson.fromJson(output,DroneList.class);
                     break;
                 case 3:
                     in.nextLine();
-                    System.out.println("insert t1");
+                    System.out.println("insert first timestamp [YYYY-MM-DD hh:mm:ss]");
                     t1 = in.nextLine();
-                    System.out.println("insert t2");
+                    System.out.println("insert second timestamp [YYYY-MM-DD hh:mm:ss]");
                     t2 = in.nextLine();
                     params = new MultivaluedMapImpl();
                     params.add("t1", t1);
@@ -145,24 +130,23 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     AvgStatisticsModel avgModel = response.getEntity(AvgStatisticsModel.class);
-                    System.out.println("Output from Server .... \n");
                     double avg = avgModel.getAvg();
                     if (Double.isNaN(avg)) {
-                        System.out.println("media non disponibile");
+                        System.out.println("Average not available");
                     } else {
-                        System.out.println("The average number of delivery is" + avg);
+                        System.out.println("The average number of delivery is " + avg);
                     }
 
                     break;
                 case 4:
                     in.nextLine();
-                    System.out.println("insert first timestamp");
+                    System.out.println("insert first timestamp [YYYY-MM-DD hh:mm:ss]");
                     t1 = in.nextLine();
-                    System.out.println("insert second timestamp");
+                    System.out.println("insert second timestamp [YYYY-MM-DD hh:mm:ss]");
                     t2 = in.nextLine();
                     params = new MultivaluedMapImpl();
                     params.add("t1", t1);
@@ -173,24 +157,18 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     AvgStatisticsModel avgModelKm = response.getEntity(AvgStatisticsModel.class);
-                    System.out.println("Output from Server .... \n");
                     double avgKm = avgModelKm.getAvg();
                     if (Double.isNaN(avgKm)) {
-                        System.out.println("media non disponibile");
+                        System.out.println("Average not available");
                     } else {
-                        System.out.println("The average number of delivery is" + avgKm);
+                        System.out.println("The average number of kilometers is " + avgKm);
                     }
 
                     break;
-                    /*
-                    output = response.getEntity(DroneList.class);
-                    System.out.println("Output from Server .... \n");
-                    System.out.println(output);
-                    */
 
                 default:
                     System.out.println("exit from menu");
