@@ -354,7 +354,7 @@ public class Drone {
         Position oldPosition = this.getMyPosition();
         System.out.println("Order in progress by drone with id:" + this.getIdDrone());
         try {
-            Thread.sleep(15 * 1000);
+            Thread.sleep(5 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
