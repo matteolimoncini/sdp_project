@@ -32,7 +32,8 @@ public class ElectionImpl extends electionImplBase {
 
 
         Drone nextDroneInRing = drone.getNextInRing();
-        String targetAddress = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
+        Drone nextNextDroneInRing = nextDroneInRing.getNextInRing();
+        String targetAddressNext = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         Context.current().fork().run(() -> {
 
             message propagatedMessage = null;
@@ -142,16 +143,41 @@ public class ElectionImpl extends electionImplBase {
                 }
             }
             if (propagatedMessage != null) {
-                final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddress).usePlaintext().build();
+                final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddressNext).usePlaintext().build();
                 electionGrpc.electionStub stub = electionGrpc.newStub(channel);
+                message finalPropagatedMessage = propagatedMessage;
                 stub.election(propagatedMessage, new StreamObserver<message>() {
                     @Override
                     public void onNext(message value) {
-
                     }
 
                     @Override
                     public void onError(Throwable t) {
+                        if(nextNextDroneInRing!=null){
+                            System.out.println("next next drone");
+                            String targetAddressNextNext = nextNextDroneInRing.getIpAddress() + ":" + nextNextDroneInRing.getPortNumber();
+                            final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddressNextNext).usePlaintext().build();
+                            electionGrpc.electionStub stubNextNext = electionGrpc.newStub(channel);
+                            stubNextNext.election(finalPropagatedMessage, new StreamObserver<message>() {
+                                @Override
+                                public void onNext(message message) {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    channel.shutdown();
+                                }
+
+                                @Override
+                                public void onCompleted() {
+                                    channel.shutdown();
+                                }
+                            });
+
+                        }
+
+
                         channel.shutdown();
                     }
 
