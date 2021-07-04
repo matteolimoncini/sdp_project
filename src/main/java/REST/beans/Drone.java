@@ -47,7 +47,8 @@ public class Drone {
     private int countPosition = 0;
     private boolean quit = false;
     private boolean electionInProgress = false;
-    private Object syncCurrentOrder = new Object();
+    @JsonIgnore
+    private final Object syncCurrentOrder = new Object();
 
 
     public Drone() {
@@ -159,9 +160,10 @@ public class Drone {
         return syncCurrentOrder;
     }
 
-    public void setSyncCurrentOrder(Object syncCurrentOrder) {
+    /*public void setSyncCurrentOrder(Object syncCurrentOrder) {
         this.syncCurrentOrder = syncCurrentOrder;
     }
+     */
 
     public synchronized List<Double> getMeasurementList() {
         if (measurementList != null)
