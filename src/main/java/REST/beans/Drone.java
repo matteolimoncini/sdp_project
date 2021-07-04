@@ -227,33 +227,21 @@ public class Drone {
         this.processingDelivery = processingDelivery;
     }
 
-    private boolean batteryLow() {
-        int lowbatteryThreshold = 15;
-        return this.battery < lowbatteryThreshold;
-    }
-
-    private void quit() throws MqttException {
-        this.disconnect();
-    }
-
     public void disconnect() throws MqttException {
         if (!isMaster()) {
             System.err.println("only master can disconnect");
             return;
-            //throw exception?
         }
         if (this.clientDrone.isConnected()) {
             this.clientDrone.disconnect();
             System.out.println("Subscriber disconnected");
         }
-        //System.out.println("Subscriber already disconnected");
     }
 
     public void subscribeAndPutInQueue() throws MqttException {
         if (!isMaster()) {
             System.err.println("only master can subscribe");
             return;
-            //throw exception?
         }
 
         String clientId = MqttClient.generateClientId();
@@ -262,8 +250,8 @@ public class Drone {
         int qos = 2;
 
         this.clientDrone = new MqttClient(broker, clientId);
-        this.clientDrone.connect();
         // Connect the client
+        this.clientDrone.connect();
         //System.out.println(clientId + " Connecting Broker " + broker);
         //System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
 
@@ -271,7 +259,6 @@ public class Drone {
         this.clientDrone.setCallback(new MqttCallback() {
 
             public void messageArrived(String topic, MqttMessage message) {
-                // Called when a message arrives from the server that matches any subscription made by the client
                 String receivedMessage = new String(message.getPayload());
                 Gson gson = new Gson();
                 Order order = gson.fromJson(receivedMessage, Order.class);
