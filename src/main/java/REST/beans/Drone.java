@@ -376,6 +376,21 @@ public class Drone {
         return null;
     }
 
+    public synchronized Drone getNextNextInRing() {
+        int size = this.drones.size();
+        for (int i = 0; i < size; i++) {
+            Drone d = this.drones.get(i);
+            if (d.getIdDrone() > this.getIdDrone())
+                return this.drones.get(i + 1);
+        }
+
+        if (this.getDrones().size() >= 1) {
+            return this.getDrones().get(0);
+        }
+
+        return null;
+    }
+
     public synchronized void insertDroneInList(Drone insertDrone) {
         if (this.drones == null)
             this.drones = new ArrayList<>();

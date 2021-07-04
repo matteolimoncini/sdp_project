@@ -32,7 +32,7 @@ public class ElectionImpl extends electionImplBase {
 
 
         Drone nextDroneInRing = drone.getNextInRing();
-        Drone nextNextDroneInRing = nextDroneInRing.getNextInRing();
+        Drone nextNextDroneInRing = drone.getNextNextInRing();
         String targetAddressNext = nextDroneInRing.getIpAddress() + ":" + nextDroneInRing.getPortNumber();
         Context.current().fork().run(() -> {
 
@@ -154,7 +154,6 @@ public class ElectionImpl extends electionImplBase {
                     @Override
                     public void onError(Throwable t) {
                         if(nextNextDroneInRing!=null){
-                            System.out.println("next next drone");
                             String targetAddressNextNext = nextNextDroneInRing.getIpAddress() + ":" + nextNextDroneInRing.getPortNumber();
                             final ManagedChannel channel = ManagedChannelBuilder.forTarget(targetAddressNextNext).usePlaintext().build();
                             electionGrpc.electionStub stubNextNext = electionGrpc.newStub(channel);
