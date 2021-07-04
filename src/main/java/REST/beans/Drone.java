@@ -163,6 +163,14 @@ public class Drone {
         this.battery = battery;
     }
 
+    public Object getSyncCurrentOrder() {
+        return syncCurrentOrder;
+    }
+
+    public void setSyncCurrentOrder(Object syncCurrentOrder) {
+        this.syncCurrentOrder = syncCurrentOrder;
+    }
+
     public synchronized List<Double> getMeasurementList() {
         if (measurementList != null)
             return new ArrayList<>(measurementList);
@@ -387,16 +395,12 @@ public class Drone {
 
     public synchronized Drone getNextNextInRing() {
         int size = this.drones.size();
-        for (int i = 0; i < size; i++) {
-            Drone d = this.drones.get(i);
+        int i;
+        for (i = 0; i < size; i++) {
+            Drone d = this.drones.get((i+1)%size);
             if (d.getIdDrone() > this.getIdDrone())
-                return this.drones.get(i + 1);
+                return d;
         }
-
-        if (this.getDrones().size() >= 1) {
-            return this.getDrones().get(0);
-        }
-
         return null;
     }
 
