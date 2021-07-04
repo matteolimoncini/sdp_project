@@ -147,14 +147,6 @@ public class Drone {
         this.countPosition = countPosition;
     }
 
-    public Object getSyncCurrentOrder() {
-        return syncCurrentOrder;
-    }
-
-    public void setSyncCurrentOrder(Object syncCurrentOrder) {
-        this.syncCurrentOrder = syncCurrentOrder;
-    }
-
     public synchronized Integer getBattery() {
         return battery;
     }
