@@ -1,4 +1,4 @@
-syntax='proto3';
+syntax = 'proto3';
 package com.example.grpc;
 
 message position {
@@ -8,7 +8,7 @@ message position {
 }
 
 message responsePosition {
-  string messageResponse= 1;
+  string messageResponse = 1;
 }
 
 service positionService {
