@@ -124,9 +124,9 @@ public class DroneMain {
         //wait until current order is in progress
 
         try {
-            synchronized (drone) {
+            synchronized (drone.getSyncCurrentOrder()) {
                 if(drone.isProcessingDelivery()){
-                    drone.wait();
+                    drone.getSyncCurrentOrder().wait();
                 }
             }
             } catch (InterruptedException e) {

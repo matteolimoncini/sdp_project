@@ -47,6 +47,7 @@ public class Drone {
     private int countPosition = 0;
     private boolean quit = false;
     private boolean electionInProgress = false;
+    private Object syncCurrentOrder = new Object();
 
 
     public Drone() {
@@ -144,6 +145,14 @@ public class Drone {
 
     public void setCountPosition(int countPosition) {
         this.countPosition = countPosition;
+    }
+
+    public Object getSyncCurrentOrder() {
+        return syncCurrentOrder;
+    }
+
+    public void setSyncCurrentOrder(Object syncCurrentOrder) {
+        this.syncCurrentOrder = syncCurrentOrder;
     }
 
     public synchronized Integer getBattery() {
@@ -350,8 +359,8 @@ public class Drone {
         //System.out.println("battery level decreased");
         System.out.println("now battery level is: " + this.getBattery());
         this.setProcessingDelivery(false);
-        synchronized (this) {
-            this.notify();
+        synchronized (this.getSyncCurrentOrder()) {
+            this.getSyncCurrentOrder().notify();
         }
         this.sendStatToMaster(order, timestamp, oldPosition);
     }

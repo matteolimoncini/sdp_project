@@ -44,8 +44,8 @@ public class GlobalStatsMasterImpl extends globalStatsServiceGrpc.globalStatsSer
         //System.out.println("setted new position");
 
         droneInMessage.setProcessingDelivery(false);
-        synchronized (droneInMessage){
-            droneInMessage.notify();
+        synchronized (droneInMessage.getSyncCurrentOrder()){
+            droneInMessage.getSyncCurrentOrder().notify();
         }
         //System.out.println("setted processing delivery");
 
