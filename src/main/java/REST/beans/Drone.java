@@ -49,6 +49,8 @@ public class Drone {
     private boolean electionInProgress = false;
     @JsonIgnore
     private final Object syncCurrentOrder = new Object();
+    private double kmTravelled=0;
+    private int numDelivery =0;
 
 
     public Drone() {
@@ -154,6 +156,22 @@ public class Drone {
 
     public synchronized void setBattery(Integer battery) {
         this.battery = battery;
+    }
+
+    public double getKmTravelled() {
+        return kmTravelled;
+    }
+
+    public void setKmTravelled(double kmTravelled) {
+        this.kmTravelled = kmTravelled;
+    }
+
+    public int getNumDelivery() {
+        return numDelivery;
+    }
+
+    public void setNumDelivery(int numDelivery) {
+        this.numDelivery = numDelivery;
     }
 
     public Object getSyncCurrentOrder() {
@@ -364,6 +382,7 @@ public class Drone {
         synchronized (this.getSyncCurrentOrder()) {
             this.getSyncCurrentOrder().notify();
         }
+        this.setNumDelivery(this.getNumDelivery()+1);
         this.sendStatToMaster(order, timestamp, oldPosition);
     }
 
@@ -497,6 +516,8 @@ public class Drone {
                 Position pickUpPoint = order.getPickUpPoint();
                 double distanceFromOldToPickup = distance(oldPosition.getxCoordinate(), oldPosition.getyCoordinate(), pickUpPoint.getxCoordinate(), pickUpPoint.getyCoordinate());
                 double distanceFromPickupTpDelivery = distance(pickUpPoint.getxCoordinate(), pickUpPoint.getxCoordinate(), deliveryPoint.getxCoordinate(), deliveryPoint.getyCoordinate());
+                double totKm = distanceFromPickupTpDelivery + distanceFromOldToPickup;
+                this.setKmTravelled(this.getKmTravelled()+totKm);
                 GlobalStatsToMaster.globalStatsToMaster request1 = GlobalStatsToMaster.globalStatsToMaster
                         .newBuilder()
                         .setIdDrone(this.getIdDrone())
@@ -504,7 +525,7 @@ public class Drone {
                         .setBattery(this.getBattery())
                         .setNewPositionX(deliveryPoint.getxCoordinate())
                         .setNewPositionY(deliveryPoint.getyCoordinate())
-                        .setKmTravelled(distanceFromPickupTpDelivery + distanceFromOldToPickup)
+                        .setKmTravelled(totKm)
                         .addAllAvgPm10(this.getMeasurementList())
                         .build();
                 stub.globalStatsMaster(request1, new StreamObserver<GlobalStatsToMaster.responseGlobalStats>() {

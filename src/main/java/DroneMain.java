@@ -20,6 +20,7 @@ public class DroneMain {
         PingThread pingThread;
         Thread manageOrder;
         PM10Simulator pm10Sim;
+        PrintThread printThread;
 
         List<Drone> drones = drone.getDrones();
 
@@ -53,6 +54,11 @@ public class DroneMain {
         //start a thread to manage ping between drones
         pingThread = new PingThread(drone);
         pingThread.start();
+
+
+        //start a thread that print stats every 10 seconds
+        printThread = new PrintThread(drone);
+        printThread.start();
 
         BufferImpl buffer = new BufferImpl();
 
@@ -100,6 +106,10 @@ public class DroneMain {
         //manage exit from the system
 
         drone.setQuit(true);
+
+
+        //stop thread that prints stats
+        printThread.stopMeGently();
 
         //if is master disconnect from broker mqtt
         if(drone.isMaster()){
