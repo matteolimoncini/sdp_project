@@ -3,8 +3,8 @@ package DroneThreads;
 import REST.beans.Drone;
 
 public class PrintThread extends Thread{
-    private Drone drone;
-    private volatile boolean stopCondition;
+    private final Drone drone;
+    private boolean stopCondition;
     public PrintThread(Drone drone) {
         this.drone=drone;
         this.stopCondition=false;

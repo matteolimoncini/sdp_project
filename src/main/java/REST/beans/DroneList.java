@@ -9,13 +9,13 @@ import java.util.List;
 public class DroneList {
     private static DroneList instance;
     @Expose
-    private List<Drone> drones;
+    private final List<Drone> drones;
 
     private DroneList() {
         drones = new ArrayList<>();
     }
 
-    //singleton per ritornare l'istanza di droneList
+    //singleton to return the instance of droneList
     public synchronized static DroneList getInstance() {
         if (instance==null)
             instance = new DroneList();

@@ -10,11 +10,12 @@ import com.example.grpc.sendOrderGrpc.sendOrderStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.concurrent.TimeUnit;
 
 public class ManageOrderThread extends Thread {
-    private Drone drone;
+    private final Drone drone;
     private boolean stopCondition;
 
     public ManageOrderThread(Drone drone) {
@@ -84,7 +85,11 @@ public class ManageOrderThread extends Thread {
             }
             //System.out.println("ending manage order thread...");
 
-        } catch (Exception e) {
+        }catch (MqttException e){
+            System.err.println("Mqtt exception during disconnect");
+            e.printStackTrace();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

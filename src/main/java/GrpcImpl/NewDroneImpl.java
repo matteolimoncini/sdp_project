@@ -8,7 +8,7 @@ import com.example.grpc.newDroneGrpc.newDroneImplBase;
 import io.grpc.stub.StreamObserver;
 
 public class NewDroneImpl extends newDroneImplBase {
-    private Drone myDrone;
+    private final Drone myDrone;
     public NewDroneImpl(Drone myDrone) {
         this.myDrone = myDrone;
     }

@@ -7,9 +7,9 @@ import SimulatorPm10.Measurement;
 import java.util.List;
 
 public class PollutionThread extends Thread {
-    private volatile boolean stopCondition = false;
-    private Drone drone;
-    private BufferImpl buffer;
+    private boolean stopCondition = false;
+    private final Drone drone;
+    private final BufferImpl buffer;
 
     public PollutionThread(Drone drone, BufferImpl buffer) {
         this.drone = drone;

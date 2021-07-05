@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PositionDroneThread extends Thread {
-    private Drone drone;
-
+    private final Drone drone;
     public PositionDroneThread(Drone drone) {
         this.drone = drone;
     }

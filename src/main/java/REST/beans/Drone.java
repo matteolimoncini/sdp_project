@@ -31,15 +31,12 @@ public class Drone {
     private Integer portNumber;
     private Integer idMaster = -1;
     private MqttClient clientDrone;
-
-
     private Integer battery;
     private boolean processingDelivery;
     private Position myPosition;
     private String ipServerAdmin;
     private Integer portServerAdmin;
-    private boolean partecipant;
-
+    private boolean participant;
     private List<GlobalStats> gStatsList = new ArrayList<>();
     private List<Drone> drones = new ArrayList<>();
     private List<Order> pendingOrders;
@@ -52,11 +49,10 @@ public class Drone {
     private double kmTravelled=0;
     private int numDelivery =0;
 
-
     public Drone() {
         this.battery = 100;
         this.processingDelivery = false;
-        this.partecipant = false;
+        this.participant = false;
         this.pendingOrders = new ArrayList<>();
     }
 
@@ -68,7 +64,7 @@ public class Drone {
         this.portServerAdmin = portServerAdmin;
         this.battery = 100;
         this.processingDelivery = false;
-        this.partecipant = false;
+        this.participant = false;
         this.pendingOrders = new ArrayList<>();
     }
 
@@ -134,12 +130,12 @@ public class Drone {
         this.idMaster = idMaster;
     }
 
-    public boolean getPartecipant() {
-        return partecipant;
+    public boolean getParticipant() {
+        return participant;
     }
 
-    public void setPartecipant(boolean partecipant) {
-        this.partecipant = partecipant;
+    public void setParticipant(boolean participant) {
+        this.participant = participant;
     }
 
     public int getCountPosition() {
@@ -148,6 +144,10 @@ public class Drone {
 
     public void setCountPosition(int countPosition) {
         this.countPosition = countPosition;
+    }
+
+    public void addCountPosition() {
+        this.countPosition++;
     }
 
     public synchronized Integer getBattery() {
@@ -177,11 +177,6 @@ public class Drone {
     public Object getSyncCurrentOrder() {
         return syncCurrentOrder;
     }
-
-    /*public void setSyncCurrentOrder(Object syncCurrentOrder) {
-        this.syncCurrentOrder = syncCurrentOrder;
-    }
-     */
 
     public synchronized List<Double> getMeasurementList() {
         if (measurementList != null)
@@ -441,7 +436,7 @@ public class Drone {
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
+            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
         }
 
         ResponseAddModel output = response.getEntity(ResponseAddModel.class);
@@ -476,7 +471,7 @@ public class Drone {
         WebResource webResource = client.resource(url + "/drone/delete/" + this.getIdDrone());
         ClientResponse response = webResource.type("application/json").delete(ClientResponse.class);
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
+            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
         }
         System.out.println("Drone removed from the system");
     }
@@ -573,7 +568,7 @@ public class Drone {
 
         if (len != 0) {
             //calculate avg
-            GlobalStats gstats = new GlobalStats(sumDel / len, sumKm / len, sumPol / len, sumBat / lenPol);
+            GlobalStats globalStats = new GlobalStats(sumDel / len, sumKm / len, sumPol / lenPol, sumBat / len);
             System.out.println("Sent global statistics to server");
 
             //remove all elements from the list
@@ -582,19 +577,15 @@ public class Drone {
             String url = "http://" + this.getIpServerAdmin() + ":" + this.getPortServerAdmin();
             WebResource webResource = client.resource(url + "/statistics/globals");
             Gson gson = new Gson();
-            String input = gson.toJson(gstats);
+            String input = gson.toJson(globalStats);
             //System.out.println(input);
             ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
             if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class));
+                throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
             }
         }
 
-    }
-
-    public void addCountPosition() {
-        this.countPosition++;
     }
 
     @Override

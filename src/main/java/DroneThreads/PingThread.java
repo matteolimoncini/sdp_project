@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PingThread extends Thread {
-    private volatile boolean stopCondition = false;
-    private Drone drone;
+    private boolean stopCondition = false;
+    private final Drone drone;
 
     public PingThread(Drone drone) {
         this.drone = drone;

@@ -98,7 +98,7 @@ public class StatisticsService {
 
             double avgKilometers;
             int sumKilometers = 0;
-            List<GlobalStats> globalStatsList = null;
+            List<GlobalStats> globalStatsList;
             globalStatsList = GlobalStatsList.getInstance().getGlobalStatsList(t1, t2);
             for (GlobalStats globalStats : globalStatsList)
                 sumKilometers += globalStats.getAvgKilometers();

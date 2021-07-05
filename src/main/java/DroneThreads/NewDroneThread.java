@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 import static com.example.grpc.AddDrone.*;
 
 public class NewDroneThread extends Thread {
-    private Drone myDrone;
-    private String ipReceiverDrone;
-    private int portReceiverDrone;
-    private String message;
+    private final Drone myDrone;
+    private final String ipReceiverDrone;
+    private final int portReceiverDrone;
+    private final String message;
 
     public NewDroneThread(String ipReceiverDrone, int portReceiverDrone, String message, Drone newDrone) {
         this.ipReceiverDrone = ipReceiverDrone;

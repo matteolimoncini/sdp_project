@@ -37,13 +37,12 @@ public class ElectionImpl extends electionImplBase {
         Context.current().fork().run(() -> {
 
             message propagatedMessage = null;
-
-            System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
+            //System.out.println("message received: " + typeMessage + " whit id inside: " + idDroneInMessage);
             if (typeMessage.equals("ELECTION")) {
 
                 drone.setElectionInProgress(true);
 
-                if (drone.getPartecipant()) {   //if drone is participant
+                if (drone.getParticipant()) {   //if drone is participant
                     if (myBattery < batteryDroneInMessage) {
                         //propagate message as is
                         propagatedMessage = request;
@@ -61,7 +60,7 @@ public class ElectionImpl extends electionImplBase {
                                 drone.setIdMaster(myId);
 
                                 //set as not participant
-                                drone.setPartecipant(false);
+                                drone.setParticipant(false);
 
                                 //send ELECTED message
                                 propagatedMessage = message.newBuilder()
@@ -83,7 +82,7 @@ public class ElectionImpl extends electionImplBase {
                 } else {      //if drone is not participant
 
                     //set as participant
-                    drone.setPartecipant(true);
+                    drone.setParticipant(true);
 
                     if (myBattery > batteryDroneInMessage) {
                         //change idDroneInMessage with myId and send message
@@ -119,7 +118,7 @@ public class ElectionImpl extends electionImplBase {
                 if (typeMessage.equals("ELECTED")) {
 
                     //set as non participant
-                    drone.setPartecipant(false);
+                    drone.setParticipant(false);
 
                     //save id master
                     drone.setIdMaster(idDroneInMessage);

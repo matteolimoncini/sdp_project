@@ -5,11 +5,9 @@ import REST.beans.Drone;
 import java.util.Scanner;
 
 public class QuitThread extends Thread {
-    private Drone drone;
     private boolean stopCondition;
 
-    public QuitThread(Drone drone) {
-        this.drone = drone;
+    public QuitThread() {
         this.stopCondition = false;
     }
 

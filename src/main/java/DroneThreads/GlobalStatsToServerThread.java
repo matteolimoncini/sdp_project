@@ -3,7 +3,7 @@ package DroneThreads;
 import REST.beans.Drone;
 
 public class GlobalStatsToServerThread extends Thread {
-    private volatile boolean stopCondition = false;
+    private boolean stopCondition = false;
     private Drone drone;
 
     public GlobalStatsToServerThread(Drone drone) {

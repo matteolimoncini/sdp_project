@@ -20,9 +20,8 @@ public class ElectionThread extends Thread {
     @Override
     public void run() {
 
-        drone.setPartecipant(true);
+        drone.setParticipant(true);
         //System.out.println(drone.getIdDrone()+" setted as partecipant");
-
         //System.out.println("ID DRONE: "+drone.getIdDrone());
         //System.out.println("drones:"+drone.getDrones());
         Drone nextDroneInRing = drone.getNextInRing();

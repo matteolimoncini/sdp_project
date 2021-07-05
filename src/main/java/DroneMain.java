@@ -10,9 +10,10 @@ public class DroneMain {
     public static void main(String[] args) {
         Drone drone = new Drone(4, "localhost", 9444, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
+
+        //connect to server rest
         drone.addDrone();
 
-        //when we add a new drone we start a thread that wait that user type "quit" and exit
         QuitThread quitThread;
         GlobalStatsToServerThread sendGlobalStatsThread;
         Thread sendNewDroneAdded;
@@ -21,7 +22,6 @@ public class DroneMain {
         Thread manageOrder;
         PM10Simulator pm10Sim;
         PrintThread printThread;
-
         List<Drone> drones = drone.getDrones();
 
         //start grpc server thread
@@ -29,11 +29,11 @@ public class DroneMain {
         serverThread.start();
 
         //start a thread that wait that user type "quit" and exit
-        quitThread = new QuitThread(drone);
+        quitThread = new QuitThread();
         quitThread.start();
 
         if (drones != null) {
-            if (drones.size() == 0) {
+            if (drones.isEmpty()) {
                 //i am alone in the system, i'm master
                 drone.setIdMaster(drone.getIdDrone());
                 System.out.println("I am master");
@@ -117,6 +117,7 @@ public class DroneMain {
             try {
                 drone.disconnect();
             } catch (MqttException e) {
+                System.err.println("Mqtt exception during disconnect");
                 e.printStackTrace();
             }
 
@@ -143,10 +144,6 @@ public class DroneMain {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        /*while (drone.isProcessingDelivery()){
-            assert true;
-        }
-         */
 
         //stop pollutions threads
         pm10Sim.stopMeGently();
