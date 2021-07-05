@@ -4,7 +4,7 @@ import REST.beans.Drone;
 
 public class PrintThread extends Thread{
     private Drone drone;
-    private boolean stopCondition;
+    private volatile boolean stopCondition;
     public PrintThread(Drone drone) {
         this.drone=drone;
         this.stopCondition=false;
