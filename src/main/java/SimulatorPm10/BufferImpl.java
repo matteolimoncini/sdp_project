@@ -1,4 +1,4 @@
-package REST;
+package SimulatorPm10;
 
 import SimulatorPm10.Buffer;
 import SimulatorPm10.Measurement;

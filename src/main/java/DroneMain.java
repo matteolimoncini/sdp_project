@@ -1,5 +1,5 @@
 import DroneThreads.*;
-import REST.BufferImpl;
+import SimulatorPm10.BufferImpl;
 import REST.beans.*;
 import SimulatorPm10.PM10Simulator;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(2, "localhost", 9222, "localhost", 1337);
+        Drone drone = new Drone(1, "localhost", 9111, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
 
         //connect to server rest

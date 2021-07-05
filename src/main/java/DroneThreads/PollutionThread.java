@@ -1,6 +1,6 @@
 package DroneThreads;
 
-import REST.BufferImpl;
+import SimulatorPm10.BufferImpl;
 import REST.beans.Drone;
 import SimulatorPm10.Measurement;
 
