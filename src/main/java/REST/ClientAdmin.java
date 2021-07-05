@@ -57,7 +57,7 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+                        throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     output = response.getEntity(DroneList.class);
@@ -89,7 +89,7 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+                        throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     List<GlobalStats> gstatsList = response.getEntity(new GenericType<List<GlobalStats>>() {
@@ -130,7 +130,7 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+                        throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     AvgStatisticsModel avgModel = response.getEntity(AvgStatisticsModel.class);
@@ -157,7 +157,7 @@ public class ClientAdmin {
                             .get(ClientResponse.class);
 
                     if (response.getStatus() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+                        throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
                     }
 
                     AvgStatisticsModel avgModelKm = response.getEntity(AvgStatisticsModel.class);

@@ -29,7 +29,7 @@ public class Drone {
     private String ipAddress;
     @Expose
     private Integer portNumber;
-    private Integer idMaster = -1;
+    private Integer idMaster;
     private MqttClient clientDrone;
     private Integer battery;
     private boolean processingDelivery;
@@ -37,26 +37,38 @@ public class Drone {
     private String ipServerAdmin;
     private Integer portServerAdmin;
     private boolean participant;
-    private List<GlobalStats> gStatsList = new ArrayList<>();
-    private List<Drone> drones = new ArrayList<>();
+    private List<GlobalStats> gStatsList;
+    private List<Drone> drones;
     private List<Order> pendingOrders;
-    private List<Double> measurementList = new ArrayList<>();
-    private int countPosition = 0;
-    private boolean quit = false;
-    private boolean electionInProgress = false;
+    private List<Double> measurementList;
+    private int countPosition;
+    private boolean quit;
+    private boolean electionInProgress;
     @JsonIgnore
-    private final Object syncCurrentOrder = new Object();
-    private double kmTravelled=0;
-    private int numDelivery =0;
+    private final Object syncCurrentOrder;
+    private double kmTravelled;
+    private int numDelivery;
 
     public Drone() {
+        this.idMaster = -1;
         this.battery = 100;
         this.processingDelivery = false;
         this.participant = false;
         this.pendingOrders = new ArrayList<>();
+        this.gStatsList = new ArrayList<>();
+        this.drones = new ArrayList<>();
+        this.pendingOrders = new ArrayList<>();
+        this.measurementList = new ArrayList<>();
+        this.countPosition = 0;
+        this.quit = false;
+        this.electionInProgress = false;
+        this.syncCurrentOrder = new Object();
+        this.kmTravelled = 0;
+        this.numDelivery = 0;
     }
 
     public Drone(Integer id, String ipAddress, Integer portNumber, String ipServerAdmin, Integer portServerAdmin) {
+        this.idMaster = -1;
         this.idDrone = id;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
@@ -65,7 +77,16 @@ public class Drone {
         this.battery = 100;
         this.processingDelivery = false;
         this.participant = false;
+        this.gStatsList = new ArrayList<>();
+        this.drones = new ArrayList<>();
         this.pendingOrders = new ArrayList<>();
+        this.measurementList = new ArrayList<>();
+        this.countPosition = 0;
+        this.quit = false;
+        this.electionInProgress = false;
+        this.syncCurrentOrder = new Object();
+        this.kmTravelled = 0;
+        this.numDelivery = 0;
     }
 
     public synchronized List<Drone> getDrones() {
@@ -436,7 +457,7 @@ public class Drone {
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+            throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
         }
 
         ResponseAddModel output = response.getEntity(ResponseAddModel.class);
@@ -471,7 +492,7 @@ public class Drone {
         WebResource webResource = client.resource(url + "/drone/delete/" + this.getIdDrone());
         ClientResponse response = webResource.type("application/json").delete(ClientResponse.class);
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+            throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
         }
         System.out.println("Drone removed from the system");
     }
@@ -582,7 +603,7 @@ public class Drone {
             ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
             if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getEntity(ExceptionModel.class).getMessage());
+                throw new RuntimeException("Failed : HTTP error : " + response.getEntity(ExceptionModel.class).getMessage());
             }
         }
 
