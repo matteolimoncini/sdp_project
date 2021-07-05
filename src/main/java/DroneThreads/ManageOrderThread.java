@@ -15,10 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 public class ManageOrderThread extends Thread {
     private Drone drone;
+    private boolean stopCondition;
 
     public ManageOrderThread(Drone drone) {
         this.drone = drone;
-
+        this.stopCondition=false;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ManageOrderThread extends Thread {
             this.drone.subscribeAndPutInQueue();
 
             Order firstPendingOrder;
-            while (true) {
+            while (!stopCondition) {
                 if (this.drone.areTherePendingOrders()) {
                     //System.out.println("try to manage pending order...");
                     firstPendingOrder = this.drone.getFirstPendingOrder();
@@ -77,7 +78,7 @@ public class ManageOrderThread extends Thread {
                 } else {
                     if (this.drone.isQuit()) {
                         //System.out.println("no pending order and quit flag set as true");
-                        break;
+                        this.stopCondition=true;
                     }
                 }
             }
