@@ -97,7 +97,6 @@ public class DroneMain {
 
             //send global stats if is master and thread to send global stats is crashed
             if (!sendGlobalStatsThread.isAlive() && drone.isMaster()){
-                assert true;
                 sendGlobalStatsThread.start();
             }
 
