@@ -43,7 +43,7 @@ public class Dronazon {
                     ") to (" + deliveryPoint.getxCoordinate() + "," + deliveryPoint.getyCoordinate() + ")");
             //System.out.println(clientId + " Message published");
 
-            Thread.sleep(2 * 1000);
+            Thread.sleep(5 * 1000);
         }
         /*
         if (client.isConnected())
