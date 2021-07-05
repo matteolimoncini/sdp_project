@@ -8,12 +8,12 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone drone = new Drone(1, "localhost", 9111, "localhost", 1337);
+        Drone drone = new Drone(5, "localhost", 9555, "localhost", 1337);
         System.out.println("I am drone: "+drone.getIdDrone());
         drone.addDrone();
 
         //when we add a new drone we start a thread that wait that user type "quit" and exit
-        Thread quitThread;
+        QuitThread quitThread;
         GlobalStatsToServerThread sendGlobalStatsThread;
         Thread sendNewDroneAdded;
         ServerGrpcThread serverThread;
@@ -107,6 +107,8 @@ public class DroneMain {
 
         drone.setQuit(true);
 
+        //stop thread that wait input "quit"
+        quitThread.stopMeGently();
 
         //stop thread that prints stats
         printThread.stopMeGently();
