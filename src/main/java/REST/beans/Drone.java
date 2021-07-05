@@ -398,7 +398,7 @@ public class Drone {
         synchronized (this.getSyncCurrentOrder()) {
             this.getSyncCurrentOrder().notify();
         }
-        this.setNumDelivery(this.getNumDelivery()+1);
+        this.setNumDelivery(this.getNumDelivery() + 1);
         this.sendStatToMaster(order, timestamp, oldPosition);
     }
 
@@ -426,7 +426,7 @@ public class Drone {
         int size = this.drones.size();
         int i;
         for (i = 0; i < size; i++) {
-            Drone d = this.drones.get((i+1)%size);
+            Drone d = this.drones.get((i + 1) % size);
             if (d.getIdDrone() > this.getIdDrone())
                 return d;
         }
@@ -533,7 +533,7 @@ public class Drone {
                 double distanceFromOldToPickup = distance(oldPosition.getxCoordinate(), oldPosition.getyCoordinate(), pickUpPoint.getxCoordinate(), pickUpPoint.getyCoordinate());
                 double distanceFromPickupTpDelivery = distance(pickUpPoint.getxCoordinate(), pickUpPoint.getxCoordinate(), deliveryPoint.getxCoordinate(), deliveryPoint.getyCoordinate());
                 double totKm = distanceFromPickupTpDelivery + distanceFromOldToPickup;
-                this.setKmTravelled(this.getKmTravelled()+totKm);
+                this.setKmTravelled(this.getKmTravelled() + totKm);
                 GlobalStatsToMaster.globalStatsToMaster request1 = GlobalStatsToMaster.globalStatsToMaster
                         .newBuilder()
                         .setIdDrone(this.getIdDrone())
