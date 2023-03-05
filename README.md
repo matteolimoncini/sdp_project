@@ -1,12 +1,12 @@
 # sdp_project
 Project for "Distributed and pervasive systems" course - University of Milan - Year 2020/21
 
-Dronazon
+##Dronazon
+
 Overview
 
 The purpose of this project is to simulate a drone delivery network that receives and executes orders from an external service. The drones work together to complete the deliveries, with one drone being elected as the Master Drone to coordinate the operation.
 
-This project was developed as a university project for the "Distributed and Pervasive Systems" course.
 Components
 Dronazon
 
